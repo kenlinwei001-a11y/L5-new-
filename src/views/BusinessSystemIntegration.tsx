@@ -15,16 +15,49 @@ import {
 import { cn } from '../lib/utils';
 
 const MOCK_SYSTEMS = [
+  // 核心生产与计划
   { id: 'SYS-MES-01', name: '核心制造执行系统 (MES)', type: 'MES', status: 'connected', lastSync: '2m ago', protocol: 'REST API' },
   { id: 'SYS-ERP-01', name: '企业资源计划 (ERP)', type: 'ERP', status: 'connected', lastSync: '1h ago', protocol: 'SOAP' },
-  { id: 'SYS-WMS-01', name: '智能仓储系统 (WMS)', type: 'WMS', status: 'error', lastSync: '1d ago', protocol: 'REST API' },
   { id: 'SYS-APS-01', name: '高级排程系统 (APS)', type: 'APS', status: 'connected', lastSync: '5m ago', protocol: 'GraphQL' },
+  
+  // 仓储与物流
+  { id: 'SYS-WMS-01', name: '智能仓储系统 (WMS)', type: 'WMS', status: 'error', lastSync: '1d ago', protocol: 'REST API' },
+  { id: 'SYS-WCS-01', name: '仓储控制系统 (WCS)', type: 'WCS', status: 'connected', lastSync: '1m ago', protocol: 'TCP/IP' },
+  { id: 'SYS-AGV-01', name: 'AGV/AMR 调度系统', type: 'Logistics', status: 'connected', lastSync: '10s ago', protocol: 'MQTT' },
+  
+  // 质量与研发
+  { id: 'SYS-QMS-01', name: '质量管理系统 (QMS)', type: 'QMS', status: 'connected', lastSync: '15m ago', protocol: 'REST API' },
+  { id: 'SYS-LIMS-01', name: '实验室信息管理系统 (LIMS)', type: 'LIMS', status: 'connected', lastSync: '30m ago', protocol: 'REST API' },
+  { id: 'SYS-PLM-01', name: '产品生命周期管理 (PLM)', type: 'PLM', status: 'connected', lastSync: '2h ago', protocol: 'OData' },
+  { id: 'SYS-SPC-01', name: '统计过程控制系统 (SPC)', type: 'SPC', status: 'connected', lastSync: '1m ago', protocol: 'gRPC' },
+  
+  // 设备与资产管理
+  { id: 'SYS-EAM-01', name: '企业资产管理系统 (EAM)', type: 'EAM', status: 'connected', lastSync: '10m ago', protocol: 'REST API' },
+  { id: 'SYS-CMMS-01', name: '设备维修工单系统 (CMMS)', type: 'CMMS', status: 'connected', lastSync: '5m ago', protocol: 'REST API' },
+  { id: 'SYS-MRO-01', name: '备品备件库存系统 (MRO)', type: 'Inventory', status: 'connected', lastSync: '1h ago', protocol: 'REST API' },
+  { id: 'SYS-SCADA-01', name: '数据采集与监视控制 (SCADA)', type: 'IoT', status: 'connected', lastSync: '1s ago', protocol: 'OPC UA' },
+  
+  // 人力与排班
+  { id: 'SYS-HRMS-01', name: '人力资源管理系统 (HRMS)', type: 'HR', status: 'connected', lastSync: '12h ago', protocol: 'REST API' },
+  { id: 'SYS-WFM-PROD', name: '生产员工排程系统 (WFM-Prod)', type: 'WFM', status: 'connected', lastSync: '1h ago', protocol: 'REST API' },
+  { id: 'SYS-WFM-MAINT', name: '维修人员排程系统 (WFM-Maint)', type: 'WFM', status: 'connected', lastSync: '1h ago', protocol: 'REST API' },
+  
+  // 供应链与客户
+  { id: 'SYS-SRM-01', name: '供应商关系管理 (SRM)', type: 'SRM', status: 'connected', lastSync: '4h ago', protocol: 'REST API' },
+  { id: 'SYS-CRM-01', name: '客户关系管理 (CRM)', type: 'CRM', status: 'connected', lastSync: '1h ago', protocol: 'REST API' },
+  
+  // 厂务与环境
+  { id: 'SYS-EMS-01', name: '能源管理系统 (EMS)', type: 'EMS', status: 'connected', lastSync: '5m ago', protocol: 'MQTT' },
+  { id: 'SYS-EHS-01', name: '环境健康安全系统 (EHS)', type: 'EHS', status: 'connected', lastSync: '1d ago', protocol: 'REST API' },
 ];
 
 const MOCK_LOGS = [
   { id: 1, time: '10:23:45', system: 'SYS-MES-01', event: '工单状态同步成功', type: 'info' },
   { id: 2, time: '09:15:20', system: 'SYS-WMS-01', event: 'API 连接超时', type: 'error' },
   { id: 3, time: '08:05:11', system: 'SYS-ERP-01', event: '物料主数据拉取完成 (1200条)', type: 'success' },
+  { id: 4, time: '07:30:00', system: 'SYS-CMMS-01', event: '涂布机维修工单状态更新', type: 'info' },
+  { id: 5, time: '07:15:22', system: 'SYS-WFM-PROD', event: '早班人员排班数据同步完成', type: 'success' },
+  { id: 6, time: '06:45:10', system: 'SYS-MRO-01', event: '备件库存低于安全阈值告警', type: 'error' },
 ];
 
 export default function BusinessSystemIntegration() {
@@ -111,10 +144,26 @@ export default function BusinessSystemIntegration() {
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">系统类型</label>
                   <select defaultValue={selectedSystem.type} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                    <option value="MES">MES</option>
-                    <option value="ERP">ERP</option>
-                    <option value="WMS">WMS</option>
-                    <option value="APS">APS</option>
+                    <option value="MES">MES (制造执行)</option>
+                    <option value="ERP">ERP (企业资源计划)</option>
+                    <option value="WMS">WMS (智能仓储)</option>
+                    <option value="WCS">WCS (仓储控制)</option>
+                    <option value="APS">APS (高级排程)</option>
+                    <option value="QMS">QMS (质量管理)</option>
+                    <option value="LIMS">LIMS (实验室信息管理)</option>
+                    <option value="PLM">PLM (产品生命周期)</option>
+                    <option value="SPC">SPC (统计过程控制)</option>
+                    <option value="EAM">EAM (企业资产管理)</option>
+                    <option value="CMMS">CMMS (设备维修工单)</option>
+                    <option value="Inventory">Inventory (备品备件库存)</option>
+                    <option value="IoT">IoT/SCADA (数据采集与监视)</option>
+                    <option value="HR">HRMS (人力资源)</option>
+                    <option value="WFM">WFM (劳动力排程)</option>
+                    <option value="SRM">SRM (供应商关系管理)</option>
+                    <option value="CRM">CRM (客户关系管理)</option>
+                    <option value="EMS">EMS (能源管理)</option>
+                    <option value="EHS">EHS (环境健康安全)</option>
+                    <option value="Logistics">Logistics (物流与AGV调度)</option>
                   </select>
                 </div>
               </div>
