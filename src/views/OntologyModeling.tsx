@@ -447,165 +447,227 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
   failure_impact: {
     name: '设备故障影响评估 (COATER-01)',
     nodes: [
-      { id: 'FAIL-001', label: '主轴卡死 (故障)', type: 'EquipmentFailure', x: 0, y: -100 },
-      { id: 'COATER-01', label: '涂布机-01', type: 'Device', x: -200, y: 0 },
-      { id: 'MAINT-20260318', label: '维修单-更换主轴', type: 'MaintenanceOrder', x: 200, y: 0 },
-      { id: 'SP-ROLLER-05', label: '备件-涂布辊', type: 'SparePart', x: 0, y: 100 },
-      { id: 'TECH-ZHANG', label: '张三 (维修工)', type: 'Technician', x: 200, y: 150 },
+      { id: 'FAIL-001', label: '主轴卡死 (当前故障)', type: 'EquipmentFailure', x: 0, y: -100 },
+      { id: 'COATER-01', label: '涂布机-01', type: 'Device', x: -150, y: 0 },
+      { id: 'LINE-1', label: '涂布一线 (受影响产线)', type: 'ProductionLine', x: -300, y: 0 },
+      { id: 'MAINT-NEW', label: '维修单-更换主轴', type: 'MaintenanceOrder', x: 150, y: 0 },
+      { id: 'MAINT-HIST', label: '历史维修单 (3个月前)', type: 'MaintenanceOrder', x: -150, y: 150 },
+      { id: 'SP-ROLLER-05', label: '备件-涂布辊 (库存:充足)', type: 'SparePart', x: 150, y: 150 },
+      { id: 'WH-SPARE', label: 'A栋备件仓 (库位:A-12)', type: 'Workshop', x: 300, y: 150 },
+      { id: 'SUPP-MECH', label: '机械供应商 (L/T:3天, 成本:高)', type: 'Supplier', x: 150, y: 250 },
+      { id: 'TECH-ZHANG', label: '张三 (高级维修工)', type: 'Technician', x: 300, y: 0 },
     ],
     edges: [
       { id: 'e1', source: 'FAIL-001', target: 'COATER-01', label: 'occurs_on' },
-      { id: 'e2', source: 'FAIL-001', target: 'MAINT-20260318', label: 'triggers' },
-      { id: 'e3', source: 'MAINT-20260318', target: 'SP-ROLLER-05', label: 'consumes' },
-      { id: 'e4', source: 'MAINT-20260318', target: 'TECH-ZHANG', label: 'assigned_to' },
+      { id: 'e2', source: 'COATER-01', target: 'LINE-1', label: 'belongs_to' },
+      { id: 'e3', source: 'FAIL-001', target: 'MAINT-NEW', label: 'triggers' },
+      { id: 'e4', source: 'COATER-01', target: 'MAINT-HIST', label: 'has_history' },
+      { id: 'e5', source: 'MAINT-NEW', target: 'SP-ROLLER-05', label: 'consumes' },
+      { id: 'e6', source: 'SP-ROLLER-05', target: 'WH-SPARE', label: 'stored_in' },
+      { id: 'e7', source: 'SP-ROLLER-05', target: 'SUPP-MECH', label: 'supplied_by' },
+      { id: 'e8', source: 'MAINT-NEW', target: 'TECH-ZHANG', label: 'assigned_to' },
     ]
   },
   line_schedule: {
     name: '产线排产计划 (LINE-A)',
     nodes: [
-      { id: 'LINE-A', label: '涂布一线', type: 'ProductionLine', x: -200, y: 0 },
+      { id: 'LINE-A', label: '涂布一线 (OEE:85%)', type: 'ProductionLine', x: -200, y: 0 },
       { id: 'WO-0318', label: 'WO-20260318-01', type: 'WorkOrder', x: 0, y: 0 },
       { id: 'PROD-LFP', label: 'Cell-LFP-280Ah', type: 'Product', x: 200, y: -100 },
-      { id: 'SO-202603', label: 'SO-202603 (订单)', type: 'SalesOrder', x: 200, y: 100 },
-      { id: 'CUST-TESLA', label: '特斯拉 (客户)', type: 'Customer', x: 0, y: 150 },
+      { id: 'SO-202603', label: 'SO-202603 (加急)', type: 'SalesOrder', x: 200, y: 100 },
+      { id: 'CUST-TESLA', label: '特斯拉 (VIP客户)', type: 'Customer', x: 0, y: 150 },
+      { id: 'MAT-SLURRY', label: 'LFP浆料 (库存:充足)', type: 'Material', x: -200, y: 150 },
+      { id: 'SHIFT-A', label: '白班班组 (缺1人)', type: 'Batch', x: -200, y: -150 },
+      { id: 'COATER-01', label: '涂布机-01 (运行中)', type: 'Device', x: -400, y: 0 },
     ],
     edges: [
       { id: 'e1', source: 'WO-0318', target: 'LINE-A', label: 'assigned_to' },
       { id: 'e2', source: 'WO-0318', target: 'PROD-LFP', label: 'produces' },
       { id: 'e3', source: 'WO-0318', target: 'SO-202603', label: 'fulfills' },
       { id: 'e4', source: 'SO-202603', target: 'CUST-TESLA', label: 'placed_by' },
+      { id: 'e5', source: 'WO-0318', target: 'MAT-SLURRY', label: 'requires' },
+      { id: 'e6', source: 'LINE-A', target: 'SHIFT-A', label: 'operated_by' },
+      { id: 'e7', source: 'COATER-01', target: 'LINE-A', label: 'belongs_to' },
     ]
   },
   quality_trace: {
     name: '质量追溯 (LOT-C-001)',
     nodes: [
-      { id: 'LOT-C-001', label: 'LOT-C-001 (批次)', type: 'Batch', x: 0, y: 0 },
-      { id: 'QI-001', label: '面密度检测', type: 'QualityInspection', x: -200, y: -100 },
+      { id: 'LOT-C-001', label: 'LOT-C-001 (异常批次)', type: 'Batch', x: 0, y: 0 },
+      { id: 'QI-001', label: '面密度偏低 (NG)', type: 'QualityInspection', x: -200, y: -100 },
       { id: 'COATER-01', label: '涂布机-01', type: 'Device', x: 200, y: -100 },
-      { id: 'MAT-ANODE', label: '负极浆料', type: 'Material', x: -200, y: 100 },
-      { id: 'SUPP-LITHIUM', label: '天齐锂业', type: 'Supplier', x: 200, y: 100 },
+      { id: 'TEL-TEMP', label: '烘箱温度 (波动)', type: 'Telemetry', x: 400, y: -100 },
+      { id: 'MAT-ANODE', label: '负极浆料 (LOT-A-09)', type: 'Material', x: -200, y: 100 },
+      { id: 'SUPP-LITHIUM', label: '天齐锂业', type: 'Supplier', x: -400, y: 100 },
+      { id: 'TECH-LI', label: '李四 (操作工)', type: 'Technician', x: 200, y: 100 },
+      { id: 'WO-0315', label: '生产工单-0315', type: 'WorkOrder', x: 0, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'LOT-C-001', target: 'QI-001', label: 'inspected_by' },
       { id: 'e2', source: 'LOT-C-001', target: 'COATER-01', label: 'processed_on' },
-      { id: 'e3', source: 'LOT-C-001', target: 'MAT-ANODE', label: 'consumes' },
-      { id: 'e4', source: 'MAT-ANODE', target: 'SUPP-LITHIUM', label: 'supplied_by' },
+      { id: 'e3', source: 'COATER-01', target: 'TEL-TEMP', label: 'generates' },
+      { id: 'e4', source: 'LOT-C-001', target: 'MAT-ANODE', label: 'consumes' },
+      { id: 'e5', source: 'MAT-ANODE', target: 'SUPP-LITHIUM', label: 'supplied_by' },
+      { id: 'e6', source: 'LOT-C-001', target: 'TECH-LI', label: 'operated_by' },
+      { id: 'e7', source: 'LOT-C-001', target: 'WO-0315', label: 'belongs_to' },
     ]
   },
   supply_chain: {
     name: '供应链协同 (MAT-CATHODE)',
     nodes: [
-      { id: 'MAT-CATHODE', label: '正极材料', type: 'Material', x: 0, y: 0 },
-      { id: 'SUPP-SHANSHAN', label: '杉杉股份', type: 'Supplier', x: -200, y: -100 },
-      { id: 'PO-202603', label: '采购单-03', type: 'WorkOrder', x: 200, y: -100 },
-      { id: 'WH-RAW', label: '原料仓', type: 'Workshop', x: 0, y: 150 },
+      { id: 'MAT-CATHODE', label: '正极材料 (NCM811)', type: 'Material', x: 0, y: 0 },
+      { id: 'SUPP-SHANSHAN', label: '杉杉股份 (核心供应商)', type: 'Supplier', x: -200, y: -100 },
+      { id: 'PO-202603', label: '采购单-03 (在途)', type: 'WorkOrder', x: 200, y: -100 },
+      { id: 'LOGISTICS-01', label: '顺丰冷链 (预计明天达)', type: 'Telemetry', x: 400, y: -100 },
+      { id: 'WH-RAW', label: '原料仓 (库容:80%)', type: 'Workshop', x: -200, y: 100 },
+      { id: 'QI-INCOMING', label: 'IQC检验标准', type: 'QualityInspection', x: 200, y: 100 },
+      { id: 'PROD-NCM', label: 'Cell-NCM-100Ah', type: 'Product', x: 0, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'MAT-CATHODE', target: 'SUPP-SHANSHAN', label: 'supplied_by' },
       { id: 'e2', source: 'PO-202603', target: 'MAT-CATHODE', label: 'purchases' },
-      { id: 'e3', source: 'MAT-CATHODE', target: 'WH-RAW', label: 'stored_in' },
+      { id: 'e3', source: 'PO-202603', target: 'LOGISTICS-01', label: 'tracked_by' },
+      { id: 'e4', source: 'MAT-CATHODE', target: 'WH-RAW', label: 'stored_in' },
+      { id: 'e5', source: 'MAT-CATHODE', target: 'QI-INCOMING', label: 'requires' },
+      { id: 'e6', source: 'PROD-NCM', target: 'MAT-CATHODE', label: 'consumes' },
     ]
   },
   energy_consumption: {
     name: '能耗异常分析 (OVEN-03)',
     nodes: [
-      { id: 'OVEN-03', label: '烘烤箱-03', type: 'Device', x: 0, y: 0 },
-      { id: 'TEL-ELEC', label: '电表-03', type: 'Telemetry', x: -200, y: -100 },
+      { id: 'OVEN-03', label: '烘烤箱-03 (能耗飙升)', type: 'Device', x: 0, y: 0 },
+      { id: 'TEL-ELEC', label: '电表-03 (150kWh)', type: 'Telemetry', x: -200, y: -100 },
+      { id: 'TEL-TEMP', label: '内部温度 (偏低)', type: 'Telemetry', x: -200, y: 100 },
       { id: 'LINE-B', label: '烘烤二线', type: 'ProductionLine', x: 200, y: -100 },
-      { id: 'WS-BAKING', label: '烘烤车间', type: 'Workshop', x: 0, y: 150 },
+      { id: 'WS-BAKING', label: '烘烤车间', type: 'Workshop', x: 400, y: -100 },
+      { id: 'WO-0310', label: '工单-0310', type: 'WorkOrder', x: 200, y: 100 },
+      { id: 'PROD-LFP', label: '单耗基准 (1.2kWh/pcs)', type: 'Product', x: 400, y: 100 },
     ],
     edges: [
       { id: 'e1', source: 'OVEN-03', target: 'TEL-ELEC', label: 'monitored_by' },
-      { id: 'e2', source: 'OVEN-03', target: 'LINE-B', label: 'belongs_to' },
-      { id: 'e3', source: 'LINE-B', target: 'WS-BAKING', label: 'located_in' },
+      { id: 'e2', source: 'OVEN-03', target: 'TEL-TEMP', label: 'monitored_by' },
+      { id: 'e3', source: 'OVEN-03', target: 'LINE-B', label: 'belongs_to' },
+      { id: 'e4', source: 'LINE-B', target: 'WS-BAKING', label: 'located_in' },
+      { id: 'e5', source: 'WO-0310', target: 'OVEN-03', label: 'executed_on' },
+      { id: 'e6', source: 'WO-0310', target: 'PROD-LFP', label: 'produces' },
     ]
   },
   maintenance_plan: {
     name: '预防性维护排程 (WINDER-02)',
     nodes: [
-      { id: 'WINDER-02', label: '卷绕机-02', type: 'Device', x: 0, y: 0 },
-      { id: 'PM-202604', label: '4月月度保养', type: 'MaintenanceOrder', x: -200, y: -100 },
-      { id: 'TECH-WANG', label: '王五 (保养员)', type: 'Technician', x: 200, y: -100 },
-      { id: 'SP-BEARING', label: '备件-轴承', type: 'SparePart', x: 0, y: 150 },
+      { id: 'WINDER-02', label: '卷绕机-02 (运行:500h)', type: 'Device', x: 0, y: 0 },
+      { id: 'PM-202604', label: '4月月度保养 (计划)', type: 'MaintenanceOrder', x: -200, y: -100 },
+      { id: 'TECH-WANG', label: '王五 (排班:周二)', type: 'Technician', x: 200, y: -100 },
+      { id: 'SP-BEARING', label: '备件-轴承 (库存:0)', type: 'SparePart', x: -200, y: 100 },
+      { id: 'PO-SPARE', label: '采购单-轴承 (在途)', type: 'WorkOrder', x: -400, y: 100 },
+      { id: 'LINE-WIND', label: '卷绕产线 (排产满)', type: 'ProductionLine', x: 200, y: 100 },
     ],
     edges: [
       { id: 'e1', source: 'PM-202604', target: 'WINDER-02', label: 'maintains' },
       { id: 'e2', source: 'PM-202604', target: 'TECH-WANG', label: 'assigned_to' },
-      { id: 'e3', source: 'PM-202604', target: 'SP-BEARING', label: 'consumes' },
+      { id: 'e3', source: 'PM-202604', target: 'SP-BEARING', label: 'requires' },
+      { id: 'e4', source: 'PO-SPARE', target: 'SP-BEARING', label: 'replenishes' },
+      { id: 'e5', source: 'WINDER-02', target: 'LINE-WIND', label: 'belongs_to' },
     ]
   },
   yield_analysis: {
     name: '良率波动诊断 (CELL-BATCH-05)',
     nodes: [
-      { id: 'CELL-BATCH-05', label: '电芯批次-05', type: 'Batch', x: 0, y: 0 },
-      { id: 'QI-CAPACITY', label: '容量测试', type: 'QualityInspection', x: -200, y: -100 },
+      { id: 'CELL-BATCH-05', label: '电芯批次-05 (良率88%)', type: 'Batch', x: 0, y: 0 },
+      { id: 'QI-CAPACITY', label: '容量测试 (低容)', type: 'QualityInspection', x: -200, y: -100 },
       { id: 'FORMATION-01', label: '化成柜-01', type: 'Device', x: 200, y: -100 },
-      { id: 'WO-0319', label: 'WO-20260319', type: 'WorkOrder', x: 0, y: 150 },
+      { id: 'TEL-VOLTAGE', label: '化成电压曲线 (异常)', type: 'Telemetry', x: 400, y: -100 },
+      { id: 'WO-0319', label: 'WO-20260319', type: 'WorkOrder', x: -200, y: 100 },
+      { id: 'MAT-ELECTROLYTE', label: '电解液 (LOT-E-12)', type: 'Material', x: 200, y: 100 },
     ],
     edges: [
       { id: 'e1', source: 'CELL-BATCH-05', target: 'QI-CAPACITY', label: 'inspected_by' },
       { id: 'e2', source: 'CELL-BATCH-05', target: 'FORMATION-01', label: 'processed_on' },
-      { id: 'e3', source: 'CELL-BATCH-05', target: 'WO-0319', label: 'belongs_to' },
+      { id: 'e3', source: 'FORMATION-01', target: 'TEL-VOLTAGE', label: 'generates' },
+      { id: 'e4', source: 'CELL-BATCH-05', target: 'WO-0319', label: 'belongs_to' },
+      { id: 'e5', source: 'CELL-BATCH-05', target: 'MAT-ELECTROLYTE', label: 'consumes' },
     ]
   },
   inventory_warning: {
     name: '备件库存预警 (SP-ROLLER-05)',
     nodes: [
-      { id: 'SP-ROLLER-05', label: '备件-涂布辊', type: 'SparePart', x: 0, y: 0 },
-      { id: 'SUPP-ROLLER', label: '辊轴供应商', type: 'Supplier', x: -200, y: -100 },
-      { id: 'WH-SPARE', label: '备件仓', type: 'Workshop', x: 200, y: -100 },
-      { id: 'MAINT-URGENT', label: '紧急抢修单', type: 'MaintenanceOrder', x: 0, y: 150 },
+      { id: 'SP-ROLLER-05', label: '备件-涂布辊 (库存:1)', type: 'SparePart', x: 0, y: 0 },
+      { id: 'SUPP-ROLLER', label: '辊轴供应商 (L/T:15天)', type: 'Supplier', x: -200, y: -100 },
+      { id: 'WH-SPARE', label: '备件仓 (安全库存:3)', type: 'Workshop', x: 200, y: -100 },
+      { id: 'MAINT-URGENT', label: '紧急抢修单 (需1个)', type: 'MaintenanceOrder', x: -200, y: 100 },
+      { id: 'COATER-02', label: '涂布机-02 (待修)', type: 'Device', x: 0, y: 150 },
+      { id: 'PO-AUTO', label: '自动触发采购单', type: 'WorkOrder', x: 200, y: 100 },
     ],
     edges: [
       { id: 'e1', source: 'SP-ROLLER-05', target: 'SUPP-ROLLER', label: 'supplied_by' },
       { id: 'e2', source: 'SP-ROLLER-05', target: 'WH-SPARE', label: 'stored_in' },
       { id: 'e3', source: 'MAINT-URGENT', target: 'SP-ROLLER-05', label: 'requires' },
+      { id: 'e4', source: 'MAINT-URGENT', target: 'COATER-02', label: 'maintains' },
+      { id: 'e5', source: 'PO-AUTO', target: 'SP-ROLLER-05', label: 'replenishes' },
     ]
   },
   customer_complaint: {
     name: '客户投诉溯源 (CUST-TESLA-001)',
     nodes: [
-      { id: 'CUST-TESLA', label: '特斯拉 (客户)', type: 'Customer', x: 0, y: 0 },
-      { id: 'SO-202601', label: 'SO-202601 (订单)', type: 'SalesOrder', x: -200, y: -100 },
+      { id: 'CUST-TESLA', label: '特斯拉 (投诉:续航短)', type: 'Customer', x: 0, y: 0 },
+      { id: 'SO-202601', label: 'SO-202601 (历史订单)', type: 'SalesOrder', x: -200, y: -100 },
       { id: 'PROD-LFP', label: 'Cell-LFP-280Ah', type: 'Product', x: 200, y: -100 },
-      { id: 'LOT-C-001', label: 'LOT-C-001 (批次)', type: 'Batch', x: -100, y: 150 },
-      { id: 'QI-001', label: '出货检验', type: 'QualityInspection', x: 100, y: 150 },
+      { id: 'LOT-C-001', label: 'LOT-C-001 (发货批次)', type: 'Batch', x: -200, y: 100 },
+      { id: 'QI-001', label: '出货检验 (当时OK)', type: 'QualityInspection', x: 0, y: 150 },
+      { id: 'MAT-CATHODE', label: '正极材料 (追溯源头)', type: 'Material', x: 200, y: 100 },
+      { id: 'SUPP-SHANSHAN', label: '杉杉股份 (材料供应商)', type: 'Supplier', x: 400, y: 100 },
+      { id: 'LINE-1', label: '涂布一线 (生产线)', type: 'ProductionLine', x: -400, y: 100 },
     ],
     edges: [
       { id: 'e1', source: 'SO-202601', target: 'CUST-TESLA', label: 'placed_by' },
       { id: 'e2', source: 'SO-202601', target: 'PROD-LFP', label: 'includes' },
       { id: 'e3', source: 'LOT-C-001', target: 'PROD-LFP', label: 'is_instance_of' },
       { id: 'e4', source: 'LOT-C-001', target: 'QI-001', label: 'inspected_by' },
+      { id: 'e5', source: 'LOT-C-001', target: 'MAT-CATHODE', label: 'consumes' },
+      { id: 'e6', source: 'MAT-CATHODE', target: 'SUPP-SHANSHAN', label: 'supplied_by' },
+      { id: 'e7', source: 'LOT-C-001', target: 'LINE-1', label: 'processed_on' },
     ]
   },
   worker_schedule: {
     name: '关键岗位人员排班 (TECH-ZHANG)',
     nodes: [
-      { id: 'TECH-ZHANG', label: '张三 (维修工)', type: 'Technician', x: 0, y: 0 },
-      { id: 'SHIFT-NIGHT', label: '夜班', type: 'Batch', x: -200, y: -100 },
+      { id: 'TECH-ZHANG', label: '张三 (高级涂布工)', type: 'Technician', x: 0, y: 0 },
+      { id: 'SHIFT-NIGHT', label: '夜班 (疲劳度高)', type: 'Batch', x: -200, y: -100 },
       { id: 'LINE-1', label: '涂布一线', type: 'ProductionLine', x: 200, y: -100 },
-      { id: 'WS-COATING', label: '涂布车间', type: 'Workshop', x: 0, y: 150 },
+      { id: 'WS-COATING', label: '涂布车间', type: 'Workshop', x: 400, y: -100 },
+      { id: 'CERT-01', label: '特种作业证 (下月过期)', type: 'QualityInspection', x: -200, y: 100 },
+      { id: 'MAINT-TASK', label: '临时维修任务', type: 'MaintenanceOrder', x: 200, y: 100 },
+      { id: 'COATER-01', label: '涂布机-01', type: 'Device', x: 400, y: 100 },
     ],
     edges: [
       { id: 'e1', source: 'TECH-ZHANG', target: 'SHIFT-NIGHT', label: 'assigned_to' },
       { id: 'e2', source: 'SHIFT-NIGHT', target: 'LINE-1', label: 'operates' },
       { id: 'e3', source: 'LINE-1', target: 'WS-COATING', label: 'located_in' },
+      { id: 'e4', source: 'TECH-ZHANG', target: 'CERT-01', label: 'holds' },
+      { id: 'e5', source: 'MAINT-TASK', target: 'TECH-ZHANG', label: 'assigned_to' },
+      { id: 'e6', source: 'MAINT-TASK', target: 'COATER-01', label: 'maintains' },
     ]
   },
   material_shortage: {
     name: '物料短缺影响评估 (MAT-ANODE)',
     nodes: [
-      { id: 'MAT-ANODE', label: '负极材料', type: 'Material', x: 0, y: 0 },
+      { id: 'MAT-ANODE', label: '负极材料 (缺口:5吨)', type: 'Material', x: 0, y: 0 },
       { id: 'BOM-LFP', label: 'BOM-LFP-280', type: 'BOM', x: -200, y: -100 },
       { id: 'PROD-LFP', label: 'Cell-LFP-280Ah', type: 'Product', x: 200, y: -100 },
-      { id: 'WO-0320', label: 'WO-20260320', type: 'WorkOrder', x: -100, y: 150 },
-      { id: 'SO-202605', label: 'SO-202605', type: 'SalesOrder', x: 100, y: 150 },
+      { id: 'WO-0320', label: 'WO-20260320 (停工待料)', type: 'WorkOrder', x: -200, y: 100 },
+      { id: 'SO-202605', label: 'SO-202605 (违约风险)', type: 'SalesOrder', x: 0, y: 150 },
+      { id: 'SUPP-ANODE', label: '负极供应商 (交期延误)', type: 'Supplier', x: 200, y: 100 },
+      { id: 'LINE-3', label: '涂布三线 (受影响产线)', type: 'ProductionLine', x: 400, y: 100 },
+      { id: 'LOGISTICS-02', label: '跨省物流 (在途:2天)', type: 'Telemetry', x: 400, y: 0 },
     ],
     edges: [
       { id: 'e1', source: 'BOM-LFP', target: 'MAT-ANODE', label: 'requires' },
       { id: 'e2', source: 'BOM-LFP', target: 'PROD-LFP', label: 'defines' },
       { id: 'e3', source: 'WO-0320', target: 'PROD-LFP', label: 'produces' },
       { id: 'e4', source: 'WO-0320', target: 'SO-202605', label: 'fulfills' },
+      { id: 'e5', source: 'MAT-ANODE', target: 'SUPP-ANODE', label: 'supplied_by' },
+      { id: 'e6', source: 'WO-0320', target: 'LINE-3', label: 'assigned_to' },
+      { id: 'e7', source: 'SUPP-ANODE', target: 'LOGISTICS-02', label: 'ships_via' },
     ]
   },
   order_delay: {
@@ -615,11 +677,17 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'WO-0321', label: 'WO-20260321', type: 'WorkOrder', x: -200, y: -100 },
       { id: 'LINE-2', label: '涂布二线', type: 'ProductionLine', x: 200, y: -100 },
       { id: 'FAIL-002', label: '烘箱温度异常', type: 'EquipmentFailure', x: 0, y: 150 },
+      { id: 'CUST-BYD', label: '比亚迪 (客户)', type: 'Customer', x: -200, y: 150 },
+      { id: 'MAINT-URGENT', label: '紧急抢修单', type: 'MaintenanceOrder', x: 200, y: 150 },
+      { id: 'SP-HEATER', label: '加热管备件 (库存:0)', type: 'SparePart', x: 400, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'WO-0321', target: 'SO-202604', label: 'fulfills' },
       { id: 'e2', source: 'WO-0321', target: 'LINE-2', label: 'assigned_to' },
       { id: 'e3', source: 'FAIL-002', target: 'LINE-2', label: 'affects' },
+      { id: 'e4', source: 'SO-202604', target: 'CUST-BYD', label: 'placed_by' },
+      { id: 'e5', source: 'FAIL-002', target: 'MAINT-URGENT', label: 'triggers' },
+      { id: 'e6', source: 'MAINT-URGENT', target: 'SP-HEATER', label: 'requires' },
     ]
   },
   equipment_upgrade: {
@@ -629,11 +697,15 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'COATER-02', label: '涂布机-02', type: 'Device', x: -200, y: -100 },
       { id: 'MAINT-UPGRADE', label: '技改工单-01', type: 'MaintenanceOrder', x: 200, y: -100 },
       { id: 'TECH-LI', label: '李四 (工程师)', type: 'Technician', x: 0, y: 150 },
+      { id: 'WO-0325', label: '受影响生产工单', type: 'WorkOrder', x: -200, y: 150 },
+      { id: 'SP-SENSOR', label: '新型传感器备件', type: 'SparePart', x: 200, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'COATER-02', target: 'LINE-2', label: 'belongs_to' },
       { id: 'e2', source: 'MAINT-UPGRADE', target: 'COATER-02', label: 'upgrades' },
       { id: 'e3', source: 'MAINT-UPGRADE', target: 'TECH-LI', label: 'assigned_to' },
+      { id: 'e4', source: 'MAINT-UPGRADE', target: 'WO-0325', label: 'delays' },
+      { id: 'e5', source: 'MAINT-UPGRADE', target: 'SP-SENSOR', label: 'installs' },
     ]
   },
   process_optimization: {
@@ -643,11 +715,15 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'PROD-NCM', label: 'Cell-NCM-100Ah', type: 'Product', x: -200, y: -100 },
       { id: 'LOT-TEST-01', label: '实验批次-01', type: 'Batch', x: 200, y: -100 },
       { id: 'QI-PERFORMANCE', label: '性能测试', type: 'QualityInspection', x: 0, y: 150 },
+      { id: 'LINE-LAB', label: '实验产线', type: 'ProductionLine', x: -200, y: 150 },
+      { id: 'MAT-NEW-ADDITIVE', label: '新型添加剂', type: 'Material', x: 200, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'RECIPE-002', target: 'PROD-NCM', label: 'defines' },
       { id: 'e2', source: 'LOT-TEST-01', target: 'RECIPE-002', label: 'uses' },
       { id: 'e3', source: 'LOT-TEST-01', target: 'QI-PERFORMANCE', label: 'inspected_by' },
+      { id: 'e4', source: 'LOT-TEST-01', target: 'LINE-LAB', label: 'processed_on' },
+      { id: 'e5', source: 'RECIPE-002', target: 'MAT-NEW-ADDITIVE', label: 'includes' },
     ]
   },
   supplier_evaluation: {
@@ -657,11 +733,15 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'MAT-LITHIUM', label: '碳酸锂', type: 'Material', x: -200, y: -100 },
       { id: 'QI-INCOMING', label: '来料检验', type: 'QualityInspection', x: 200, y: -100 },
       { id: 'LOT-RAW-05', label: '原料批次-05', type: 'Batch', x: 0, y: 150 },
+      { id: 'PO-202602', label: '历史采购单', type: 'WorkOrder', x: -200, y: 150 },
+      { id: 'LOGISTICS-03', label: '物流时效 (平均3天)', type: 'Telemetry', x: 200, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'MAT-LITHIUM', target: 'SUPP-LITHIUM', label: 'supplied_by' },
       { id: 'e2', source: 'LOT-RAW-05', target: 'MAT-LITHIUM', label: 'is_instance_of' },
       { id: 'e3', source: 'LOT-RAW-05', target: 'QI-INCOMING', label: 'inspected_by' },
+      { id: 'e4', source: 'PO-202602', target: 'SUPP-LITHIUM', label: 'purchased_from' },
+      { id: 'e5', source: 'SUPP-LITHIUM', target: 'LOGISTICS-03', label: 'evaluated_by' },
     ]
   },
   logistics_tracking: {
@@ -671,11 +751,15 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'CUST-NIO', label: '蔚来汽车', type: 'Customer', x: -200, y: -100 },
       { id: 'PROD-PACK', label: 'Battery-Pack-100kWh', type: 'Product', x: 200, y: -100 },
       { id: 'FAC-SHANGHAI', label: '上海临港工厂', type: 'Factory', x: 0, y: 150 },
+      { id: 'LOGISTICS-04', label: '冷链运输 (温度:22℃)', type: 'Telemetry', x: -200, y: 150 },
+      { id: 'WH-FINISHED', label: '成品仓 (出库)', type: 'Workshop', x: 200, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'SHIP-009', target: 'CUST-NIO', label: 'delivered_to' },
       { id: 'e2', source: 'SHIP-009', target: 'PROD-PACK', label: 'includes' },
       { id: 'e3', source: 'SHIP-009', target: 'FAC-SHANGHAI', label: 'ships_from' },
+      { id: 'e4', source: 'SHIP-009', target: 'LOGISTICS-04', label: 'tracked_by' },
+      { id: 'e5', source: 'SHIP-009', target: 'WH-FINISHED', label: 'departs_from' },
     ]
   },
   environmental_monitor: {
@@ -685,39 +769,51 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'TEL-TEMP', label: '温湿度传感器', type: 'Telemetry', x: -200, y: -100 },
       { id: 'LOT-INJECT-01', label: '注液批次-01', type: 'Batch', x: 200, y: -100 },
       { id: 'QI-MOISTURE', label: '水分检测', type: 'QualityInspection', x: 0, y: 150 },
+      { id: 'DEVICE-HVAC', label: '空调机组 (高负荷)', type: 'Device', x: -200, y: 150 },
+      { id: 'MAINT-HVAC', label: '空调维保工单', type: 'MaintenanceOrder', x: 200, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'TEL-TEMP', target: 'WS-CLEANROOM', label: 'monitors' },
       { id: 'e2', source: 'LOT-INJECT-01', target: 'WS-CLEANROOM', label: 'processed_in' },
       { id: 'e3', source: 'LOT-INJECT-01', target: 'QI-MOISTURE', label: 'inspected_by' },
+      { id: 'e4', source: 'DEVICE-HVAC', target: 'WS-CLEANROOM', label: 'controls_environment' },
+      { id: 'e5', source: 'MAINT-HVAC', target: 'DEVICE-HVAC', label: 'maintains' },
     ]
   },
   tool_lifespan: {
     name: '模具寿命预警管理 (TOOL-PUNCH-01)',
     nodes: [
       { id: 'TOOL-PUNCH-01', label: '冲压模具-01', type: 'SparePart', x: 0, y: 0 },
-      { id: 'PUNCH-MACHINE', label: '冲压机-05', type: 'Device', x: -200, y: -100 },
-      { id: 'LOT-PUNCH-02', label: '冲压批次-02', type: 'Batch', x: 200, y: -100 },
-      { id: 'QI-DIMENSION', label: '尺寸检测', type: 'QualityInspection', x: 0, y: 150 },
+      { id: 'PUNCH-MACHINE', label: '冲压机-05 (产线:L-006)', type: 'Device', x: -200, y: -100 },
+      { id: 'LOT-PUNCH-02', label: '冲压批次-02 (数量:10000)', type: 'Batch', x: 200, y: -100 },
+      { id: 'QI-DIMENSION', label: '尺寸检测 (毛刺增多)', type: 'QualityInspection', x: 0, y: 150 },
+      { id: 'MAINT-TOOL', label: '模具修磨工单 (耗时:8h)', type: 'MaintenanceOrder', x: -200, y: 150 },
+      { id: 'SP-NEW-TOOL', label: '备用模具 (库存:1, 成本:¥2w)', type: 'SparePart', x: 200, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'TOOL-PUNCH-01', target: 'PUNCH-MACHINE', label: 'installed_on' },
       { id: 'e2', source: 'LOT-PUNCH-02', target: 'PUNCH-MACHINE', label: 'processed_on' },
       { id: 'e3', source: 'LOT-PUNCH-02', target: 'QI-DIMENSION', label: 'inspected_by' },
+      { id: 'e4', source: 'TOOL-PUNCH-01', target: 'MAINT-TOOL', label: 'requires' },
+      { id: 'e5', source: 'MAINT-TOOL', target: 'SP-NEW-TOOL', label: 'replaced_by' },
     ]
   },
   cost_accounting: {
     name: '批次生产成本核算 (LOT-W-002)',
     nodes: [
-      { id: 'LOT-W-002', label: '卷绕批次-002', type: 'Batch', x: 0, y: 0 },
-      { id: 'MAT-FOIL', label: '铜箔/铝箔', type: 'Material', x: -200, y: -100 },
-      { id: 'WO-0322', label: 'WO-20260322', type: 'WorkOrder', x: 200, y: -100 },
-      { id: 'SO-202606', label: 'SO-202606', type: 'SalesOrder', x: 0, y: 150 },
+      { id: 'LOT-W-002', label: '卷绕批次-002 (产线:L-003)', type: 'Batch', x: 0, y: 0 },
+      { id: 'MAT-FOIL', label: '铜箔/铝箔 (成本:¥5000, 供应商:诺德)', type: 'Material', x: -200, y: -100 },
+      { id: 'WO-0322', label: 'WO-20260322 (人工成本:¥800)', type: 'WorkOrder', x: 200, y: -100 },
+      { id: 'SO-202606', label: 'SO-202606 (客户:小鹏)', type: 'SalesOrder', x: 0, y: 150 },
+      { id: 'TEL-ENERGY', label: '能耗数据 (电费:¥300)', type: 'Telemetry', x: -200, y: 150 },
+      { id: 'QI-SCRAP', label: '废品记录 (损失:¥200)', type: 'QualityInspection', x: 200, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'LOT-W-002', target: 'MAT-FOIL', label: 'consumes' },
       { id: 'e2', source: 'LOT-W-002', target: 'WO-0322', label: 'belongs_to' },
       { id: 'e3', source: 'WO-0322', target: 'SO-202606', label: 'fulfills' },
+      { id: 'e4', source: 'LOT-W-002', target: 'TEL-ENERGY', label: 'consumes_energy' },
+      { id: 'e5', source: 'LOT-W-002', target: 'QI-SCRAP', label: 'generates_scrap' },
     ]
   },
   safety_incident: {
@@ -725,13 +821,17 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
     nodes: [
       { id: 'INCIDENT-001', label: '电池热失控事故', type: 'EquipmentFailure', x: 0, y: 0 },
       { id: 'WS-TESTING', label: '测试车间', type: 'Workshop', x: -200, y: -100 },
-      { id: 'TECH-ZHAO', label: '赵六 (测试员)', type: 'Technician', x: 200, y: -100 },
-      { id: 'TEST-CHAMBER', label: '防爆测试箱', type: 'Device', x: 0, y: 150 },
+      { id: 'TECH-ZHAO', label: '赵六 (测试员, 受伤)', type: 'Technician', x: 200, y: -100 },
+      { id: 'TEST-CHAMBER', label: '防爆测试箱 (损坏)', type: 'Device', x: 0, y: 150 },
+      { id: 'LOT-TEST-05', label: '测试批次-05 (起火源)', type: 'Batch', x: -200, y: 150 },
+      { id: 'MAINT-REPAIR', label: '设备大修工单', type: 'MaintenanceOrder', x: 200, y: 150 },
     ],
     edges: [
       { id: 'e1', source: 'INCIDENT-001', target: 'WS-TESTING', label: 'occurred_in' },
       { id: 'e2', source: 'INCIDENT-001', target: 'TECH-ZHAO', label: 'reported_by' },
       { id: 'e3', source: 'INCIDENT-001', target: 'TEST-CHAMBER', label: 'involved' },
+      { id: 'e4', source: 'LOT-TEST-05', target: 'TEST-CHAMBER', label: 'tested_in' },
+      { id: 'e5', source: 'INCIDENT-001', target: 'MAINT-REPAIR', label: 'triggers' },
     ]
   }
 };
@@ -1345,7 +1445,7 @@ export default function OntologyModeling() {
       {/* Main Content with Vertical Tabs */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Navigation (Stepper) */}
-        <div className="w-48 bg-gray-50 border-r border-gray-200 flex flex-col shrink-0 py-4">
+        <div className="w-48 bg-gray-50 border-r border-gray-200 flex flex-col shrink-0 py-4 z-20">
           <div className="px-4 mb-4">
             <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400">构建流程</h3>
           </div>
