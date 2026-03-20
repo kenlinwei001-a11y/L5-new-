@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Play, Plus, Search, Settings, Database, GitMerge, BrainCircuit, Terminal, FlaskConical, Layers, ZoomIn, ZoomOut, Maximize, X } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Play, Plus, Search, Settings, Database, GitMerge, BrainCircuit, Terminal, FlaskConical, Layers, ZoomIn, ZoomOut, Maximize, X, List, LayoutGrid } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const nodeCategories = [
@@ -16,30 +16,79 @@ const nodeTypes: Record<string, string[]> = {
   data: ['数据获取节点', '流数据连接节点', '特征工程节点', '数据过滤节点'],
   semantic: ['本体映射节点', '实体识别节点', '关系抽取节点'],
   reasoning: ['异常检测节点', '根因分析节点', '趋势预测节点'],
-  decision: ['优化决策节点', '规则引擎节点', '多目标规划节点'],
+  decision: ['产销匹配推演 Agent', '设备异常诊断 Agent', '目标实例: 生产订单', '目标实例: 维保工单', '优化决策节点', '规则引擎节点', '多目标规划节点'],
   simulation: ['物理仿真节点', '业务推演节点', 'What-If分析节点'],
   execution: ['动作下发节点', 'API调用节点', '工单生成节点'],
   control: ['条件分支节点', '循环控制节点', '并行网关节点']
 };
 
-const initialNodes = [
-  { id: 'n1', type: '数据获取节点', category: 'data', x: 50, y: 150 },
-  { id: 'n2', type: '本体映射节点', category: 'semantic', x: 250, y: 150 },
-  { id: 'n3', type: '异常检测节点', category: 'reasoning', x: 450, y: 100 },
-  { id: 'n4', type: '优化决策节点', category: 'decision', x: 650, y: 150 },
-  { id: 'n5', type: '动作下发节点', category: 'execution', x: 850, y: 150 },
+const workflows = [
+  { id: 'wf1', name: '产销协同优化工作流', description: '基于订单波动自动调整生产计划' },
+  { id: 'wf2', name: '设备预测性维护工作流', description: '监控设备状态并自动生成维保工单' },
+  { id: 'wf3', name: '供应链风险预警工作流', description: '识别供应链潜在风险并推荐替代方案' }
 ];
 
-const sampleEdges = [
-  { from: 'n1', to: 'n2' },
-  { from: 'n2', to: 'n3' },
-  { from: 'n3', to: 'n4' },
-  { from: 'n4', to: 'n5' },
-];
+const workflowData: Record<string, { nodes: any[], edges: any[] }> = {
+  wf1: {
+    nodes: [
+      { id: 'n1', type: '订单数据接入', category: 'data', x: 50, y: 150 },
+      { id: 'n2', type: '订单解析与映射', category: 'semantic', x: 250, y: 150 },
+      { id: 'n3', type: '产能瓶颈检测', category: 'reasoning', x: 450, y: 100 },
+      { id: 'n4', type: '产销匹配推演 Agent', category: 'decision', x: 650, y: 100 },
+      { id: 'n4_target', type: '目标实例: 生产订单', category: 'decision', x: 650, y: 200 },
+      { id: 'n5', type: '排产计划下发', category: 'execution', x: 850, y: 150 },
+    ],
+    edges: [
+      { from: 'n1', to: 'n2' },
+      { from: 'n2', to: 'n3' },
+      { from: 'n3', to: 'n4' },
+      { from: 'n3', to: 'n4_target' },
+      { from: 'n4', to: 'n5' },
+      { from: 'n4_target', to: 'n5' },
+    ]
+  },
+  wf2: {
+    nodes: [
+      { id: 'n1', type: 'IoT传感器数据', category: 'data', x: 50, y: 150 },
+      { id: 'n2', type: '设备状态映射', category: 'semantic', x: 250, y: 150 },
+      { id: 'n3', type: '设备异常诊断 Agent', category: 'decision', x: 450, y: 100 },
+      { id: 'n3_target', type: '目标实例: 维保工单', category: 'decision', x: 450, y: 200 },
+      { id: 'n4', type: '维保工单生成', category: 'execution', x: 650, y: 150 },
+    ],
+    edges: [
+      { from: 'n1', to: 'n2' },
+      { from: 'n2', to: 'n3' },
+      { from: 'n2', to: 'n3_target' },
+      { from: 'n3', to: 'n4' },
+      { from: 'n3_target', to: 'n4' },
+    ]
+  },
+  wf3: {
+    nodes: [
+      { id: 'n1', type: '数据获取节点', category: 'data', x: 50, y: 150 },
+      { id: 'n2', type: '本体映射节点', category: 'semantic', x: 250, y: 150 },
+      { id: 'n3', type: '异常检测节点', category: 'reasoning', x: 450, y: 100 },
+      { id: 'n4', type: '优化决策节点', category: 'decision', x: 650, y: 150 },
+      { id: 'n5', type: '动作下发节点', category: 'execution', x: 850, y: 150 },
+    ],
+    edges: [
+      { from: 'n1', to: 'n2' },
+      { from: 'n2', to: 'n3' },
+      { from: 'n3', to: 'n4' },
+      { from: 'n4', to: 'n5' },
+    ]
+  }
+};
+
+  // Clean up initialNodes and sampleEdges as they are no longer used directly
+
 
 export default function WorkflowStudio() {
   const [activeCategory, setActiveCategory] = useState('data');
-  const [nodes, setNodes] = useState(initialNodes);
+  const [activeTab, setActiveTab] = useState<'workflows' | 'nodes'>('workflows');
+  const [selectedWorkflowId, setSelectedWorkflowId] = useState('wf1');
+  const [nodes, setNodes] = useState(workflowData['wf1'].nodes);
+  const [edges, setEdges] = useState(workflowData['wf1'].edges);
   const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
   
   // Dragging & Panning State
@@ -147,6 +196,13 @@ export default function WorkflowStudio() {
     setNodes(nds => [...nds, newNode]);
   };
 
+  useEffect(() => {
+    if (selectedWorkflowId && workflowData[selectedWorkflowId]) {
+      setNodes(workflowData[selectedWorkflowId].nodes);
+      setEdges(workflowData[selectedWorkflowId].edges);
+    }
+  }, [selectedWorkflowId]);
+
   return (
     <div className="h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
       {/* Header */}
@@ -181,46 +237,95 @@ export default function WorkflowStudio() {
       </div>
 
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - Nodes */}
+        {/* Left Sidebar - Nodes & Workflows */}
         <div className="w-64 border-r border-gray-200 bg-gray-50/30 flex flex-col shrink-0 z-20">
-          <div className="p-3 border-b border-gray-200">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
-              <input 
-                type="text" 
-                placeholder="搜索 100+ 节点..." 
-                className="w-full pl-8 pr-3 py-1.5 bg-white border border-gray-200 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              />
-            </div>
+          <div className="flex border-b border-gray-200">
+            <button
+              onClick={() => setActiveTab('workflows')}
+              className={cn(
+                "flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors",
+                activeTab === 'workflows' ? "text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/30" : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+              )}
+            >
+              <List size={14} />
+              工作流清单
+            </button>
+            <button
+              onClick={() => setActiveTab('nodes')}
+              className={cn(
+                "flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors",
+                activeTab === 'nodes' ? "text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/30" : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+              )}
+            >
+              <LayoutGrid size={14} />
+              节点库
+            </button>
           </div>
-          <div className="flex-1 overflow-y-auto p-2 space-y-4">
-            {nodeCategories.map(cat => (
-              <div key={cat.id}>
-                <div 
-                  className="flex items-center gap-2 px-2 py-1.5 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 rounded-md"
-                  onClick={() => setActiveCategory(cat.id)}
+
+          {activeTab === 'workflows' ? (
+            <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              {workflows.map(wf => (
+                <div
+                  key={wf.id}
+                  onClick={() => setSelectedWorkflowId(wf.id)}
+                  className={cn(
+                    "p-3 rounded-lg border cursor-pointer transition-all",
+                    selectedWorkflowId === wf.id
+                      ? "bg-indigo-50 border-indigo-200 shadow-sm"
+                      : "bg-white border-gray-200 hover:border-indigo-300 hover:shadow-sm"
+                  )}
                 >
-                  <cat.icon size={14} className={cat.color} />
-                  {cat.label}
+                  <h3 className={cn("text-xs font-semibold mb-1", selectedWorkflowId === wf.id ? "text-indigo-700" : "text-gray-900")}>
+                    {wf.name}
+                  </h3>
+                  <p className="text-[10px] text-gray-500 leading-relaxed line-clamp-2">
+                    {wf.description}
+                  </p>
                 </div>
-                {activeCategory === cat.id && (
-                  <div className="mt-1 space-y-1 pl-6 pr-2">
-                    {nodeTypes[cat.id]?.map((node, idx) => (
-                      <div 
-                        key={idx} 
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, node, cat.id)}
-                        className="px-2 py-1.5 bg-white border border-gray-200 rounded text-[11px] text-gray-600 cursor-grab hover:border-indigo-300 hover:shadow-sm transition-all flex items-center justify-between"
-                      >
-                        <span className="font-mono">{node}</span>
-                        <Plus size={12} className="text-gray-400" />
-                      </div>
-                    ))}
-                  </div>
-                )}
+              ))}
+            </div>
+          ) : (
+            <>
+              <div className="p-3 border-b border-gray-200">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+                  <input 
+                    type="text" 
+                    placeholder="搜索 100+ 节点..." 
+                    className="w-full pl-8 pr-3 py-1.5 bg-white border border-gray-200 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  />
+                </div>
               </div>
-            ))}
-          </div>
+              <div className="flex-1 overflow-y-auto p-2 space-y-4">
+                {nodeCategories.map(cat => (
+                  <div key={cat.id}>
+                    <div 
+                      className="flex items-center gap-2 px-2 py-1.5 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 rounded-md"
+                      onClick={() => setActiveCategory(cat.id)}
+                    >
+                      <cat.icon size={14} className={cat.color} />
+                      {cat.label}
+                    </div>
+                    {activeCategory === cat.id && (
+                      <div className="mt-1 space-y-1 pl-6 pr-2">
+                        {nodeTypes[cat.id]?.map((node, idx) => (
+                          <div 
+                            key={idx} 
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, node, cat.id)}
+                            className="px-2 py-1.5 bg-white border border-gray-200 rounded text-[11px] text-gray-600 cursor-grab hover:border-indigo-300 hover:shadow-sm transition-all flex items-center justify-between"
+                          >
+                            <span className="font-mono">{node}</span>
+                            <Plus size={12} className="text-gray-400" />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Canvas Area */}
@@ -252,7 +357,7 @@ export default function WorkflowStudio() {
           >
             {/* SVG for Edges */}
             <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none">
-              {sampleEdges.map((edge, idx) => {
+              {edges.map((edge, idx) => {
                 const fromNode = nodes.find(n => n.id === edge.from);
                 const toNode = nodes.find(n => n.id === edge.to);
                 if (!fromNode || !toNode) return null;

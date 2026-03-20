@@ -1004,6 +1004,45 @@ export default function OntologyModeling() {
 
   const handleRelMouseUp = () => setRelDragState(null);
 
+  const handleDragStart = (e: React.DragEvent, type: string) => {
+    e.dataTransfer.setData('application/ontology-node', type);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const type = e.dataTransfer.getData('application/ontology-node');
+    if (!type) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) * 0.5;
+    const y = (e.clientY - rect.top - rect.height / 2) * 0.5;
+
+    let color = 'indigo';
+    if (['Material', 'Product', 'SparePart', 'BOM'].includes(type)) color = 'emerald';
+    else if (['WorkOrder', 'SalesOrder', 'MaintenanceOrder', 'PurchaseOrder', 'Batch'].includes(type)) color = 'purple';
+    else if (['QualityInspection', 'Telemetry', 'Incident', 'EquipmentFailure'].includes(type)) color = 'rose';
+    else if (['Process', 'Recipe'].includes(type)) color = 'amber';
+    else if (['Worker', 'Supplier', 'Customer', 'Technician'].includes(type)) color = 'blue';
+    else if (['Warehouse', 'Logistics'].includes(type)) color = 'gray';
+
+    const newNode = {
+      id: `${type}-${Date.now()}`,
+      label: `新建 ${type}`,
+      type: type,
+      color,
+      x,
+      y
+    };
+
+    setRelNodes([...relNodes, newNode]);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
   const handleSaveRel = () => {
     if (activeRelId) {
       setRelEdges(prev => prev.map(e => e.id === activeRelId ? { ...e, ...relFormData } : e));
@@ -1276,13 +1315,115 @@ export default function OntologyModeling() {
 
   const renderRelationsTab = () => (
     <div className="flex-1 flex overflow-hidden">
+      {/* Left Sidebar: Toolbox */}
+      <div className="w-64 border-r border-gray-200 bg-white flex flex-col shrink-0 z-20">
+        <div className="p-3 border-b border-gray-200 bg-gray-50/50">
+          <h3 className="text-xs font-semibold text-gray-900 flex items-center gap-2">
+            <Box size={14} className="text-indigo-600" />
+            实体节点库
+          </h3>
+          <p className="text-[10px] text-gray-500 mt-1">拖拽节点到右侧画布中</p>
+        </div>
+        <div className="flex-1 overflow-y-auto p-3 space-y-4">
+          <div>
+            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">制造资源</div>
+            <div className="space-y-1.5">
+              {['Factory', 'Workshop', 'ProductionLine', 'Device'].map(type => (
+                <div
+                  key={type}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, type)}
+                  className="px-3 py-2 bg-indigo-50 border border-indigo-100 rounded-md text-xs text-indigo-700 cursor-grab hover:bg-indigo-100 hover:border-indigo-300 transition-colors flex items-center justify-between"
+                >
+                  <span>{type}</span>
+                  <Plus size={12} className="text-indigo-400" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">产品定义</div>
+            <div className="space-y-1.5">
+              {['Product', 'Material', 'BOM'].map(type => (
+                <div
+                  key={type}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, type)}
+                  className="px-3 py-2 bg-emerald-50 border border-emerald-100 rounded-md text-xs text-emerald-700 cursor-grab hover:bg-emerald-100 hover:border-emerald-300 transition-colors flex items-center justify-between"
+                >
+                  <span>{type}</span>
+                  <Plus size={12} className="text-emerald-400" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">生产执行</div>
+            <div className="space-y-1.5">
+              {['SalesOrder', 'WorkOrder', 'Batch'].map(type => (
+                <div
+                  key={type}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, type)}
+                  className="px-3 py-2 bg-purple-50 border border-purple-100 rounded-md text-xs text-purple-700 cursor-grab hover:bg-purple-100 hover:border-purple-300 transition-colors flex items-center justify-between"
+                >
+                  <span>{type}</span>
+                  <Plus size={12} className="text-purple-400" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">设备与维护</div>
+            <div className="space-y-1.5">
+              {['EquipmentFailure', 'MaintenanceOrder', 'SparePart', 'Telemetry'].map(type => (
+                <div
+                  key={type}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, type)}
+                  className="px-3 py-2 bg-rose-50 border border-rose-100 rounded-md text-xs text-rose-700 cursor-grab hover:bg-rose-100 hover:border-rose-300 transition-colors flex items-center justify-between"
+                >
+                  <span>{type}</span>
+                  <Plus size={12} className="text-rose-400" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">组织与人员</div>
+            <div className="space-y-1.5">
+              {['Technician', 'Supplier', 'Customer'].map(type => (
+                <div
+                  key={type}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, type)}
+                  className="px-3 py-2 bg-blue-50 border border-blue-100 rounded-md text-xs text-blue-700 cursor-grab hover:bg-blue-100 hover:border-blue-300 transition-colors flex items-center justify-between"
+                >
+                  <span>{type}</span>
+                  <Plus size={12} className="text-blue-400" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Middle: Graph */}
       <div 
         className="flex-1 bg-[#f8f9fa] relative overflow-hidden flex flex-col border-r border-gray-200"
         onMouseMove={handleRelMouseMove}
         onMouseUp={handleRelMouseUp}
         onMouseLeave={handleRelMouseUp}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
       >
+        {relNodes.length === 0 && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 pointer-events-none">
+            <Box size={48} className="mb-4 text-gray-300" />
+            <h3 className="text-lg font-bold text-gray-500 mb-2">画布为空</h3>
+            <p className="text-sm">请从左侧工具箱拖拽实体节点到此处，或点击下方“添加节点”按钮。</p>
+          </div>
+        )}
         <div className="absolute top-4 left-4 z-10 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 flex items-center gap-4">
           <div className="flex items-center gap-2">
             {isEditingGraphName ? (
