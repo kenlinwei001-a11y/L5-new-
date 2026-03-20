@@ -17,16 +17,16 @@ import {
 import { cn } from '../lib/utils';
 
 const MOCK_DEVICES = [
-  { id: 'DEV-CNC-001', name: 'CNC加工中心-A', type: 'CNC', status: 'online', health: 'good', lastHeartbeat: '10s ago', protocol: 'OPC-UA' },
-  { id: 'DEV-CNC-002', name: 'CNC加工中心-B', type: 'CNC', status: 'online', health: 'warning', lastHeartbeat: '12s ago', protocol: 'OPC-UA' },
-  { id: 'DEV-ROB-001', name: '装配机器人-1', type: 'Robot', status: 'offline', health: 'error', lastHeartbeat: '5m ago', protocol: 'MQTT' },
-  { id: 'DEV-AGV-001', name: '搬运AGV-1', type: 'AGV', status: 'online', health: 'good', lastHeartbeat: '2s ago', protocol: 'HTTP' },
+  { id: 'DEV-CNC-001', name: 'CNC加工中心-A', type: 'CNC', status: '在线', health: '良好', lastHeartbeat: '10秒前', protocol: 'OPC-UA' },
+  { id: 'DEV-CNC-002', name: 'CNC加工中心-B', type: 'CNC', status: '在线', health: '警告', lastHeartbeat: '12秒前', protocol: 'OPC-UA' },
+  { id: 'DEV-ROB-001', name: '装配机器人-1', type: 'Robot', status: '离线', health: '异常', lastHeartbeat: '5分钟前', protocol: 'MQTT' },
+  { id: 'DEV-AGV-001', name: '搬运AGV-1', type: 'AGV', status: '在线', health: '良好', lastHeartbeat: '2秒前', protocol: 'HTTP' },
 ];
 
 const MOCK_ALERTS = [
-  { id: 1, time: '10:23:45', device: 'DEV-ROB-001', type: 'Connection Lost', level: 'high', status: 'unread' },
-  { id: 2, time: '09:15:20', device: 'DEV-CNC-002', type: 'High Temperature', level: 'medium', status: 'read' },
-  { id: 3, time: '08:05:11', device: 'DEV-AGV-001', type: 'Battery Low', level: 'low', status: 'read' },
+  { id: 1, time: '10:23:45', device: 'DEV-ROB-001', type: '连接丢失', level: '高', status: '未读' },
+  { id: 2, time: '09:15:20', device: 'DEV-CNC-002', type: '温度过高', level: '中', status: '已读' },
+  { id: 3, time: '08:05:11', device: 'DEV-AGV-001', type: '电量低', level: '低', status: '已读' },
 ];
 
 export default function IoTDeviceManagement() {
@@ -130,11 +130,11 @@ export default function IoTDeviceManagement() {
         </div>
         <div className="divide-y divide-gray-100">
           {MOCK_ALERTS.map(alert => (
-            <div key={alert.id} className={cn("p-3 flex items-center justify-between hover:bg-gray-50", alert.status === 'unread' ? 'bg-rose-50/30' : '')}>
+            <div key={alert.id} className={cn("p-3 flex items-center justify-between hover:bg-gray-50", alert.status === '未读' ? 'bg-rose-50/30' : '')}>
               <div className="flex items-center gap-3">
                 <div className={cn(
                   "w-2 h-2 rounded-full",
-                  alert.level === 'high' ? 'bg-rose-500' : alert.level === 'medium' ? 'bg-amber-500' : 'bg-blue-500'
+                  alert.level === '高' ? 'bg-rose-500' : alert.level === '中' ? 'bg-amber-500' : 'bg-blue-500'
                 )} />
                 <span className="text-sm font-medium text-gray-900">{alert.device}</span>
                 <span className="text-sm text-gray-600">{alert.type}</span>
@@ -189,7 +189,7 @@ export default function IoTDeviceManagement() {
               <div className="flex flex-col items-end gap-1">
                 <span className={cn(
                   "w-2 h-2 rounded-full",
-                  device.status === 'online' ? 'bg-emerald-500' : 'bg-gray-400'
+                  device.status === '在线' ? 'bg-emerald-500' : 'bg-gray-400'
                 )} />
                 <span className="text-[10px] text-gray-400">{device.protocol}</span>
               </div>
@@ -235,8 +235,8 @@ export default function IoTDeviceManagement() {
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">所属产线</label>
                   <select className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                    <option>Line-A (机加工)</option>
-                    <option>Line-B (装配)</option>
+                    <option>产线-A (机加工)</option>
+                    <option>产线-B (装配)</option>
                   </select>
                 </div>
               </div>
@@ -296,10 +296,10 @@ export default function IoTDeviceManagement() {
                   <tbody className="divide-y divide-gray-100">
                     <tr>
                       <td className="px-4 py-2 font-mono text-xs">ns=2;s=SpindleSpeed</td>
-                      <td className="px-4 py-2 text-gray-500">Double</td>
+                      <td className="px-4 py-2 text-gray-500">双精度浮点数</td>
                       <td className="px-4 py-2">
                         <select className="w-full px-2 py-1 border border-gray-300 rounded text-xs">
-                          <option>Equipment.Spindle.Speed</option>
+                          <option>设备.主轴.转速</option>
                         </select>
                       </td>
                       <td className="px-4 py-2">
@@ -308,10 +308,10 @@ export default function IoTDeviceManagement() {
                     </tr>
                     <tr>
                       <td className="px-4 py-2 font-mono text-xs">ns=2;s=Temperature</td>
-                      <td className="px-4 py-2 text-gray-500">Double</td>
+                      <td className="px-4 py-2 text-gray-500">双精度浮点数</td>
                       <td className="px-4 py-2">
                         <select className="w-full px-2 py-1 border border-gray-300 rounded text-xs">
-                          <option>Equipment.Status.Temperature</option>
+                          <option>设备.状态.温度</option>
                         </select>
                       </td>
                       <td className="px-4 py-2">

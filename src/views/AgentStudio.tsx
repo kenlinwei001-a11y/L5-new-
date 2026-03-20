@@ -15,7 +15,7 @@ const moduleDetails: Record<ModuleKey, any> = {
     color: 'text-slate-700',
     bgColor: 'bg-slate-100',
     borderColor: 'border-slate-300',
-    description: 'IoT设备 / MES / ERP / 工单 / 生产日志 / 外部API',
+    description: 'IoT设备 / MES / ERP / PLM / QMS / SCADA / CRM / WMS / SRM / 碳排放计算系统 / 外部API',
     responsibilities: [
       '数据实时采集',
       '事件/状态上报'
@@ -29,7 +29,7 @@ const moduleDetails: Record<ModuleKey, any> = {
     color: 'text-blue-700',
     bgColor: 'bg-blue-50',
     borderColor: 'border-blue-200',
-    description: 'Object Layer (业务对象) & Semantic Layer (指标语义 & 本体)',
+    description: '业务对象 & 语义层 (指标语义 & 本体)',
     responsibilities: [
       '对象实体：设备/产线/工单/产品/事件',
       '属性/状态/生命周期/行为规则',
@@ -37,7 +37,7 @@ const moduleDetails: Record<ModuleKey, any> = {
       '图谱 + 本体 + 业务语言统一'
     ],
     output: '标准化/结构化数据，Agent可直接理解',
-    relations: 'IoT、MES、ERP数据接入 -> Object Layer + Semantic Layer'
+    relations: 'IoT、MES、ERP数据接入 -> 业务对象层 + 语义层'
   },
   reasoning: {
     title: '推理 & 因果层',
@@ -45,7 +45,7 @@ const moduleDetails: Record<ModuleKey, any> = {
     color: 'text-purple-700',
     bgColor: 'bg-purple-50',
     borderColor: 'border-purple-200',
-    description: 'Reasoning Layer (因果推理与决策上下文生成)',
+    description: '因果推理与决策上下文生成',
     responsibilities: [
       '异常 -> 关联对象 -> 关键指标 -> 推理链 -> 决策建议 -> 执行动作',
       '图数据库支撑Agent因果推理'
@@ -54,7 +54,7 @@ const moduleDetails: Record<ModuleKey, any> = {
     relations: '标准化数据 -> 推理层 -> 决策上下文/推理链 -> Agent层'
   },
   agent: {
-    title: '智能体 (Agent Runtime)',
+    title: '智能体运行时',
     icon: Cpu,
     color: 'text-indigo-700',
     bgColor: 'bg-indigo-50',
@@ -75,7 +75,7 @@ const moduleDetails: Record<ModuleKey, any> = {
     color: 'text-amber-700',
     bgColor: 'bg-amber-50',
     borderColor: 'border-amber-300',
-    description: 'Modular Control/Computation Platform (工具注册与执行)',
+    description: '模块化控制与计算平台 (工具注册与执行)',
     responsibilities: [
       '封装数据查询/计算/动作/优化/仿真工具',
       '提供标准接口供Agent调用',
@@ -100,14 +100,14 @@ const moduleDetails: Record<ModuleKey, any> = {
     relations: '实际执行动作或计算，输出结果回写数据层/Agent记忆。可被多个Workflow/MCP/Agent共享。'
   },
   workflow: {
-    title: 'Workflow Studio',
+    title: '工作流编排',
     icon: GitMerge,
     color: 'text-rose-700',
     bgColor: 'bg-rose-50',
     borderColor: 'border-rose-300',
-    description: '流程编排和执行 (可视化DAG)',
+    description: '流程编排和执行 (可视化有向无环图)',
     responsibilities: [
-      '将Agent + MCP + Skill组合成可执行DAG',
+      '将Agent + MCP + Skill组合成可执行流程',
       '定义多步骤决策逻辑',
       '支持条件分支、循环、异常处理'
     ],
@@ -115,7 +115,7 @@ const moduleDetails: Record<ModuleKey, any> = {
     relations: 'Agent可被Workflow调度，也可触发Workflow。Workflow串联多步决策。'
   },
   simulation: {
-    title: 'Simulation / What-if 推演',
+    title: '仿真与推演',
     icon: MonitorPlay,
     color: 'text-cyan-700',
     bgColor: 'bg-cyan-50',
@@ -135,7 +135,7 @@ const moduleDetails: Record<ModuleKey, any> = {
     color: 'text-teal-700',
     bgColor: 'bg-teal-50',
     borderColor: 'border-teal-200',
-    description: 'Action / Execution & Visualization Layer',
+    description: '执行与可视化层',
     responsibilities: [
       'MES / ERP / IoT 控制执行',
       '自动更新对象状态',
@@ -222,7 +222,7 @@ export default function AgentStudio() {
                 <ArrowDown size={12} />
              </div>
              <div className="absolute -left-4 top-1/2 -translate-y-1/2 -rotate-90 text-[8px] font-mono text-slate-400 tracking-widest whitespace-nowrap uppercase">
-                Closed-Loop Learning
+                闭环学习
              </div>
           </div>
 

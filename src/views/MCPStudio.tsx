@@ -3,10 +3,10 @@ import { Terminal, Plus, Search, CheckCircle2, XCircle, Play, Settings, Code2, S
 import { cn } from '../lib/utils';
 
 const tools = [
-  { id: 'mcp-001', name: 'get_equipment_status', server: 'MES_Server', status: 'online', auth: 'OAuth2', calls: 12500 },
-  { id: 'mcp-002', name: 'update_work_order', server: 'ERP_Server', status: 'online', auth: 'API Key', calls: 3400 },
-  { id: 'mcp-003', name: 'fetch_sensor_data', server: 'IoT_Hub', status: 'offline', auth: 'mTLS', calls: 89000 },
-  { id: 'mcp-004', name: 'run_simulation', server: 'Sim_Engine', status: 'online', auth: 'JWT', calls: 450 },
+  { id: 'mcp-001', name: '获取设备状态', server: 'MES服务器', status: 'online', auth: 'OAuth2', calls: 12500 },
+  { id: 'mcp-002', name: '更新工单', server: 'ERP服务器', status: 'online', auth: 'API 密钥', calls: 3400 },
+  { id: 'mcp-003', name: '获取传感器数据', server: 'IoT中心', status: 'offline', auth: 'mTLS', calls: 89000 },
+  { id: 'mcp-004', name: '运行仿真', server: '仿真引擎', status: 'online', auth: 'JWT', calls: 450 },
 ];
 
 export default function MCPStudio() {
@@ -21,7 +21,7 @@ export default function MCPStudio() {
             <Terminal size={18} />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-gray-900">Tool Center (MCP)</h2>
+            <h2 className="text-sm font-semibold text-gray-900">工具中心 (MCP)</h2>
             <p className="text-[10px] text-gray-500 font-mono">注册 • 测试 • 权限控制</p>
           </div>
         </div>
@@ -55,7 +55,7 @@ export default function MCPStudio() {
               )}
             >
               <Database size={16} />
-              工具注册表 (Registry)
+              工具注册表
             </button>
             <button
               onClick={() => setActiveTab('test')}
@@ -65,7 +65,7 @@ export default function MCPStudio() {
               )}
             >
               <Play size={16} />
-              测试沙盒 (Sandbox)
+              测试沙盒
             </button>
             <button
               onClick={() => setActiveTab('auth')}
@@ -75,7 +75,7 @@ export default function MCPStudio() {
               )}
             >
               <ShieldAlert size={16} />
-              权限控制 (Auth)
+              权限控制
             </button>
           </nav>
         </div>
@@ -87,8 +87,8 @@ export default function MCPStudio() {
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-semibold text-gray-900">MCP 工具列表</h3>
                 <div className="flex gap-2">
-                  <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs text-gray-500 font-mono">Total: 128</span>
-                  <span className="px-2 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded text-xs font-mono">Online: 120</span>
+                  <span className="px-2 py-1 bg-white border border-gray-200 rounded text-xs text-gray-500 font-mono">总计: 128</span>
+                  <span className="px-2 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded text-xs font-mono">在线: 120</span>
                 </div>
               </div>
               
@@ -96,11 +96,11 @@ export default function MCPStudio() {
                 <table className="w-full text-left text-sm">
                   <thead className="bg-gray-50/50 border-b border-gray-200 text-xs uppercase tracking-wider text-gray-500">
                     <tr>
-                      <th className="px-6 py-3 font-medium">工具名称 (Name)</th>
-                      <th className="px-6 py-3 font-medium">所属服务 (Server)</th>
-                      <th className="px-6 py-3 font-medium">状态 (Status)</th>
-                      <th className="px-6 py-3 font-medium">认证方式 (Auth)</th>
-                      <th className="px-6 py-3 font-medium text-right">调用次数 (Calls)</th>
+                      <th className="px-6 py-3 font-medium">工具名称</th>
+                      <th className="px-6 py-3 font-medium">所属服务</th>
+                      <th className="px-6 py-3 font-medium">状态</th>
+                      <th className="px-6 py-3 font-medium">认证方式</th>
+                      <th className="px-6 py-3 font-medium text-right">调用次数</th>
                       <th className="px-6 py-3 font-medium text-right">操作</th>
                     </tr>
                   </thead>
@@ -118,7 +118,7 @@ export default function MCPStudio() {
                             tool.status === 'online' ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
                           )}>
                             {tool.status === 'online' ? <CheckCircle2 size={12} /> : <XCircle size={12} />}
-                            {tool.status.toUpperCase()}
+                            {tool.status === 'online' ? '在线' : '离线'}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-gray-600 font-mono text-xs">{tool.auth}</td>
@@ -144,12 +144,12 @@ export default function MCPStudio() {
               <div className="grid grid-cols-2 gap-6 flex-1 min-h-0">
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col overflow-hidden">
                   <div className="p-3 border-b border-gray-200 bg-gray-50/50 font-mono text-xs font-semibold text-gray-700">
-                    Request Payload (JSON)
+                    请求内容 (JSON)
                   </div>
                   <div className="flex-1 p-4 bg-gray-900 text-green-400 font-mono text-sm overflow-y-auto">
                     <pre>
 {`{
-  "tool": "get_equipment_status",
+  "tool": "获取设备状态",
   "args": {
     "id": "EQ-001"
   }
@@ -159,26 +159,26 @@ export default function MCPStudio() {
                   <div className="p-3 border-t border-gray-200 bg-gray-50/50 flex justify-end">
                     <button className="px-4 py-1.5 bg-emerald-600 text-white font-medium rounded-lg flex items-center gap-2 hover:bg-emerald-700 transition-colors text-xs shadow-sm">
                       <Play size={14} />
-                      Send Request
+                      发送请求
                     </button>
                   </div>
                 </div>
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm flex flex-col overflow-hidden">
                   <div className="p-3 border-b border-gray-200 bg-gray-50/50 font-mono text-xs font-semibold text-gray-700">
-                    Response
+                    响应内容
                   </div>
                   <div className="flex-1 p-4 bg-gray-50 text-gray-800 font-mono text-sm overflow-y-auto border-t border-gray-200">
                     <pre>
 {`{
-  "status": "success",
-  "data": {
-    "id": "EQ-001",
-    "state": "running",
-    "temperature": 92.5,
-    "vibration": 0.05,
-    "last_maintenance": "2023-10-15"
+  "状态": "成功",
+  "数据": {
+    "编号": "EQ-001",
+    "运行状态": "运行中",
+    "温度": 92.5,
+    "振动": 0.05,
+    "上次维护时间": "2023-10-15"
   },
-  "latency_ms": 45
+  "延迟_毫秒": 45
 }`}
                     </pre>
                   </div>

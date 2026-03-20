@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AlertTriangle, ArrowRight, CheckCircle2, Play, Activity, Thermometer, Zap, BrainCircuit } from 'lucide-react';
+import { AlertTriangle, ArrowRight, CheckCircle2, Play, Activity, Thermometer, Zap, BrainCircuit, Network, Globe } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 const anomalies = [
@@ -25,14 +25,59 @@ const anomalies = [
   }
 ];
 
+const decisionDetails: Record<string, any> = {
+  'AN-001': {
+    reasoning: [
+      { type: 'anomaly', icon: Thermometer, color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200', text: '异常：设备温度异常升高 (92°C)' },
+      { type: 'relation', icon: ArrowRight, color: 'text-gray-600', border: 'border-gray-300', text: '关联对象：设备A / 影响工单 ORD-2026-101 (客户: 宁德时代)' },
+      { type: 'metric', icon: ArrowRight, color: 'text-gray-600', border: 'border-gray-300', text: '关键指标：良率预计下降 5%，交期延迟风险增加 30%' },
+      { type: 'reasoning', icon: BrainCircuit, color: 'text-blue-600', border: 'border-blue-300', text: '因果推理：温度升高导致焊接稳定性下降，进而影响电池包密封性。' },
+      { type: 'impact', icon: Globe, color: 'text-purple-600', border: 'border-purple-300', text: '全局影响：排产调整将导致后续 3 个订单顺延，需紧急采购 500kg 冷却液。' },
+      { type: 'decision', icon: Zap, color: 'text-emerald-600', border: 'border-emerald-300', text: '决策建议：降低功率 10% + 转移 20% 负载至 EQ-002 + 触发紧急采购 + 自动通知受影响客户。' }
+    ],
+    execution: {
+      title: '多系统协同执行方案',
+      actions: [
+        '调用 MES: 降低 EQ-001 焊接功率 10%，将 20% 负载转移至 EQ-002',
+        '调用 ERP/APS: 重新计算排产，顺延 ORD-2026-102, 103, 104',
+        '调用 SRM: 自动生成 500kg 冷却液紧急采购单',
+        '调用 CRM: 生成客户延期预警通知草稿'
+      ],
+      risk: '中风险 (85% 置信度)',
+      riskColor: 'text-orange-600'
+    }
+  },
+  'AN-002': {
+    reasoning: [
+      { type: 'anomaly', icon: Activity, color: 'text-orange-500', bg: 'bg-orange-50', border: 'border-orange-200', text: '异常：涂布机负载异常波动 (0.85)' },
+      { type: 'relation', icon: ArrowRight, color: 'text-gray-600', border: 'border-gray-300', text: '关联对象：设备 EQ-045 / 影响批次 BAT-Y-20260318' },
+      { type: 'metric', icon: ArrowRight, color: 'text-gray-600', border: 'border-gray-300', text: '关键指标：涂布厚度均匀性下降，废品率上升 2%' },
+      { type: 'reasoning', icon: BrainCircuit, color: 'text-blue-600', border: 'border-blue-300', text: '因果推理：浆料粘度变化导致泵送阻力不稳，引起负载波动。' },
+      { type: 'impact', icon: Globe, color: 'text-purple-600', border: 'border-purple-300', text: '全局影响：废品率上升将导致当前批次物料消耗增加，可能引发后续批次缺料。' },
+      { type: 'decision', icon: Zap, color: 'text-emerald-600', border: 'border-emerald-300', text: '决策建议：微调泵送压力 + 增加在线测厚频次 + 预警物料消耗。' }
+    ],
+    execution: {
+      title: '质量控制与设备调整',
+      actions: [
+        '调用 SCADA: 微调 EQ-045 供料泵压力参数 (-5%)',
+        '调用 QMS: 将在线测厚仪采样频次从 1次/分钟 提升至 3次/分钟',
+        '调用 WMS: 锁定额外 5% 的正极材料作为当前批次备用'
+      ],
+      risk: '低风险 (92% 置信度)',
+      riskColor: 'text-emerald-600'
+    }
+  }
+};
+
 export default function DecisionSpace() {
   const [selectedId, setSelectedId] = useState('AN-001');
   const selected = anomalies.find(a => a.id === selectedId);
+  const details = decisionDetails[selectedId];
 
   return (
     <div className="h-full flex flex-col gap-6">
       <header>
-        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">决策空间 (Decision Space)</h2>
+        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">决策空间</h2>
         <p className="text-sm text-gray-500 mt-1">智能体驱动的异常处理与执行</p>
       </header>
 
@@ -97,26 +142,16 @@ export default function DecisionSpace() {
                 <section>
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-4">推理路径</h4>
                   <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm">
-                    <div className="flex items-center gap-3 text-gray-700 mb-3">
-                      <Thermometer size={16} className="text-red-500" />
-                      <span>异常：设备温度异常升高</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-600 mb-3 pl-4 border-l border-gray-300 ml-2">
-                      <ArrowRight size={14} />
-                      <span>关联对象：设备A / 工单123</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-600 mb-3 pl-4 border-l border-gray-300 ml-2">
-                      <ArrowRight size={14} />
-                      <span>关键指标：良率下降5%</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-blue-600 mb-3 pl-4 border-l border-blue-300 ml-2">
-                      <BrainCircuit size={16} />
-                      <span>因果推理：温度升高影响焊接稳定性</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-emerald-600 pl-4 border-l border-emerald-300 ml-2">
-                      <Zap size={16} />
-                      <span>决策建议：降低功率 + 排产调整</span>
-                    </div>
+                    {details.reasoning.map((step: any, index: number) => {
+                      const Icon = step.icon;
+                      const isLast = index === details.reasoning.length - 1;
+                      return (
+                        <div key={index} className={cn("flex items-center gap-3 mb-3", index > 0 ? "pl-4 border-l ml-2" : "", step.border)}>
+                          <Icon size={16} className={step.color} />
+                          <span className={cn(index === 0 ? "text-gray-700" : index === details.reasoning.length - 1 ? step.color : "text-gray-600")}>{step.text}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </section>
 
@@ -126,16 +161,16 @@ export default function DecisionSpace() {
                   <div className="bg-white border border-gray-200 shadow-sm rounded-lg p-5">
                     <div className="flex items-start justify-between">
                       <div>
-                        <h5 className="text-gray-900 font-semibold mb-2">调用MES修改参数</h5>
+                        <h5 className="text-gray-900 font-semibold mb-2">{details.execution.title}</h5>
                         <ul className="space-y-2 text-sm text-gray-600 font-mono">
-                          <li>• 目标对象: EQ-001</li>
-                          <li>• 执行动作: 降低焊接功率 10%</li>
-                          <li>• 联动动作: 将 20% 负载转移至 EQ-002</li>
+                          {details.execution.actions.map((action: string, index: number) => (
+                            <li key={index}>• {action}</li>
+                          ))}
                         </ul>
                       </div>
                       <div className="text-right">
                         <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">风险评估</div>
-                        <div className="text-emerald-600 font-mono text-sm font-medium">低风险 (98% 置信度)</div>
+                        <div className={cn("font-mono text-sm font-medium", details.execution.riskColor)}>{details.execution.risk}</div>
                       </div>
                     </div>
                     
@@ -145,7 +180,7 @@ export default function DecisionSpace() {
                         自动执行
                       </button>
                       <button className="px-6 bg-white hover:bg-gray-50 text-gray-700 font-medium py-2.5 rounded-lg border border-gray-300 transition-colors shadow-sm">
-                        人工干预 (Override)
+                        人工干预
                       </button>
                     </div>
                   </div>

@@ -89,7 +89,7 @@ export default function AgentWorkspace({ onNavigate }: AgentWorkspaceProps) {
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex-1">
             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-6 flex items-center gap-2">
               <Network size={16} className="text-indigo-600" />
-              智能体协同闭环 (Agent Collaboration Loop)
+              智能体协同闭环
             </h3>
             
             <div className="relative h-64 bg-slate-50 rounded-xl border border-slate-100 p-6 flex flex-col items-center justify-center overflow-hidden">
@@ -104,7 +104,7 @@ export default function AgentWorkspace({ onNavigate }: AgentWorkspaceProps) {
                     className="w-32 p-3 bg-white border-2 border-rose-200 rounded-xl shadow-sm flex flex-col items-center gap-2 cursor-pointer hover:border-rose-400 transition-colors"
                   >
                     <GitMerge size={24} className="text-rose-600" />
-                    <span className="text-xs font-bold text-gray-700">Workflow 编排</span>
+                    <span className="text-xs font-bold text-gray-700">工作流编排</span>
                   </div>
                   <ArrowRight size={20} className="text-gray-400 rotate-90" />
                   <div 
@@ -112,7 +112,7 @@ export default function AgentWorkspace({ onNavigate }: AgentWorkspaceProps) {
                     className="w-32 p-3 bg-indigo-600 text-white rounded-xl shadow-md flex flex-col items-center gap-2 cursor-pointer hover:bg-indigo-700 transition-colors relative"
                   >
                     <Bot size={24} />
-                    <span className="text-xs font-bold">Agent 决策中枢</span>
+                    <span className="text-xs font-bold">智能体决策中枢</span>
                     <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white animate-pulse"></div>
                   </div>
                 </div>
@@ -210,7 +210,7 @@ export default function AgentWorkspace({ onNavigate }: AgentWorkspaceProps) {
                 onClick={() => handleNavigate('agent')}
                 className="w-full py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
               >
-                <Play size={14} /> 进入 Agent 控制台
+                <Play size={14} /> 进入智能体控制台
               </button>
             </div>
           </div>

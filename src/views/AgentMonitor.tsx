@@ -5,14 +5,14 @@ import { cn } from '../lib/utils';
 const activeTasks = [
   { id: 'TASK-8902', name: 'EQ-001 温度异常诊断与处理', agent: 'Planner-01', status: 'running', progress: 65, startTime: '10:23:45' },
   { id: 'TASK-8901', name: '周度 OEE 报表生成', agent: 'Analyst-02', status: 'completed', progress: 100, startTime: '09:00:00' },
-  { id: 'TASK-8903', name: '物料短缺风险评估', agent: 'Critic-01', status: 'pending', progress: 0, startTime: '-' },
+  { id: 'TASK-8903', name: '物料短缺风险评估', agent: 'Critic-01', status: 'running', progress: 40, startTime: '11:20:00' },
   { id: 'TASK-8904', name: '产线-A 激光传感器校准', agent: 'Operator-03', status: 'running', progress: 30, startTime: '11:10:00' },
   { id: 'TASK-8905', name: '电池包-Y 质量抽检分析', agent: 'Analyst-01', status: 'completed', progress: 100, startTime: '08:30:00' },
   { id: 'TASK-8906', name: '涂布机-A 涂布厚度异常预警', agent: 'Monitor-02', status: 'running', progress: 80, startTime: '10:45:00' },
-  { id: 'TASK-8907', name: '自动排产计划优化', agent: 'Planner-02', status: 'pending', progress: 0, startTime: '-' },
+  { id: 'TASK-8907', name: '自动排产计划优化', agent: 'Planner-02', status: 'running', progress: 20, startTime: '11:30:00' },
   { id: 'TASK-8908', name: '仓储 AGV 路径冲突解决', agent: 'Coordinator-01', status: 'completed', progress: 100, startTime: '09:15:00' },
   { id: 'TASK-8909', name: '客户订单交期预测', agent: 'Analyst-03', status: 'running', progress: 45, startTime: '10:50:00' },
-  { id: 'TASK-8910', name: '能源消耗异常波动排查', agent: 'Monitor-01', status: 'pending', progress: 0, startTime: '-' },
+  { id: 'TASK-8910', name: '能源消耗异常波动排查', agent: 'Monitor-01', status: 'running', progress: 10, startTime: '11:45:00' },
 ];
 
 const taskReasoningSteps: Record<string, any[]> = {
@@ -32,7 +32,10 @@ const taskReasoningSteps: Record<string, any[]> = {
     { id: 5, type: 'reasoning', content: '报表生成完毕，准备发送给生产主管。', status: 'done', time: '09:00:45' },
   ],
   'TASK-8903': [
-    { id: 1, type: 'context', content: '等待触发条件：接收到最新的 ERP 物料库存快照...', status: 'pending', time: '-' },
+    { id: 1, type: 'context', content: '接收到最新的 ERP 物料库存快照，发现负极材料库存低于安全阈值...', status: 'done', time: '11:20:05' },
+    { id: 2, type: 'tool', content: '调用工具: analyze_inventory_impact(material="anode", current_stock=5000)', status: 'done', time: '11:20:15' },
+    { id: 3, type: 'reasoning', content: '评估影响：当前库存仅能维持 2 天生产，预计影响 3 个进行中的工单。', status: 'done', time: '11:20:30' },
+    { id: 4, type: 'tool', content: '调用工具: query_supplier_lead_time(material="anode")', status: 'running', time: '11:20:45' },
   ],
   'TASK-8904': [
     { id: 1, type: 'context', content: '接收到产线-A 激光传感器精度下降的警报...', status: 'done', time: '11:10:00' },
@@ -52,7 +55,8 @@ const taskReasoningSteps: Record<string, any[]> = {
     { id: 3, type: 'tool', content: '调用工具: adjust_coating_gap(machine_id="COATER-A", delta=-2)', status: 'running', time: '10:45:15' },
   ],
   'TASK-8907': [
-    { id: 1, type: 'context', content: '等待触发条件：每日 18:00 定时触发排产计算...', status: 'pending', time: '-' },
+    { id: 1, type: 'context', content: '触发排产计算：接收到新的插单请求及设备状态更新...', status: 'done', time: '11:30:05' },
+    { id: 2, type: 'tool', content: '调用工具: run_aps_solver(constraints=["delivery_date", "machine_availability"])', status: 'running', time: '11:30:15' },
   ],
   'TASK-8908': [
     { id: 1, type: 'context', content: '检测到 AGV-05 和 AGV-12 在通道 C 发生路径冲突预警...', status: 'done', time: '09:15:00' },
@@ -67,7 +71,8 @@ const taskReasoningSteps: Record<string, any[]> = {
     { id: 4, type: 'tool', content: '调用工具: simulate_production_schedule(order_id="ORD-2026-992")', status: 'running', time: '10:50:20' },
   ],
   'TASK-8910': [
-    { id: 1, type: 'context', content: '等待触发条件：车间总能耗超过基线 15%...', status: 'pending', time: '-' },
+    { id: 1, type: 'context', content: '车间总能耗超过基线 15%，触发异常排查...', status: 'done', time: '11:45:05' },
+    { id: 2, type: 'tool', content: '调用工具: fetch_energy_consumption_breakdown(facility="workshop_1")', status: 'running', time: '11:45:15' },
   ]
 };
 
@@ -81,7 +86,7 @@ export default function AgentMonitor() {
   return (
     <div className="h-full flex flex-col gap-6">
       <header>
-        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">Agent 控制台</h2>
+        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">智能体控制台</h2>
         <p className="text-sm text-gray-500 mt-1">多智能体协同执行与推理链监控</p>
       </header>
 
@@ -90,7 +95,7 @@ export default function AgentMonitor() {
         <div className="col-span-4 flex flex-col bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
           <div className="p-4 border-b border-gray-200 bg-gray-50/50 flex justify-between items-center">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">当前任务队列</h3>
-            <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded text-[10px] font-medium">{activeTaskCount} Active</span>
+            <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded text-[10px] font-medium">{activeTaskCount} 运行中</span>
           </div>
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {activeTasks.map((task) => (
@@ -115,7 +120,7 @@ export default function AgentMonitor() {
                     {task.status === 'running' && <Loader2 size={10} className="animate-spin" />}
                     {task.status === 'completed' && <CheckCircle2 size={10} />}
                     {task.status === 'pending' && <Clock size={10} />}
-                    {task.status.toUpperCase()}
+                    {task.status === 'running' ? '运行中' : task.status === 'completed' ? '已完成' : '等待中'}
                   </span>
                 </div>
                 <div className="font-medium text-gray-900 text-sm mb-1 truncate">{task.name}</div>
@@ -150,11 +155,11 @@ export default function AgentMonitor() {
           <div className="p-4 border-b border-gray-200 bg-gray-50/50 flex justify-between items-center shrink-0">
             <div className="flex items-center gap-3">
               <BrainCircuit className="text-indigo-600" size={18} />
-              <h3 className="text-sm font-semibold text-gray-900">Token 级推理链 (Reasoning Chain)</h3>
+              <h3 className="text-sm font-semibold text-gray-900">Token 级推理链</h3>
             </div>
             <div className="flex items-center gap-2 text-xs text-gray-500 font-mono">
               <Clock size={14} />
-              Started: {currentTask?.startTime || '-'}
+              开始时间: {currentTask?.startTime || '-'}
             </div>
           </div>
 
@@ -196,7 +201,7 @@ export default function AgentMonitor() {
                         {step.status === 'running' && (
                           <div className="flex items-center gap-2 mt-2 text-gray-400 text-xs font-mono">
                             <Loader2 size={12} className="animate-spin" />
-                            Waiting for tool response...
+                            等待工具响应...
                           </div>
                         )}
                       </div>

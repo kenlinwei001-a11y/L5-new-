@@ -9,10 +9,10 @@ const skills = [
     category: '决策',
     rating: 4.8,
     downloads: 1250,
-    author: 'Data Science Team',
+    author: '数据科学团队',
     description: '通过分析设备数据，自动生成排产优化方案，提升整体设备效率。',
     roi: '+15% 产能',
-    tags: ['排产优化', '设备数据', 'calc_oee']
+    tags: ['排产优化', '设备数据', '计算OEE']
   },
   {
     id: 'sk-002',
@@ -20,7 +20,7 @@ const skills = [
     category: '分析',
     rating: 4.9,
     downloads: 3400,
-    author: 'Quality Control',
+    author: '质量控制团队',
     description: '基于历史异常案例和传感器数据，快速定位质量问题的根本原因。',
     roi: '-30% 诊断时间',
     tags: ['质量控制', '异常检测', '图谱推理']
@@ -31,7 +31,7 @@ const skills = [
     category: '控制',
     rating: 4.5,
     downloads: 890,
-    author: 'Process Engineering',
+    author: '工艺工程团队',
     description: '根据实时环境数据和产品规格，动态调整生产线工艺参数。',
     roi: '-5% 废品率',
     tags: ['闭环控制', '工艺参数', '实时调整']
@@ -42,7 +42,7 @@ const skills = [
     category: '仿真',
     rating: 4.7,
     downloads: 2100,
-    author: 'Supply Chain Ops',
+    author: '供应链运营团队',
     description: '模拟不同供应链中断场景下的库存和交付风险，生成应急预案。',
     roi: '-20% 缺货风险',
     tags: ['供应链', '风险评估', '蒙特卡洛']
@@ -109,7 +109,7 @@ export default function SkillMarket() {
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <h3 className="text-base font-semibold text-gray-900">{skill.name}</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">by {skill.author}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">作者: {skill.author}</p>
                   </div>
                   <span className={cn(
                     "px-2 py-1 rounded text-[10px] font-medium",

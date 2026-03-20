@@ -32,7 +32,7 @@ export default function DataIntegrationHub() {
   const renderPipeline = () => (
     <div className="p-6 h-full overflow-y-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">数据流管线图 (Data Pipeline)</h2>
+        <h2 className="text-lg font-semibold text-gray-900">数据流管线图</h2>
         <div className="flex gap-2">
           <button className="px-3 py-1.5 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium">
             新建管线
@@ -48,21 +48,21 @@ export default function DataIntegrationHub() {
             <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center border border-blue-200 shadow-sm">
               <Database size={24} />
             </div>
-            <span className="text-xs font-medium text-gray-600">数据源 (Source)</span>
+            <span className="text-xs font-medium text-gray-600">数据源</span>
           </div>
           <ArrowRight className="text-gray-400" />
           <div className="flex flex-col items-center gap-2">
             <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center border border-amber-200 shadow-sm">
               <GitCommit size={24} />
             </div>
-            <span className="text-xs font-medium text-gray-600">转换 (Transform)</span>
+            <span className="text-xs font-medium text-gray-600">转换</span>
           </div>
           <ArrowRight className="text-gray-400" />
           <div className="flex flex-col items-center gap-2">
             <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center border border-emerald-200 shadow-sm">
               <Database size={24} />
             </div>
-            <span className="text-xs font-medium text-gray-600">目标 (Sink)</span>
+            <span className="text-xs font-medium text-gray-600">目标</span>
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@ export default function DataIntegrationHub() {
                     "bg-rose-50 text-rose-700"
                   )}>
                     {pl.status === 'running' ? <Play size={12} /> : pl.status === 'stopped' ? <Square size={12} /> : <AlertTriangle size={12} />}
-                    {pl.status.toUpperCase()}
+                    {pl.status === 'running' ? '运行中' : pl.status === 'stopped' ? '已停止' : '异常'}
                   </span>
                 </td>
                 <td className="px-4 py-3 text-gray-600 font-mono text-xs">{pl.latency}</td>
@@ -118,7 +118,7 @@ export default function DataIntegrationHub() {
   const renderTasks = () => (
     <div className="p-6 h-full overflow-y-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">任务调度 (Task Scheduling)</h2>
+        <h2 className="text-lg font-semibold text-gray-900">任务调度</h2>
         <div className="flex gap-2">
           <button className="px-3 py-1.5 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium">
             新建任务
@@ -149,7 +149,7 @@ export default function DataIntegrationHub() {
                     task.status === 'success' ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-700"
                   )}>
                     {task.status === 'success' ? <CheckCircle2 size={12} /> : <XCircle size={12} />}
-                    {task.status.toUpperCase()}
+                    {task.status === 'success' ? '成功' : '失败'}
                   </span>
                 </td>
                 <td className="px-4 py-3">

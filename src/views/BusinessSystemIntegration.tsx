@@ -16,39 +16,39 @@ import { cn } from '../lib/utils';
 
 const MOCK_SYSTEMS = [
   // 核心生产与计划
-  { id: 'SYS-MES-01', name: '核心制造执行系统 (MES)', type: 'MES', status: 'connected', lastSync: '2m ago', protocol: 'REST API' },
-  { id: 'SYS-ERP-01', name: '企业资源计划 (ERP)', type: 'ERP', status: 'connected', lastSync: '1h ago', protocol: 'SOAP' },
-  { id: 'SYS-APS-01', name: '高级排程系统 (APS)', type: 'APS', status: 'connected', lastSync: '5m ago', protocol: 'GraphQL' },
+  { id: 'SYS-MES-01', name: '核心制造执行系统', type: 'MES', status: '已连接', lastSync: '2分钟前', protocol: 'REST API' },
+  { id: 'SYS-ERP-01', name: '企业资源计划', type: 'ERP', status: '已连接', lastSync: '1小时前', protocol: 'SOAP' },
+  { id: 'SYS-APS-01', name: '高级排程系统', type: 'APS', status: '已连接', lastSync: '5分钟前', protocol: 'GraphQL' },
   
   // 仓储与物流
-  { id: 'SYS-WMS-01', name: '智能仓储系统 (WMS)', type: 'WMS', status: 'error', lastSync: '1d ago', protocol: 'REST API' },
-  { id: 'SYS-WCS-01', name: '仓储控制系统 (WCS)', type: 'WCS', status: 'connected', lastSync: '1m ago', protocol: 'TCP/IP' },
-  { id: 'SYS-AGV-01', name: 'AGV/AMR 调度系统', type: 'Logistics', status: 'connected', lastSync: '10s ago', protocol: 'MQTT' },
+  { id: 'SYS-WMS-01', name: '智能仓储系统', type: 'WMS', status: '异常', lastSync: '1天前', protocol: 'REST API' },
+  { id: 'SYS-WCS-01', name: '仓储控制系统', type: 'WCS', status: '已连接', lastSync: '1分钟前', protocol: 'TCP/IP' },
+  { id: 'SYS-AGV-01', name: 'AGV/AMR调度系统', type: 'Logistics', status: '已连接', lastSync: '10秒前', protocol: 'MQTT' },
   
   // 质量与研发
-  { id: 'SYS-QMS-01', name: '质量管理系统 (QMS)', type: 'QMS', status: 'connected', lastSync: '15m ago', protocol: 'REST API' },
-  { id: 'SYS-LIMS-01', name: '实验室信息管理系统 (LIMS)', type: 'LIMS', status: 'connected', lastSync: '30m ago', protocol: 'REST API' },
-  { id: 'SYS-PLM-01', name: '产品生命周期管理 (PLM)', type: 'PLM', status: 'connected', lastSync: '2h ago', protocol: 'OData' },
-  { id: 'SYS-SPC-01', name: '统计过程控制系统 (SPC)', type: 'SPC', status: 'connected', lastSync: '1m ago', protocol: 'gRPC' },
+  { id: 'SYS-QMS-01', name: '质量管理系统', type: 'QMS', status: '已连接', lastSync: '15分钟前', protocol: 'REST API' },
+  { id: 'SYS-LIMS-01', name: '实验室信息管理系统', type: 'LIMS', status: '已连接', lastSync: '30分钟前', protocol: 'REST API' },
+  { id: 'SYS-PLM-01', name: '产品生命周期管理', type: 'PLM', status: '已连接', lastSync: '2小时前', protocol: 'OData' },
+  { id: 'SYS-SPC-01', name: '统计过程控制系统', type: 'SPC', status: '已连接', lastSync: '1分钟前', protocol: 'gRPC' },
   
   // 设备与资产管理
-  { id: 'SYS-EAM-01', name: '企业资产管理系统 (EAM)', type: 'EAM', status: 'connected', lastSync: '10m ago', protocol: 'REST API' },
-  { id: 'SYS-CMMS-01', name: '设备维修工单系统 (CMMS)', type: 'CMMS', status: 'connected', lastSync: '5m ago', protocol: 'REST API' },
-  { id: 'SYS-MRO-01', name: '备品备件库存系统 (MRO)', type: 'Inventory', status: 'connected', lastSync: '1h ago', protocol: 'REST API' },
-  { id: 'SYS-SCADA-01', name: '数据采集与监视控制 (SCADA)', type: 'IoT', status: 'connected', lastSync: '1s ago', protocol: 'OPC UA' },
+  { id: 'SYS-EAM-01', name: '企业资产管理系统', type: 'EAM', status: '已连接', lastSync: '10分钟前', protocol: 'REST API' },
+  { id: 'SYS-CMMS-01', name: '设备维修工单系统', type: 'CMMS', status: '已连接', lastSync: '5分钟前', protocol: 'REST API' },
+  { id: 'SYS-MRO-01', name: '备品备件库存系统', type: 'Inventory', status: '已连接', lastSync: '1小时前', protocol: 'REST API' },
+  { id: 'SYS-SCADA-01', name: '数据采集与监视控制', type: 'IoT', status: '已连接', lastSync: '1秒前', protocol: 'OPC UA' },
   
   // 人力与排班
-  { id: 'SYS-HRMS-01', name: '人力资源管理系统 (HRMS)', type: 'HR', status: 'connected', lastSync: '12h ago', protocol: 'REST API' },
-  { id: 'SYS-WFM-PROD', name: '生产员工排程系统 (WFM-Prod)', type: 'WFM', status: 'connected', lastSync: '1h ago', protocol: 'REST API' },
-  { id: 'SYS-WFM-MAINT', name: '维修人员排程系统 (WFM-Maint)', type: 'WFM', status: 'connected', lastSync: '1h ago', protocol: 'REST API' },
+  { id: 'SYS-HRMS-01', name: '人力资源管理系统', type: 'HR', status: '已连接', lastSync: '12小时前', protocol: 'REST API' },
+  { id: 'SYS-WFM-PROD', name: '生产员工排程系统', type: 'WFM', status: '已连接', lastSync: '1小时前', protocol: 'REST API' },
+  { id: 'SYS-WFM-MAINT', name: '维修人员排程系统', type: 'WFM', status: '已连接', lastSync: '1小时前', protocol: 'REST API' },
   
   // 供应链与客户
-  { id: 'SYS-SRM-01', name: '供应商关系管理 (SRM)', type: 'SRM', status: 'connected', lastSync: '4h ago', protocol: 'REST API' },
-  { id: 'SYS-CRM-01', name: '客户关系管理 (CRM)', type: 'CRM', status: 'connected', lastSync: '1h ago', protocol: 'REST API' },
+  { id: 'SYS-SRM-01', name: '供应商关系管理', type: 'SRM', status: '已连接', lastSync: '4小时前', protocol: 'REST API' },
+  { id: 'SYS-CRM-01', name: '客户关系管理', type: 'CRM', status: '已连接', lastSync: '1小时前', protocol: 'REST API' },
   
   // 厂务与环境
-  { id: 'SYS-EMS-01', name: '能源管理系统 (EMS)', type: 'EMS', status: 'connected', lastSync: '5m ago', protocol: 'MQTT' },
-  { id: 'SYS-EHS-01', name: '环境健康安全系统 (EHS)', type: 'EHS', status: 'connected', lastSync: '1d ago', protocol: 'REST API' },
+  { id: 'SYS-EMS-01', name: '能源管理系统', type: 'EMS', status: '已连接', lastSync: '5分钟前', protocol: 'MQTT' },
+  { id: 'SYS-EHS-01', name: '环境健康安全系统', type: 'EHS', status: '已连接', lastSync: '1天前', protocol: 'REST API' },
 ];
 
 const MOCK_LOGS = [
@@ -101,7 +101,7 @@ export default function BusinessSystemIntegration() {
               <div className="flex flex-col items-end gap-1">
                 <span className={cn(
                   "w-2 h-2 rounded-full",
-                  sys.status === 'connected' ? 'bg-emerald-500' : 'bg-rose-500'
+                  sys.status === '已连接' ? 'bg-emerald-500' : 'bg-rose-500'
                 )} />
                 <span className="text-[10px] text-gray-400">{sys.protocol}</span>
               </div>
@@ -144,26 +144,26 @@ export default function BusinessSystemIntegration() {
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">系统类型</label>
                   <select defaultValue={selectedSystem.type} className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                    <option value="MES">MES (制造执行)</option>
-                    <option value="ERP">ERP (企业资源计划)</option>
-                    <option value="WMS">WMS (智能仓储)</option>
-                    <option value="WCS">WCS (仓储控制)</option>
-                    <option value="APS">APS (高级排程)</option>
-                    <option value="QMS">QMS (质量管理)</option>
-                    <option value="LIMS">LIMS (实验室信息管理)</option>
-                    <option value="PLM">PLM (产品生命周期)</option>
-                    <option value="SPC">SPC (统计过程控制)</option>
-                    <option value="EAM">EAM (企业资产管理)</option>
-                    <option value="CMMS">CMMS (设备维修工单)</option>
-                    <option value="Inventory">Inventory (备品备件库存)</option>
-                    <option value="IoT">IoT/SCADA (数据采集与监视)</option>
-                    <option value="HR">HRMS (人力资源)</option>
-                    <option value="WFM">WFM (劳动力排程)</option>
-                    <option value="SRM">SRM (供应商关系管理)</option>
-                    <option value="CRM">CRM (客户关系管理)</option>
-                    <option value="EMS">EMS (能源管理)</option>
-                    <option value="EHS">EHS (环境健康安全)</option>
-                    <option value="Logistics">Logistics (物流与AGV调度)</option>
+                    <option value="MES">制造执行</option>
+                    <option value="ERP">企业资源计划</option>
+                    <option value="WMS">智能仓储</option>
+                    <option value="WCS">仓储控制</option>
+                    <option value="APS">高级排程</option>
+                    <option value="QMS">质量管理</option>
+                    <option value="LIMS">实验室信息管理</option>
+                    <option value="PLM">产品生命周期</option>
+                    <option value="SPC">统计过程控制</option>
+                    <option value="EAM">企业资产管理</option>
+                    <option value="CMMS">设备维修工单</option>
+                    <option value="Inventory">备品备件库存</option>
+                    <option value="IoT">数据采集与监视</option>
+                    <option value="HR">人力资源</option>
+                    <option value="WFM">劳动力排程</option>
+                    <option value="SRM">供应商关系管理</option>
+                    <option value="CRM">客户关系管理</option>
+                    <option value="EMS">能源管理</option>
+                    <option value="EHS">环境健康安全</option>
+                    <option value="Logistics">物流与AGV调度</option>
                   </select>
                 </div>
               </div>
@@ -189,12 +189,12 @@ export default function BusinessSystemIntegration() {
                   <label className="block text-xs font-medium text-gray-700 mb-1">认证方式</label>
                   <select className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     <option value="OAuth2">OAuth 2.0</option>
-                    <option value="API Key">API Key</option>
-                    <option value="Basic">Basic Auth</option>
+                    <option value="API Key">API 密钥</option>
+                    <option value="Basic">基础认证</option>
                   </select>
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Base URL</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">基础 URL</label>
                   <input type="text" defaultValue="https://api.enterprise.com/v1/mes" className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" />
                 </div>
               </div>
@@ -222,7 +222,7 @@ export default function BusinessSystemIntegration() {
                       <td className="px-4 py-2 font-mono text-xs text-gray-500">POST /webhook/workorder/create</td>
                       <td className="px-4 py-2">
                         <select className="w-full px-2 py-1 border border-gray-300 rounded text-xs">
-                          <option>WorkOrder.Create</option>
+                          <option>工单创建</option>
                         </select>
                       </td>
                       <td className="px-4 py-2">
@@ -234,7 +234,7 @@ export default function BusinessSystemIntegration() {
                       <td className="px-4 py-2 font-mono text-xs text-gray-500">POST /webhook/workorder/complete</td>
                       <td className="px-4 py-2">
                         <select className="w-full px-2 py-1 border border-gray-300 rounded text-xs">
-                          <option>WorkOrder.Complete</option>
+                          <option>工单完成</option>
                         </select>
                       </td>
                       <td className="px-4 py-2">

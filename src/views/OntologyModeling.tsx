@@ -3,7 +3,8 @@ import {
   Database, Plus, Search, CheckCircle2, GitMerge, Link2, Layers, Cpu, 
   ChevronRight, ChevronDown, Box, FileText, Terminal, Play,
   Wand2, Save, Server, Table2, Sparkles, ArrowRight, Network, Settings,
-  Activity, ShieldCheck, Wrench, Users, Headset, Truck, FileSpreadsheet, AlertTriangle
+  Activity, ShieldCheck, Wrench, Users, Headset, Truck, FileSpreadsheet, AlertTriangle,
+  Trash2, Edit3, X
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -458,14 +459,14 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'TECH-ZHANG', label: '张三 (高级维修工)', type: 'Technician', x: 300, y: 0 },
     ],
     edges: [
-      { id: 'e1', source: 'FAIL-001', target: 'COATER-01', label: 'occurs_on' },
-      { id: 'e2', source: 'COATER-01', target: 'LINE-1', label: 'belongs_to' },
-      { id: 'e3', source: 'FAIL-001', target: 'MAINT-NEW', label: 'triggers' },
-      { id: 'e4', source: 'COATER-01', target: 'MAINT-HIST', label: 'has_history' },
-      { id: 'e5', source: 'MAINT-NEW', target: 'SP-ROLLER-05', label: 'consumes' },
-      { id: 'e6', source: 'SP-ROLLER-05', target: 'WH-SPARE', label: 'stored_in' },
-      { id: 'e7', source: 'SP-ROLLER-05', target: 'SUPP-MECH', label: 'supplied_by' },
-      { id: 'e8', source: 'MAINT-NEW', target: 'TECH-ZHANG', label: 'assigned_to' },
+      { id: 'e1', source: 'FAIL-001', target: 'COATER-01', label: '发生于' },
+      { id: 'e2', source: 'COATER-01', target: 'LINE-1', label: '属于' },
+      { id: 'e3', source: 'FAIL-001', target: 'MAINT-NEW', label: '触发' },
+      { id: 'e4', source: 'COATER-01', target: 'MAINT-HIST', label: '拥有历史' },
+      { id: 'e5', source: 'MAINT-NEW', target: 'SP-ROLLER-05', label: '消耗' },
+      { id: 'e6', source: 'SP-ROLLER-05', target: 'WH-SPARE', label: '存储于' },
+      { id: 'e7', source: 'SP-ROLLER-05', target: 'SUPP-MECH', label: '由...供应' },
+      { id: 'e8', source: 'MAINT-NEW', target: 'TECH-ZHANG', label: '分配给' },
     ]
   },
   line_schedule: {
@@ -481,13 +482,13 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'COATER-01', label: '涂布机-01 (运行中)', type: 'Device', x: -400, y: 0 },
     ],
     edges: [
-      { id: 'e1', source: 'WO-0318', target: 'LINE-A', label: 'assigned_to' },
-      { id: 'e2', source: 'WO-0318', target: 'PROD-LFP', label: 'produces' },
-      { id: 'e3', source: 'WO-0318', target: 'SO-202603', label: 'fulfills' },
-      { id: 'e4', source: 'SO-202603', target: 'CUST-TESLA', label: 'placed_by' },
-      { id: 'e5', source: 'WO-0318', target: 'MAT-SLURRY', label: 'requires' },
-      { id: 'e6', source: 'LINE-A', target: 'SHIFT-A', label: 'operated_by' },
-      { id: 'e7', source: 'COATER-01', target: 'LINE-A', label: 'belongs_to' },
+      { id: 'e1', source: 'WO-0318', target: 'LINE-A', label: '分配给' },
+      { id: 'e2', source: 'WO-0318', target: 'PROD-LFP', label: '生产' },
+      { id: 'e3', source: 'WO-0318', target: 'SO-202603', label: '履行' },
+      { id: 'e4', source: 'SO-202603', target: 'CUST-TESLA', label: '由...下达' },
+      { id: 'e5', source: 'WO-0318', target: 'MAT-SLURRY', label: '需要' },
+      { id: 'e6', source: 'LINE-A', target: 'SHIFT-A', label: '由...操作' },
+      { id: 'e7', source: 'COATER-01', target: 'LINE-A', label: '属于' },
     ]
   },
   quality_trace: {
@@ -503,13 +504,13 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'WO-0315', label: '生产工单-0315', type: 'WorkOrder', x: 0, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'LOT-C-001', target: 'QI-001', label: 'inspected_by' },
-      { id: 'e2', source: 'LOT-C-001', target: 'COATER-01', label: 'processed_on' },
-      { id: 'e3', source: 'COATER-01', target: 'TEL-TEMP', label: 'generates' },
-      { id: 'e4', source: 'LOT-C-001', target: 'MAT-ANODE', label: 'consumes' },
-      { id: 'e5', source: 'MAT-ANODE', target: 'SUPP-LITHIUM', label: 'supplied_by' },
-      { id: 'e6', source: 'LOT-C-001', target: 'TECH-LI', label: 'operated_by' },
-      { id: 'e7', source: 'LOT-C-001', target: 'WO-0315', label: 'belongs_to' },
+      { id: 'e1', source: 'LOT-C-001', target: 'QI-001', label: '由...检验' },
+      { id: 'e2', source: 'LOT-C-001', target: 'COATER-01', label: '加工于' },
+      { id: 'e3', source: 'COATER-01', target: 'TEL-TEMP', label: '产生' },
+      { id: 'e4', source: 'LOT-C-001', target: 'MAT-ANODE', label: '消耗' },
+      { id: 'e5', source: 'MAT-ANODE', target: 'SUPP-LITHIUM', label: '由...供应' },
+      { id: 'e6', source: 'LOT-C-001', target: 'TECH-LI', label: '由...操作' },
+      { id: 'e7', source: 'LOT-C-001', target: 'WO-0315', label: '属于' },
     ]
   },
   supply_chain: {
@@ -524,12 +525,12 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'PROD-NCM', label: 'Cell-NCM-100Ah', type: 'Product', x: 0, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'MAT-CATHODE', target: 'SUPP-SHANSHAN', label: 'supplied_by' },
-      { id: 'e2', source: 'PO-202603', target: 'MAT-CATHODE', label: 'purchases' },
-      { id: 'e3', source: 'PO-202603', target: 'LOGISTICS-01', label: 'tracked_by' },
-      { id: 'e4', source: 'MAT-CATHODE', target: 'WH-RAW', label: 'stored_in' },
-      { id: 'e5', source: 'MAT-CATHODE', target: 'QI-INCOMING', label: 'requires' },
-      { id: 'e6', source: 'PROD-NCM', target: 'MAT-CATHODE', label: 'consumes' },
+      { id: 'e1', source: 'MAT-CATHODE', target: 'SUPP-SHANSHAN', label: '由...供应' },
+      { id: 'e2', source: 'PO-202603', target: 'MAT-CATHODE', label: '采购' },
+      { id: 'e3', source: 'PO-202603', target: 'LOGISTICS-01', label: '由...追踪' },
+      { id: 'e4', source: 'MAT-CATHODE', target: 'WH-RAW', label: '存储于' },
+      { id: 'e5', source: 'MAT-CATHODE', target: 'QI-INCOMING', label: '需要' },
+      { id: 'e6', source: 'PROD-NCM', target: 'MAT-CATHODE', label: '消耗' },
     ]
   },
   energy_consumption: {
@@ -544,12 +545,12 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'PROD-LFP', label: '单耗基准 (1.2kWh/pcs)', type: 'Product', x: 400, y: 100 },
     ],
     edges: [
-      { id: 'e1', source: 'OVEN-03', target: 'TEL-ELEC', label: 'monitored_by' },
-      { id: 'e2', source: 'OVEN-03', target: 'TEL-TEMP', label: 'monitored_by' },
-      { id: 'e3', source: 'OVEN-03', target: 'LINE-B', label: 'belongs_to' },
-      { id: 'e4', source: 'LINE-B', target: 'WS-BAKING', label: 'located_in' },
-      { id: 'e5', source: 'WO-0310', target: 'OVEN-03', label: 'executed_on' },
-      { id: 'e6', source: 'WO-0310', target: 'PROD-LFP', label: 'produces' },
+      { id: 'e1', source: 'OVEN-03', target: 'TEL-ELEC', label: '由...监控' },
+      { id: 'e2', source: 'OVEN-03', target: 'TEL-TEMP', label: '由...监控' },
+      { id: 'e3', source: 'OVEN-03', target: 'LINE-B', label: '属于' },
+      { id: 'e4', source: 'LINE-B', target: 'WS-BAKING', label: '位于' },
+      { id: 'e5', source: 'WO-0310', target: 'OVEN-03', label: '执行于' },
+      { id: 'e6', source: 'WO-0310', target: 'PROD-LFP', label: '生产' },
     ]
   },
   maintenance_plan: {
@@ -563,11 +564,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'LINE-WIND', label: '卷绕产线 (排产满)', type: 'ProductionLine', x: 200, y: 100 },
     ],
     edges: [
-      { id: 'e1', source: 'PM-202604', target: 'WINDER-02', label: 'maintains' },
-      { id: 'e2', source: 'PM-202604', target: 'TECH-WANG', label: 'assigned_to' },
-      { id: 'e3', source: 'PM-202604', target: 'SP-BEARING', label: 'requires' },
-      { id: 'e4', source: 'PO-SPARE', target: 'SP-BEARING', label: 'replenishes' },
-      { id: 'e5', source: 'WINDER-02', target: 'LINE-WIND', label: 'belongs_to' },
+      { id: 'e1', source: 'PM-202604', target: 'WINDER-02', label: '维护' },
+      { id: 'e2', source: 'PM-202604', target: 'TECH-WANG', label: '分配给' },
+      { id: 'e3', source: 'PM-202604', target: 'SP-BEARING', label: '需要' },
+      { id: 'e4', source: 'PO-SPARE', target: 'SP-BEARING', label: '补充' },
+      { id: 'e5', source: 'WINDER-02', target: 'LINE-WIND', label: '属于' },
     ]
   },
   yield_analysis: {
@@ -581,11 +582,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'MAT-ELECTROLYTE', label: '电解液 (LOT-E-12)', type: 'Material', x: 200, y: 100 },
     ],
     edges: [
-      { id: 'e1', source: 'CELL-BATCH-05', target: 'QI-CAPACITY', label: 'inspected_by' },
-      { id: 'e2', source: 'CELL-BATCH-05', target: 'FORMATION-01', label: 'processed_on' },
-      { id: 'e3', source: 'FORMATION-01', target: 'TEL-VOLTAGE', label: 'generates' },
-      { id: 'e4', source: 'CELL-BATCH-05', target: 'WO-0319', label: 'belongs_to' },
-      { id: 'e5', source: 'CELL-BATCH-05', target: 'MAT-ELECTROLYTE', label: 'consumes' },
+      { id: 'e1', source: 'CELL-BATCH-05', target: 'QI-CAPACITY', label: '由...检验' },
+      { id: 'e2', source: 'CELL-BATCH-05', target: 'FORMATION-01', label: '加工于' },
+      { id: 'e3', source: 'FORMATION-01', target: 'TEL-VOLTAGE', label: '产生' },
+      { id: 'e4', source: 'CELL-BATCH-05', target: 'WO-0319', label: '属于' },
+      { id: 'e5', source: 'CELL-BATCH-05', target: 'MAT-ELECTROLYTE', label: '消耗' },
     ]
   },
   inventory_warning: {
@@ -599,11 +600,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'PO-AUTO', label: '自动触发采购单', type: 'WorkOrder', x: 200, y: 100 },
     ],
     edges: [
-      { id: 'e1', source: 'SP-ROLLER-05', target: 'SUPP-ROLLER', label: 'supplied_by' },
-      { id: 'e2', source: 'SP-ROLLER-05', target: 'WH-SPARE', label: 'stored_in' },
-      { id: 'e3', source: 'MAINT-URGENT', target: 'SP-ROLLER-05', label: 'requires' },
-      { id: 'e4', source: 'MAINT-URGENT', target: 'COATER-02', label: 'maintains' },
-      { id: 'e5', source: 'PO-AUTO', target: 'SP-ROLLER-05', label: 'replenishes' },
+      { id: 'e1', source: 'SP-ROLLER-05', target: 'SUPP-ROLLER', label: '由...供应' },
+      { id: 'e2', source: 'SP-ROLLER-05', target: 'WH-SPARE', label: '存储于' },
+      { id: 'e3', source: 'MAINT-URGENT', target: 'SP-ROLLER-05', label: '需要' },
+      { id: 'e4', source: 'MAINT-URGENT', target: 'COATER-02', label: '维护' },
+      { id: 'e5', source: 'PO-AUTO', target: 'SP-ROLLER-05', label: '补充' },
     ]
   },
   customer_complaint: {
@@ -619,13 +620,13 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'LINE-1', label: '涂布一线 (生产线)', type: 'ProductionLine', x: -400, y: 100 },
     ],
     edges: [
-      { id: 'e1', source: 'SO-202601', target: 'CUST-TESLA', label: 'placed_by' },
-      { id: 'e2', source: 'SO-202601', target: 'PROD-LFP', label: 'includes' },
-      { id: 'e3', source: 'LOT-C-001', target: 'PROD-LFP', label: 'is_instance_of' },
-      { id: 'e4', source: 'LOT-C-001', target: 'QI-001', label: 'inspected_by' },
-      { id: 'e5', source: 'LOT-C-001', target: 'MAT-CATHODE', label: 'consumes' },
-      { id: 'e6', source: 'MAT-CATHODE', target: 'SUPP-SHANSHAN', label: 'supplied_by' },
-      { id: 'e7', source: 'LOT-C-001', target: 'LINE-1', label: 'processed_on' },
+      { id: 'e1', source: 'SO-202601', target: 'CUST-TESLA', label: '由...下达' },
+      { id: 'e2', source: 'SO-202601', target: 'PROD-LFP', label: '包含' },
+      { id: 'e3', source: 'LOT-C-001', target: 'PROD-LFP', label: '是...的实例' },
+      { id: 'e4', source: 'LOT-C-001', target: 'QI-001', label: '由...检验' },
+      { id: 'e5', source: 'LOT-C-001', target: 'MAT-CATHODE', label: '消耗' },
+      { id: 'e6', source: 'MAT-CATHODE', target: 'SUPP-SHANSHAN', label: '由...供应' },
+      { id: 'e7', source: 'LOT-C-001', target: 'LINE-1', label: '加工于' },
     ]
   },
   worker_schedule: {
@@ -640,12 +641,12 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'COATER-01', label: '涂布机-01', type: 'Device', x: 400, y: 100 },
     ],
     edges: [
-      { id: 'e1', source: 'TECH-ZHANG', target: 'SHIFT-NIGHT', label: 'assigned_to' },
-      { id: 'e2', source: 'SHIFT-NIGHT', target: 'LINE-1', label: 'operates' },
-      { id: 'e3', source: 'LINE-1', target: 'WS-COATING', label: 'located_in' },
-      { id: 'e4', source: 'TECH-ZHANG', target: 'CERT-01', label: 'holds' },
-      { id: 'e5', source: 'MAINT-TASK', target: 'TECH-ZHANG', label: 'assigned_to' },
-      { id: 'e6', source: 'MAINT-TASK', target: 'COATER-01', label: 'maintains' },
+      { id: 'e1', source: 'TECH-ZHANG', target: 'SHIFT-NIGHT', label: '分配给' },
+      { id: 'e2', source: 'SHIFT-NIGHT', target: 'LINE-1', label: '操作' },
+      { id: 'e3', source: 'LINE-1', target: 'WS-COATING', label: '位于' },
+      { id: 'e4', source: 'TECH-ZHANG', target: 'CERT-01', label: '持有' },
+      { id: 'e5', source: 'MAINT-TASK', target: 'TECH-ZHANG', label: '分配给' },
+      { id: 'e6', source: 'MAINT-TASK', target: 'COATER-01', label: '维护' },
     ]
   },
   material_shortage: {
@@ -661,13 +662,13 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'LOGISTICS-02', label: '跨省物流 (在途:2天)', type: 'Telemetry', x: 400, y: 0 },
     ],
     edges: [
-      { id: 'e1', source: 'BOM-LFP', target: 'MAT-ANODE', label: 'requires' },
-      { id: 'e2', source: 'BOM-LFP', target: 'PROD-LFP', label: 'defines' },
-      { id: 'e3', source: 'WO-0320', target: 'PROD-LFP', label: 'produces' },
-      { id: 'e4', source: 'WO-0320', target: 'SO-202605', label: 'fulfills' },
-      { id: 'e5', source: 'MAT-ANODE', target: 'SUPP-ANODE', label: 'supplied_by' },
-      { id: 'e6', source: 'WO-0320', target: 'LINE-3', label: 'assigned_to' },
-      { id: 'e7', source: 'SUPP-ANODE', target: 'LOGISTICS-02', label: 'ships_via' },
+      { id: 'e1', source: 'BOM-LFP', target: 'MAT-ANODE', label: '需要' },
+      { id: 'e2', source: 'BOM-LFP', target: 'PROD-LFP', label: '定义' },
+      { id: 'e3', source: 'WO-0320', target: 'PROD-LFP', label: '生产' },
+      { id: 'e4', source: 'WO-0320', target: 'SO-202605', label: '履行' },
+      { id: 'e5', source: 'MAT-ANODE', target: 'SUPP-ANODE', label: '由...供应' },
+      { id: 'e6', source: 'WO-0320', target: 'LINE-3', label: '分配给' },
+      { id: 'e7', source: 'SUPP-ANODE', target: 'LOGISTICS-02', label: '通过...运输' },
     ]
   },
   order_delay: {
@@ -682,12 +683,12 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'SP-HEATER', label: '加热管备件 (库存:0)', type: 'SparePart', x: 400, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'WO-0321', target: 'SO-202604', label: 'fulfills' },
-      { id: 'e2', source: 'WO-0321', target: 'LINE-2', label: 'assigned_to' },
-      { id: 'e3', source: 'FAIL-002', target: 'LINE-2', label: 'affects' },
-      { id: 'e4', source: 'SO-202604', target: 'CUST-BYD', label: 'placed_by' },
-      { id: 'e5', source: 'FAIL-002', target: 'MAINT-URGENT', label: 'triggers' },
-      { id: 'e6', source: 'MAINT-URGENT', target: 'SP-HEATER', label: 'requires' },
+      { id: 'e1', source: 'WO-0321', target: 'SO-202604', label: '履行' },
+      { id: 'e2', source: 'WO-0321', target: 'LINE-2', label: '分配给' },
+      { id: 'e3', source: 'FAIL-002', target: 'LINE-2', label: '影响' },
+      { id: 'e4', source: 'SO-202604', target: 'CUST-BYD', label: '由...下达' },
+      { id: 'e5', source: 'FAIL-002', target: 'MAINT-URGENT', label: '触发' },
+      { id: 'e6', source: 'MAINT-URGENT', target: 'SP-HEATER', label: '需要' },
     ]
   },
   equipment_upgrade: {
@@ -701,11 +702,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'SP-SENSOR', label: '新型传感器备件', type: 'SparePart', x: 200, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'COATER-02', target: 'LINE-2', label: 'belongs_to' },
-      { id: 'e2', source: 'MAINT-UPGRADE', target: 'COATER-02', label: 'upgrades' },
-      { id: 'e3', source: 'MAINT-UPGRADE', target: 'TECH-LI', label: 'assigned_to' },
-      { id: 'e4', source: 'MAINT-UPGRADE', target: 'WO-0325', label: 'delays' },
-      { id: 'e5', source: 'MAINT-UPGRADE', target: 'SP-SENSOR', label: 'installs' },
+      { id: 'e1', source: 'COATER-02', target: 'LINE-2', label: '属于' },
+      { id: 'e2', source: 'MAINT-UPGRADE', target: 'COATER-02', label: '升级' },
+      { id: 'e3', source: 'MAINT-UPGRADE', target: 'TECH-LI', label: '分配给' },
+      { id: 'e4', source: 'MAINT-UPGRADE', target: 'WO-0325', label: '延迟' },
+      { id: 'e5', source: 'MAINT-UPGRADE', target: 'SP-SENSOR', label: '安装' },
     ]
   },
   process_optimization: {
@@ -719,11 +720,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'MAT-NEW-ADDITIVE', label: '新型添加剂', type: 'Material', x: 200, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'RECIPE-002', target: 'PROD-NCM', label: 'defines' },
-      { id: 'e2', source: 'LOT-TEST-01', target: 'RECIPE-002', label: 'uses' },
-      { id: 'e3', source: 'LOT-TEST-01', target: 'QI-PERFORMANCE', label: 'inspected_by' },
-      { id: 'e4', source: 'LOT-TEST-01', target: 'LINE-LAB', label: 'processed_on' },
-      { id: 'e5', source: 'RECIPE-002', target: 'MAT-NEW-ADDITIVE', label: 'includes' },
+      { id: 'e1', source: 'RECIPE-002', target: 'PROD-NCM', label: '定义' },
+      { id: 'e2', source: 'LOT-TEST-01', target: 'RECIPE-002', label: '使用' },
+      { id: 'e3', source: 'LOT-TEST-01', target: 'QI-PERFORMANCE', label: '由...检验' },
+      { id: 'e4', source: 'LOT-TEST-01', target: 'LINE-LAB', label: '加工于' },
+      { id: 'e5', source: 'RECIPE-002', target: 'MAT-NEW-ADDITIVE', label: '包含' },
     ]
   },
   supplier_evaluation: {
@@ -737,11 +738,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'LOGISTICS-03', label: '物流时效 (平均3天)', type: 'Telemetry', x: 200, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'MAT-LITHIUM', target: 'SUPP-LITHIUM', label: 'supplied_by' },
-      { id: 'e2', source: 'LOT-RAW-05', target: 'MAT-LITHIUM', label: 'is_instance_of' },
-      { id: 'e3', source: 'LOT-RAW-05', target: 'QI-INCOMING', label: 'inspected_by' },
-      { id: 'e4', source: 'PO-202602', target: 'SUPP-LITHIUM', label: 'purchased_from' },
-      { id: 'e5', source: 'SUPP-LITHIUM', target: 'LOGISTICS-03', label: 'evaluated_by' },
+      { id: 'e1', source: 'MAT-LITHIUM', target: 'SUPP-LITHIUM', label: '由...供应' },
+      { id: 'e2', source: 'LOT-RAW-05', target: 'MAT-LITHIUM', label: '是...的实例' },
+      { id: 'e3', source: 'LOT-RAW-05', target: 'QI-INCOMING', label: '由...检验' },
+      { id: 'e4', source: 'PO-202602', target: 'SUPP-LITHIUM', label: '采购自' },
+      { id: 'e5', source: 'SUPP-LITHIUM', target: 'LOGISTICS-03', label: '由...评估' },
     ]
   },
   logistics_tracking: {
@@ -755,11 +756,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'WH-FINISHED', label: '成品仓 (出库)', type: 'Workshop', x: 200, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'SHIP-009', target: 'CUST-NIO', label: 'delivered_to' },
-      { id: 'e2', source: 'SHIP-009', target: 'PROD-PACK', label: 'includes' },
-      { id: 'e3', source: 'SHIP-009', target: 'FAC-SHANGHAI', label: 'ships_from' },
-      { id: 'e4', source: 'SHIP-009', target: 'LOGISTICS-04', label: 'tracked_by' },
-      { id: 'e5', source: 'SHIP-009', target: 'WH-FINISHED', label: 'departs_from' },
+      { id: 'e1', source: 'SHIP-009', target: 'CUST-NIO', label: '交付给' },
+      { id: 'e2', source: 'SHIP-009', target: 'PROD-PACK', label: '包含' },
+      { id: 'e3', source: 'SHIP-009', target: 'FAC-SHANGHAI', label: '发货自' },
+      { id: 'e4', source: 'SHIP-009', target: 'LOGISTICS-04', label: '由...追踪' },
+      { id: 'e5', source: 'SHIP-009', target: 'WH-FINISHED', label: '离开自' },
     ]
   },
   environmental_monitor: {
@@ -773,11 +774,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'MAINT-HVAC', label: '空调维保工单', type: 'MaintenanceOrder', x: 200, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'TEL-TEMP', target: 'WS-CLEANROOM', label: 'monitors' },
-      { id: 'e2', source: 'LOT-INJECT-01', target: 'WS-CLEANROOM', label: 'processed_in' },
-      { id: 'e3', source: 'LOT-INJECT-01', target: 'QI-MOISTURE', label: 'inspected_by' },
-      { id: 'e4', source: 'DEVICE-HVAC', target: 'WS-CLEANROOM', label: 'controls_environment' },
-      { id: 'e5', source: 'MAINT-HVAC', target: 'DEVICE-HVAC', label: 'maintains' },
+      { id: 'e1', source: 'TEL-TEMP', target: 'WS-CLEANROOM', label: '监控' },
+      { id: 'e2', source: 'LOT-INJECT-01', target: 'WS-CLEANROOM', label: '加工于' },
+      { id: 'e3', source: 'LOT-INJECT-01', target: 'QI-MOISTURE', label: '由...检验' },
+      { id: 'e4', source: 'DEVICE-HVAC', target: 'WS-CLEANROOM', label: '控制环境' },
+      { id: 'e5', source: 'MAINT-HVAC', target: 'DEVICE-HVAC', label: '维护' },
     ]
   },
   tool_lifespan: {
@@ -791,11 +792,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'SP-NEW-TOOL', label: '备用模具 (库存:1, 成本:¥2w)', type: 'SparePart', x: 200, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'TOOL-PUNCH-01', target: 'PUNCH-MACHINE', label: 'installed_on' },
-      { id: 'e2', source: 'LOT-PUNCH-02', target: 'PUNCH-MACHINE', label: 'processed_on' },
-      { id: 'e3', source: 'LOT-PUNCH-02', target: 'QI-DIMENSION', label: 'inspected_by' },
-      { id: 'e4', source: 'TOOL-PUNCH-01', target: 'MAINT-TOOL', label: 'requires' },
-      { id: 'e5', source: 'MAINT-TOOL', target: 'SP-NEW-TOOL', label: 'replaced_by' },
+      { id: 'e1', source: 'TOOL-PUNCH-01', target: 'PUNCH-MACHINE', label: '安装于' },
+      { id: 'e2', source: 'LOT-PUNCH-02', target: 'PUNCH-MACHINE', label: '加工于' },
+      { id: 'e3', source: 'LOT-PUNCH-02', target: 'QI-DIMENSION', label: '由...检验' },
+      { id: 'e4', source: 'TOOL-PUNCH-01', target: 'MAINT-TOOL', label: '需要' },
+      { id: 'e5', source: 'MAINT-TOOL', target: 'SP-NEW-TOOL', label: '被...替换' },
     ]
   },
   cost_accounting: {
@@ -809,11 +810,11 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'QI-SCRAP', label: '废品记录 (损失:¥200)', type: 'QualityInspection', x: 200, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'LOT-W-002', target: 'MAT-FOIL', label: 'consumes' },
-      { id: 'e2', source: 'LOT-W-002', target: 'WO-0322', label: 'belongs_to' },
-      { id: 'e3', source: 'WO-0322', target: 'SO-202606', label: 'fulfills' },
-      { id: 'e4', source: 'LOT-W-002', target: 'TEL-ENERGY', label: 'consumes_energy' },
-      { id: 'e5', source: 'LOT-W-002', target: 'QI-SCRAP', label: 'generates_scrap' },
+      { id: 'e1', source: 'LOT-W-002', target: 'MAT-FOIL', label: '消耗' },
+      { id: 'e2', source: 'LOT-W-002', target: 'WO-0322', label: '属于' },
+      { id: 'e3', source: 'WO-0322', target: 'SO-202606', label: '履行' },
+      { id: 'e4', source: 'LOT-W-002', target: 'TEL-ENERGY', label: '消耗能源' },
+      { id: 'e5', source: 'LOT-W-002', target: 'QI-SCRAP', label: '产生废料' },
     ]
   },
   safety_incident: {
@@ -827,56 +828,56 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'MAINT-REPAIR', label: '设备大修工单', type: 'MaintenanceOrder', x: 200, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'INCIDENT-001', target: 'WS-TESTING', label: 'occurred_in' },
-      { id: 'e2', source: 'INCIDENT-001', target: 'TECH-ZHAO', label: 'reported_by' },
-      { id: 'e3', source: 'INCIDENT-001', target: 'TEST-CHAMBER', label: 'involved' },
-      { id: 'e4', source: 'LOT-TEST-05', target: 'TEST-CHAMBER', label: 'tested_in' },
-      { id: 'e5', source: 'INCIDENT-001', target: 'MAINT-REPAIR', label: 'triggers' },
+      { id: 'e1', source: 'INCIDENT-001', target: 'WS-TESTING', label: '发生于' },
+      { id: 'e2', source: 'INCIDENT-001', target: 'TECH-ZHAO', label: '由...报告' },
+      { id: 'e3', source: 'INCIDENT-001', target: 'TEST-CHAMBER', label: '涉及' },
+      { id: 'e4', source: 'LOT-TEST-05', target: 'TEST-CHAMBER', label: '测试于' },
+      { id: 'e5', source: 'INCIDENT-001', target: 'MAINT-REPAIR', label: '触发' },
     ]
   }
 };
 
 const SCHEMA_NODES = [
-  { id: 'Factory', label: 'Factory', x: 50, y: 10, color: 'indigo', icon: 'Database' },
-  { id: 'Workshop', label: 'Workshop', x: 50, y: 25, color: 'indigo', icon: 'Layers' },
-  { id: 'ProductionLine', label: 'ProductionLine', x: 50, y: 40, color: 'indigo', icon: 'Activity' },
-  { id: 'Device', label: 'Device', x: 25, y: 55, color: 'blue', icon: 'Cpu' },
-  { id: 'Telemetry', label: 'Telemetry', x: 25, y: 75, color: 'amber', icon: 'Activity' },
-  { id: 'Supplier', label: 'Supplier', x: 15, y: 25, color: 'rose', icon: 'Users' },
-  { id: 'Material', label: 'Material', x: 15, y: 40, color: 'rose', icon: 'Box' },
-  { id: 'Customer', label: 'Customer', x: 85, y: 25, color: 'emerald', icon: 'Users' },
-  { id: 'SalesOrder', label: 'SalesOrder', x: 85, y: 40, color: 'emerald', icon: 'FileText' },
-  { id: 'Product', label: 'Product', x: 85, y: 55, color: 'purple', icon: 'Box' },
-  { id: 'BOM', label: 'BOM', x: 85, y: 75, color: 'purple', icon: 'Layers' },
-  { id: 'WorkOrder', label: 'WorkOrder', x: 65, y: 55, color: 'emerald', icon: 'FileText' },
-  { id: 'Batch', label: 'Batch', x: 45, y: 55, color: 'emerald', icon: 'Layers' },
-  { id: 'QualityInspection', label: 'QualityInspection', x: 45, y: 75, color: 'rose', icon: 'ShieldCheck' },
-  { id: 'EquipmentFailure', label: 'EquipmentFailure', x: 10, y: 55, color: 'red', icon: 'AlertTriangle' },
-  { id: 'MaintenanceOrder', label: 'MaintenanceOrder', x: 10, y: 70, color: 'orange', icon: 'Wrench' },
-  { id: 'SparePart', label: 'SparePart', x: 10, y: 85, color: 'blue', icon: 'Box' },
-  { id: 'Technician', label: 'Technician', x: 25, y: 85, color: 'emerald', icon: 'Users' },
+  { id: 'Factory', label: '工厂', x: 50, y: 10, color: 'indigo', icon: 'Database' },
+  { id: 'Workshop', label: '车间', x: 50, y: 25, color: 'indigo', icon: 'Layers' },
+  { id: 'ProductionLine', label: '产线', x: 50, y: 40, color: 'indigo', icon: 'Activity' },
+  { id: 'Device', label: '设备', x: 25, y: 55, color: 'blue', icon: 'Cpu' },
+  { id: 'Telemetry', label: '遥测数据', x: 25, y: 75, color: 'amber', icon: 'Activity' },
+  { id: 'Supplier', label: '供应商', x: 15, y: 25, color: 'rose', icon: 'Users' },
+  { id: 'Material', label: '物料', x: 15, y: 40, color: 'rose', icon: 'Box' },
+  { id: 'Customer', label: '客户', x: 85, y: 25, color: 'emerald', icon: 'Users' },
+  { id: 'SalesOrder', label: '销售订单', x: 85, y: 40, color: 'emerald', icon: 'FileText' },
+  { id: 'Product', label: '产品', x: 85, y: 55, color: 'purple', icon: 'Box' },
+  { id: 'BOM', label: '物料清单', x: 85, y: 75, color: 'purple', icon: 'Layers' },
+  { id: 'WorkOrder', label: '工单', x: 65, y: 55, color: 'emerald', icon: 'FileText' },
+  { id: 'Batch', label: '批次', x: 45, y: 55, color: 'emerald', icon: 'Layers' },
+  { id: 'QualityInspection', label: '质检记录', x: 45, y: 75, color: 'rose', icon: 'ShieldCheck' },
+  { id: 'EquipmentFailure', label: '设备故障', x: 10, y: 55, color: 'red', icon: 'AlertTriangle' },
+  { id: 'MaintenanceOrder', label: '维修工单', x: 10, y: 70, color: 'orange', icon: 'Wrench' },
+  { id: 'SparePart', label: '备件', x: 10, y: 85, color: 'blue', icon: 'Box' },
+  { id: 'Technician', label: '技术员', x: 25, y: 85, color: 'emerald', icon: 'Users' },
 ];
 
 const SCHEMA_EDGES = [
-  { source: 'Factory', target: 'Workshop', label: 'contains' },
-  { source: 'Workshop', target: 'ProductionLine', label: 'contains' },
-  { source: 'ProductionLine', target: 'Device', label: 'contains' },
-  { source: 'ProductionLine', target: 'WorkOrder', label: 'executes' },
-  { source: 'Device', target: 'Telemetry', label: 'generates' },
-  { source: 'Supplier', target: 'Material', label: 'supplies' },
-  { source: 'Material', target: 'Batch', label: 'consumed_by' },
-  { source: 'Customer', target: 'SalesOrder', label: 'places' },
-  { source: 'SalesOrder', target: 'WorkOrder', label: 'fulfilled_by' },
-  { source: 'SalesOrder', target: 'Product', label: 'includes' },
-  { source: 'WorkOrder', target: 'Batch', label: 'generates' },
-  { source: 'WorkOrder', target: 'Product', label: 'produces' },
-  { source: 'Batch', target: 'Device', label: 'processed_on' },
-  { source: 'Batch', target: 'QualityInspection', label: 'inspected_by' },
-  { source: 'BOM', target: 'Product', label: 'defines' },
-  { source: 'Device', target: 'EquipmentFailure', label: 'experiences' },
-  { source: 'EquipmentFailure', target: 'MaintenanceOrder', label: 'triggers' },
-  { source: 'MaintenanceOrder', target: 'SparePart', label: 'consumes' },
-  { source: 'MaintenanceOrder', target: 'Technician', label: 'assigned_to' },
+  { source: 'Factory', target: 'Workshop', label: '包含' },
+  { source: 'Workshop', target: 'ProductionLine', label: '包含' },
+  { source: 'ProductionLine', target: 'Device', label: '包含' },
+  { source: 'ProductionLine', target: 'WorkOrder', label: '执行' },
+  { source: 'Device', target: 'Telemetry', label: '产生' },
+  { source: 'Supplier', target: 'Material', label: '供应' },
+  { source: 'Material', target: 'Batch', label: '被消耗于' },
+  { source: 'Customer', target: 'SalesOrder', label: '下达' },
+  { source: 'SalesOrder', target: 'WorkOrder', label: '履行于' },
+  { source: 'SalesOrder', target: 'Product', label: '包含' },
+  { source: 'WorkOrder', target: 'Batch', label: '产生' },
+  { source: 'WorkOrder', target: 'Product', label: '生产' },
+  { source: 'Batch', target: 'Device', label: '加工于' },
+  { source: 'Batch', target: 'QualityInspection', label: '检验于' },
+  { source: 'BOM', target: 'Product', label: '定义' },
+  { source: 'Device', target: 'EquipmentFailure', label: '发生' },
+  { source: 'EquipmentFailure', target: 'MaintenanceOrder', label: '触发' },
+  { source: 'MaintenanceOrder', target: 'SparePart', label: '消耗' },
+  { source: 'MaintenanceOrder', target: 'Technician', label: '分配给' },
 ];
 
 const getIcon = (name: string) => {
@@ -943,6 +944,94 @@ export default function OntologyModeling() {
   const handleMouseUp = () => {
     setDragState(null);
   };
+
+  // --- Relations Tab State & Handlers ---
+  const [relNodes, setRelNodes] = useState(SCHEMA_NODES);
+  const [relEdges, setRelEdges] = useState(SCHEMA_EDGES.map((e, i) => ({ ...e, id: `rel-edge-${i}`, cardinality: '1:N' })));
+  const [activeRelId, setActiveRelId] = useState<string | null>(null);
+  const [isAddingRel, setIsAddingRel] = useState(false);
+  const [relFormData, setRelFormData] = useState({ source: '', target: '', label: '', cardinality: '1:N' });
+  const [relDragState, setRelDragState] = useState<{ id: string, startX: number, startY: number, initialNodeX: number, initialNodeY: number } | null>(null);
+  const [graphName, setGraphName] = useState('默认生产制造本体');
+  const [isEditingGraphName, setIsEditingGraphName] = useState(false);
+  const [showSaveToast, setShowSaveToast] = useState(false);
+  const [showNewGraphConfirm, setShowNewGraphConfirm] = useState(false);
+  const [showAddNodeModal, setShowAddNodeModal] = useState(false);
+  const [newNodeData, setNewNodeData] = useState({ id: '', label: '', type: 'Equipment' });
+
+  const handleAddNode = () => {
+    if (!newNodeData.id || !newNodeData.label) return;
+    
+    let color = 'indigo';
+    if (['Material', 'Product', 'SparePart'].includes(newNodeData.type)) color = 'emerald';
+    else if (['WorkOrder', 'SalesOrder', 'MaintenanceOrder', 'PurchaseOrder'].includes(newNodeData.type)) color = 'purple';
+    else if (['QualityInspection', 'Telemetry', 'Incident'].includes(newNodeData.type)) color = 'rose';
+    else if (['Process', 'Recipe'].includes(newNodeData.type)) color = 'amber';
+    else if (['Worker', 'Supplier', 'Customer'].includes(newNodeData.type)) color = 'blue';
+    else if (['Warehouse', 'Logistics'].includes(newNodeData.type)) color = 'gray';
+
+    const newNode = {
+      id: newNodeData.id,
+      label: newNodeData.label,
+      type: newNodeData.type,
+      color,
+      x: 50 + Math.random() * 10 - 5,
+      y: 50 + Math.random() * 10 - 5
+    };
+
+    setRelNodes([...relNodes, newNode]);
+    setShowAddNodeModal(false);
+    setNewNodeData({ id: '', label: '', type: 'Equipment' });
+  };
+
+  const handleRelNodeMouseDown = (e: React.MouseEvent, id: string, initialNodeX: number, initialNodeY: number) => {
+    e.preventDefault();
+    setRelDragState({ id, startX: e.clientX, startY: e.clientY, initialNodeX, initialNodeY });
+  };
+
+  const handleRelMouseMove = (e: React.MouseEvent) => {
+    if (relDragState) {
+      const dx = (e.clientX - relDragState.startX) * 0.08; 
+      const dy = (e.clientY - relDragState.startY) * 0.08;
+      setRelNodes(prev => prev.map(node => {
+        if (node.id === relDragState.id) {
+          return { ...node, x: relDragState.initialNodeX + dx, y: relDragState.initialNodeY + dy };
+        }
+        return node;
+      }));
+    }
+  };
+
+  const handleRelMouseUp = () => setRelDragState(null);
+
+  const handleSaveRel = () => {
+    if (activeRelId) {
+      setRelEdges(prev => prev.map(e => e.id === activeRelId ? { ...e, ...relFormData } : e));
+    } else {
+      setRelEdges(prev => [...prev, { ...relFormData, id: `rel-edge-${Date.now()}` }]);
+    }
+    setActiveRelId(null);
+    setIsAddingRel(false);
+  };
+
+  const handleDeleteRel = (id: string) => {
+    setRelEdges(prev => prev.filter(e => e.id !== id));
+    if (activeRelId === id) setActiveRelId(null);
+  };
+
+  const openEditRel = (edge: any) => {
+    setRelFormData(edge);
+    setActiveRelId(edge.id);
+    setIsAddingRel(false);
+  };
+
+  const openAddRel = () => {
+    if (relNodes.length < 2) return;
+    setRelFormData({ source: relNodes[0].id, target: relNodes[1].id, label: '关联', cardinality: '1:N' });
+    setActiveRelId(null);
+    setIsAddingRel(true);
+  };
+  // --------------------------------------
 
   const toggleSource = (sourceId: string) => {
     setExpandedSources(prev => 
@@ -1188,9 +1277,32 @@ export default function OntologyModeling() {
   const renderRelationsTab = () => (
     <div className="flex-1 flex overflow-hidden">
       {/* Middle: Graph */}
-      <div className="flex-1 bg-[#f8f9fa] relative overflow-hidden flex flex-col border-r border-gray-200">
+      <div 
+        className="flex-1 bg-[#f8f9fa] relative overflow-hidden flex flex-col border-r border-gray-200"
+        onMouseMove={handleRelMouseMove}
+        onMouseUp={handleRelMouseUp}
+        onMouseLeave={handleRelMouseUp}
+      >
         <div className="absolute top-4 left-4 z-10 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 flex items-center gap-4">
-          <span className="text-xs font-bold text-gray-700">企业级本体关系图谱 (Enterprise Schema Graph)</span>
+          <div className="flex items-center gap-2">
+            {isEditingGraphName ? (
+              <input
+                autoFocus
+                value={graphName}
+                onChange={e => setGraphName(e.target.value)}
+                onBlur={() => setIsEditingGraphName(false)}
+                onKeyDown={e => e.key === 'Enter' && setIsEditingGraphName(false)}
+                className="text-sm font-bold text-gray-800 border-b-2 border-indigo-500 focus:outline-none px-1 bg-transparent w-40"
+              />
+            ) : (
+              <div
+                className="text-sm font-bold text-gray-800 cursor-pointer hover:text-indigo-600 flex items-center gap-1 group"
+                onClick={() => setIsEditingGraphName(true)}
+              >
+                {graphName} <Edit3 size={14} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+            )}
+          </div>
           <div className="h-4 w-px bg-gray-300"></div>
           <div className="flex items-center gap-3 text-[10px] font-medium text-gray-500">
             <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-indigo-500"></div> 制造资源</span>
@@ -1199,44 +1311,110 @@ export default function OntologyModeling() {
             <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-rose-500"></div> 供应链/质量</span>
           </div>
         </div>
+
+        <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+          <button
+            onClick={() => setShowNewGraphConfirm(true)}
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 rounded-md transition-colors shadow-sm"
+          >
+            <Plus size={14} /> 新建图谱
+          </button>
+          <button 
+            onClick={() => {
+              setShowSaveToast(true);
+              setTimeout(() => setShowSaveToast(false), 3000);
+            }}
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors shadow-sm"
+          >
+            <Save size={14} /> 保存图谱
+          </button>
+        </div>
         
+        {/* Floating Toolbar */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 bg-white px-2 py-2 rounded-xl shadow-md border border-gray-200 flex items-center gap-2">
+          <button 
+            onClick={() => setShowAddNodeModal(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Plus size={16} className="text-indigo-600" /> 添加节点
+          </button>
+          <div className="w-px h-5 bg-gray-300"></div>
+          <button 
+            onClick={openAddRel}
+            disabled={relNodes.length < 2}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${relNodes.length < 2 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+          >
+            <Link2 size={16} className={relNodes.length < 2 ? 'text-gray-400' : 'text-emerald-600'} /> 添加关系
+          </button>
+        </div>
+
         {/* Complex SVG Graph Representation */}
         <div className="flex-1 w-full h-full relative flex items-center justify-center overflow-auto min-h-[600px]">
+          {relNodes.length === 0 && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center z-0">
+              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                <Network size={40} className="text-gray-400" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-700 mb-2">图谱为空</h3>
+              <p className="text-sm text-gray-500 mb-6 max-w-md text-center">
+                当前本体图谱没有任何节点和关系。请先添加实体节点，然后建立它们之间的关联关系。
+              </p>
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setShowAddNodeModal(true)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-700 flex items-center gap-2 font-medium"
+                >
+                  <Plus size={18} /> 添加节点
+                </button>
+              </div>
+            </div>
+          )}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 min-w-[800px] min-h-[600px]">
             <defs>
               <marker id="arrow-gray" markerWidth="8" markerHeight="6" refX="40" refY="3" orient="auto">
                 <polygon points="0 0, 8 3, 0 6" fill="#cbd5e1" />
               </marker>
+              <marker id="arrow-indigo" markerWidth="8" markerHeight="6" refX="40" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="#6366f1" />
+              </marker>
             </defs>
-            {SCHEMA_EDGES.map((edge, i) => {
-              const sourceNode = SCHEMA_NODES.find(n => n.id === edge.source);
-              const targetNode = SCHEMA_NODES.find(n => n.id === edge.target);
+            {relEdges.map((edge) => {
+              const sourceNode = relNodes.find(n => n.id === edge.source);
+              const targetNode = relNodes.find(n => n.id === edge.target);
               if (!sourceNode || !targetNode) return null;
+              const isSelected = edge.id === activeRelId;
               return (
                 <line 
-                  key={`line-${i}`}
+                  key={edge.id}
                   x1={`${sourceNode.x}%`} y1={`${sourceNode.y}%`} 
                   x2={`${targetNode.x}%`} y2={`${targetNode.y}%`} 
-                  stroke="#cbd5e1" strokeWidth="1.5" 
-                  markerEnd="url(#arrow-gray)" 
+                  stroke={isSelected ? "#6366f1" : "#cbd5e1"} 
+                  strokeWidth={isSelected ? "2.5" : "1.5"} 
+                  markerEnd={isSelected ? "url(#arrow-indigo)" : "url(#arrow-gray)"} 
+                  className="transition-all duration-300"
                 />
               );
             })}
           </svg>
 
           {/* Edge Labels */}
-          {SCHEMA_EDGES.map((edge, i) => {
-            const sourceNode = SCHEMA_NODES.find(n => n.id === edge.source);
-            const targetNode = SCHEMA_NODES.find(n => n.id === edge.target);
+          {relEdges.map((edge) => {
+            const sourceNode = relNodes.find(n => n.id === edge.source);
+            const targetNode = relNodes.find(n => n.id === edge.target);
             if (!sourceNode || !targetNode) return null;
             
             const midX = (sourceNode.x + targetNode.x) / 2;
             const midY = (sourceNode.y + targetNode.y) / 2;
+            const isSelected = edge.id === activeRelId;
             
             return (
               <div 
-                key={`label-${i}`}
-                className="absolute px-1.5 py-0.5 bg-white/90 backdrop-blur-sm text-[9px] font-mono text-gray-500 rounded border border-gray-100 whitespace-nowrap z-10 shadow-sm"
+                key={`label-${edge.id}`}
+                onClick={() => openEditRel(edge)}
+                className={cn(
+                  "absolute px-2 py-1 backdrop-blur-sm text-[10px] font-mono rounded border cursor-pointer whitespace-nowrap z-10 shadow-sm transition-all hover:scale-110",
+                  isSelected ? "bg-indigo-100 text-indigo-700 border-indigo-300 font-bold" : "bg-white/90 text-gray-500 border-gray-200"
+                )}
                 style={{ left: `${midX}%`, top: `${midY}%`, transform: 'translate(-50%, -50%)' }}
               >
                 {edge.label}
@@ -1245,7 +1423,7 @@ export default function OntologyModeling() {
           })}
 
           {/* Nodes */}
-          {SCHEMA_NODES.map((node) => {
+          {relNodes.map((node) => {
             const colorMap = {
               indigo: 'bg-indigo-50 border-indigo-200 text-indigo-700',
               blue: 'bg-blue-50 border-blue-200 text-blue-700',
@@ -1255,20 +1433,23 @@ export default function OntologyModeling() {
               purple: 'bg-purple-50 border-purple-200 text-purple-700',
             };
             const colorClass = colorMap[node.color as keyof typeof colorMap] || colorMap.indigo;
+            const isDragging = relDragState?.id === node.id;
             
             return (
               <div 
                 key={node.id}
+                onMouseDown={(e) => handleRelNodeMouseDown(e, node.id, node.x, node.y)}
                 className={cn(
-                  "absolute -translate-x-1/2 -translate-y-1/2 border-2 p-2 rounded-xl shadow-sm flex flex-col items-center w-28 z-20 transition-transform hover:scale-105 cursor-pointer hover:shadow-md",
-                  colorClass
+                  "absolute -translate-x-1/2 -translate-y-1/2 border-2 p-2 rounded-xl shadow-sm flex flex-col items-center w-28 z-20 transition-shadow cursor-move select-none",
+                  colorClass,
+                  isDragging ? "ring-2 ring-indigo-400 shadow-lg scale-105" : "hover:shadow-md hover:border-indigo-300"
                 )}
                 style={{ left: `${node.x}%`, top: `${node.y}%` }}
               >
-                <div className="mb-1 opacity-80">
+                <div className="mb-1 opacity-80 pointer-events-none">
                   {getIcon(node.icon)}
                 </div>
-                <span className="text-[10px] font-bold text-center leading-tight">{node.label}</span>
+                <span className="text-[10px] font-bold text-center leading-tight pointer-events-none">{node.label}</span>
               </div>
             );
           })}
@@ -1277,27 +1458,176 @@ export default function OntologyModeling() {
 
       {/* Right: Relation Config */}
       <div className="w-80 bg-white flex flex-col shrink-0">
-        <div className="p-4 border-b border-gray-200 bg-white">
-          <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-            <Network size={16} className="text-indigo-600" /> 关系属性配置
-          </h3>
-          <p className="text-xs text-gray-500 mt-1">共识别出 {SCHEMA_EDGES.length} 组实体关系</p>
+        <div className="p-4 border-b border-gray-200 bg-white flex justify-between items-center">
+          <div>
+            <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+              <Network size={16} className="text-indigo-600" /> 关系属性配置
+            </h3>
+            <p className="text-xs text-gray-500 mt-1">共定义 {relEdges.length} 组实体关系</p>
+          </div>
+          {!isAddingRel && !activeRelId && (
+            <button 
+              onClick={openAddRel}
+              disabled={relNodes.length < 2}
+              className={`p-1.5 rounded transition-colors ${relNodes.length < 2 ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'}`}
+              title={relNodes.length < 2 ? "需至少两个节点才能新建关系" : "新建关系"}
+            >
+              <Plus size={16} />
+            </button>
+          )}
         </div>
-        <div className="p-4 space-y-3 flex-1 overflow-y-auto bg-gray-50/50">
-          {SCHEMA_EDGES.map((edge, i) => (
-            <div key={i} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm hover:border-indigo-300 transition-colors cursor-pointer">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-bold text-gray-700 bg-gray-100 px-2 py-1 rounded border border-gray-200">{edge.label}</span>
-                <span className="text-[10px] text-indigo-600 font-medium">1 : N</span>
+
+        <div className="flex-1 overflow-y-auto bg-gray-50/50">
+          {(isAddingRel || activeRelId) ? (
+            <div className="p-4 space-y-4 bg-white border-b border-gray-100">
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="text-xs font-bold text-gray-800">{isAddingRel ? '新建实体关系' : '编辑实体关系'}</h4>
+                <button onClick={() => { setIsAddingRel(false); setActiveRelId(null); }} className="text-gray-400 hover:text-gray-600">
+                  <X size={16} />
+                </button>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <div className="text-gray-600 font-medium">{edge.source}</div>
-                <ArrowRight size={12} className="text-gray-400 mx-2 shrink-0" />
-                <div className="text-gray-600 font-medium">{edge.target}</div>
+              
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 mb-1">源实体 (Source)</label>
+                  <select 
+                    value={relFormData.source} 
+                    onChange={e => setRelFormData({...relFormData, source: e.target.value})}
+                    className="w-full text-xs border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    {relNodes.map(n => <option key={n.id} value={n.id}>{n.label}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 mb-1">目标实体 (Target)</label>
+                  <select 
+                    value={relFormData.target} 
+                    onChange={e => setRelFormData({...relFormData, target: e.target.value})}
+                    className="w-full text-xs border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    {relNodes.map(n => <option key={n.id} value={n.id}>{n.label}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 mb-1">关系名称 (Label)</label>
+                  <input 
+                    type="text" 
+                    list="relation-labels"
+                    value={relFormData.label}
+                    onChange={e => setRelFormData({...relFormData, label: e.target.value})}
+                    placeholder="例如: 包含, 产生"
+                    className="w-full text-xs border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <datalist id="relation-labels">
+                    <option value="包含" />
+                    <option value="属于" />
+                    <option value="产生" />
+                    <option value="消耗" />
+                    <option value="触发" />
+                    <option value="分配给" />
+                    <option value="需要" />
+                    <option value="维护" />
+                    <option value="加工于" />
+                    <option value="由...检验" />
+                    <option value="由...操作" />
+                    <option value="由...供应" />
+                    <option value="位于" />
+                    <option value="监控" />
+                    <option value="定义" />
+                    <option value="生产" />
+                    <option value="履行" />
+                    <option value="由...下达" />
+                    <option value="采购" />
+                    <option value="由...追踪" />
+                    <option value="执行于" />
+                    <option value="补充" />
+                    <option value="是...的实例" />
+                    <option value="操作" />
+                    <option value="持有" />
+                    <option value="通过...运输" />
+                    <option value="影响" />
+                    <option value="升级" />
+                    <option value="延迟" />
+                    <option value="安装" />
+                    <option value="使用" />
+                    <option value="采购自" />
+                    <option value="由...评估" />
+                    <option value="交付给" />
+                    <option value="发货自" />
+                    <option value="离开自" />
+                    <option value="控制环境" />
+                    <option value="安装于" />
+                    <option value="被...替换" />
+                    <option value="消耗能源" />
+                    <option value="产生废料" />
+                    <option value="发生于" />
+                    <option value="由...报告" />
+                    <option value="涉及" />
+                    <option value="测试于" />
+                  </datalist>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-500 mb-1">基数 (Cardinality)</label>
+                  <select 
+                    value={relFormData.cardinality} 
+                    onChange={e => setRelFormData({...relFormData, cardinality: e.target.value})}
+                    className="w-full text-xs border border-gray-300 rounded-lg px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    <option value="1:1">1 : 1 (一对一)</option>
+                    <option value="1:N">1 : N (一对多)</option>
+                    <option value="N:M">N : M (多对多)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button 
+                  onClick={handleSaveRel}
+                  className="flex-1 bg-indigo-600 text-white py-2 rounded-lg text-xs font-medium hover:bg-indigo-700 transition-colors flex items-center justify-center gap-1"
+                >
+                  <Save size={14} /> 保存
+                </button>
+                {activeRelId && (
+                  <button 
+                    onClick={() => handleDeleteRel(activeRelId)}
+                    className="px-3 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 transition-colors"
+                    title="删除关系"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
               </div>
             </div>
-          ))}
+          ) : (
+            <div className="p-4 space-y-3">
+              {relEdges.map((edge) => {
+                const sourceNode = relNodes.find(n => n.id === edge.source);
+                const targetNode = relNodes.find(n => n.id === edge.target);
+                return (
+                  <div 
+                    key={edge.id} 
+                    onClick={() => openEditRel(edge)}
+                    className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm hover:border-indigo-400 hover:shadow-md transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-bold text-gray-700 bg-gray-100 px-2 py-1 rounded border border-gray-200 group-hover:bg-indigo-50 group-hover:text-indigo-700 group-hover:border-indigo-200 transition-colors">{edge.label}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-indigo-600 font-medium">{edge.cardinality}</span>
+                        <Edit3 size={12} className="text-gray-300 group-hover:text-indigo-500" />
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="text-gray-600 font-medium truncate max-w-[100px]">{sourceNode?.label || edge.source}</div>
+                      <ArrowRight size={12} className="text-gray-400 mx-2 shrink-0" />
+                      <div className="text-gray-600 font-medium truncate max-w-[100px]">{targetNode?.label || edge.target}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
+        
         <div className="p-4 border-t border-gray-200 bg-white">
           <button 
             onClick={() => setActiveTab('instances')}
@@ -1307,6 +1637,147 @@ export default function OntologyModeling() {
           </button>
         </div>
       </div>
+
+      {/* Modals and Toasts */}
+      {showAddNodeModal && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl w-[400px] overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <Plus size={16} className="text-indigo-600" />
+                添加实体节点
+              </h3>
+              <button onClick={() => setShowAddNodeModal(false)} className="text-gray-400 hover:text-gray-600">
+                <X size={16} />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1">节点 ID (唯一标识)</label>
+                <input 
+                  type="text" 
+                  value={newNodeData.id}
+                  onChange={e => setNewNodeData({...newNodeData, id: e.target.value})}
+                  placeholder="例如: EQUIP-001"
+                  className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1">节点名称 (显示标签)</label>
+                <input 
+                  type="text" 
+                  value={newNodeData.label}
+                  onChange={e => setNewNodeData({...newNodeData, label: e.target.value})}
+                  placeholder="例如: 1号涂布机"
+                  className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1">实体类型 (Type)</label>
+                <select 
+                  value={newNodeData.type}
+                  onChange={e => setNewNodeData({...newNodeData, type: e.target.value})}
+                  className="w-full text-sm border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <optgroup label="制造资源">
+                    <option value="Equipment">设备 (Equipment)</option>
+                    <option value="ProductionLine">产线 (ProductionLine)</option>
+                    <option value="Worker">人员 (Worker)</option>
+                    <option value="Warehouse">仓库 (Warehouse)</option>
+                  </optgroup>
+                  <optgroup label="产品与物料">
+                    <option value="Material">物料 (Material)</option>
+                    <option value="Product">产品 (Product)</option>
+                    <option value="SparePart">备件 (SparePart)</option>
+                  </optgroup>
+                  <optgroup label="生产执行">
+                    <option value="WorkOrder">工单 (WorkOrder)</option>
+                    <option value="Process">工序 (Process)</option>
+                    <option value="Recipe">配方 (Recipe)</option>
+                  </optgroup>
+                  <optgroup label="质量与运维">
+                    <option value="QualityInspection">质检 (QualityInspection)</option>
+                    <option value="Telemetry">遥测/指标 (Telemetry)</option>
+                    <option value="Incident">异常事件 (Incident)</option>
+                    <option value="MaintenanceOrder">维保单 (MaintenanceOrder)</option>
+                  </optgroup>
+                  <optgroup label="供应链">
+                    <option value="Supplier">供应商 (Supplier)</option>
+                    <option value="Customer">客户 (Customer)</option>
+                    <option value="SalesOrder">销售订单 (SalesOrder)</option>
+                    <option value="PurchaseOrder">采购订单 (PurchaseOrder)</option>
+                    <option value="Logistics">物流 (Logistics)</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+            <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3">
+              <button 
+                onClick={() => setShowAddNodeModal(false)}
+                className="px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                取消
+              </button>
+              <button 
+                onClick={handleAddNode}
+                disabled={!newNodeData.id || !newNodeData.label}
+                className="px-4 py-2 text-xs font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                添加节点
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showNewGraphConfirm && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl w-[400px] overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <AlertTriangle size={16} className="text-amber-500" />
+                新建图谱确认
+              </h3>
+              <button onClick={() => setShowNewGraphConfirm(false)} className="text-gray-400 hover:text-gray-600">
+                <X size={16} />
+              </button>
+            </div>
+            <div className="p-6">
+              <p className="text-sm text-gray-600">
+                确定要新建图谱吗？当前未保存的节点和关系将被清空。
+              </p>
+            </div>
+            <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3">
+              <button 
+                onClick={() => setShowNewGraphConfirm(false)}
+                className="px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                取消
+              </button>
+              <button 
+                onClick={() => {
+                  setRelNodes([]);
+                  setRelEdges([]);
+                  setGraphName('新建本体图谱');
+                  setActiveRelId(null);
+                  setIsAddingRel(false);
+                  setShowNewGraphConfirm(false);
+                }}
+                className="px-4 py-2 text-xs font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+              >
+                确定新建
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSaveToast && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg shadow-lg animate-in fade-in slide-in-from-bottom-4">
+          <CheckCircle2 size={16} className="text-emerald-500" />
+          <span className="text-sm font-medium">图谱 "{graphName}" 已保存！可在“实例绑定与生成”模块中使用。</span>
+        </div>
+      )}
     </div>
   );
 
