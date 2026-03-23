@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { 
   Database, Plus, Search, CheckCircle2, GitMerge, Link2, Layers, Cpu, 
   ChevronRight, ChevronDown, Box, FileText, Terminal, Play,
-  Wand2, Save, Server, Table2, Sparkles, ArrowRight, Network, Settings,
+  Wand2, Save, Server, Table2, Sparkles, ArrowRight, ArrowLeft, Network, Settings,
   Activity, ShieldCheck, Wrench, Users, Headset, Truck, FileSpreadsheet, AlertTriangle,
   Trash2, Edit3, X
 } from 'lucide-react';
@@ -476,7 +476,7 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'WO-0318', label: 'WO-20260318-01', type: 'WorkOrder', x: 0, y: 0 },
       { id: 'PROD-LFP', label: 'Cell-LFP-280Ah', type: 'Product', x: 200, y: -100 },
       { id: 'SO-202603', label: 'SO-202603 (加急)', type: 'SalesOrder', x: 200, y: 100 },
-      { id: 'CUST-TESLA', label: '特斯拉 (VIP客户)', type: 'Customer', x: 0, y: 150 },
+      { id: 'CUST-XPENG', label: '小鹏汽车 (VIP客户)', type: 'Customer', x: 0, y: 150 },
       { id: 'MAT-SLURRY', label: 'LFP浆料 (库存:充足)', type: 'Material', x: -200, y: 150 },
       { id: 'SHIFT-A', label: '白班班组 (缺1人)', type: 'Batch', x: -200, y: -150 },
       { id: 'COATER-01', label: '涂布机-01 (运行中)', type: 'Device', x: -400, y: 0 },
@@ -485,7 +485,7 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'e1', source: 'WO-0318', target: 'LINE-A', label: '分配给' },
       { id: 'e2', source: 'WO-0318', target: 'PROD-LFP', label: '生产' },
       { id: 'e3', source: 'WO-0318', target: 'SO-202603', label: '履行' },
-      { id: 'e4', source: 'SO-202603', target: 'CUST-TESLA', label: '由...下达' },
+      { id: 'e4', source: 'SO-202603', target: 'CUST-XPENG', label: '由...下达' },
       { id: 'e5', source: 'WO-0318', target: 'MAT-SLURRY', label: '需要' },
       { id: 'e6', source: 'LINE-A', target: 'SHIFT-A', label: '由...操作' },
       { id: 'e7', source: 'COATER-01', target: 'LINE-A', label: '属于' },
@@ -608,9 +608,9 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
     ]
   },
   customer_complaint: {
-    name: '客户投诉溯源 (CUST-TESLA-001)',
+    name: '客户投诉溯源 (CUST-XPENG-001)',
     nodes: [
-      { id: 'CUST-TESLA', label: '特斯拉 (投诉:续航短)', type: 'Customer', x: 0, y: 0 },
+      { id: 'CUST-XPENG', label: '小鹏汽车 (投诉:续航短)', type: 'Customer', x: 0, y: 0 },
       { id: 'SO-202601', label: 'SO-202601 (历史订单)', type: 'SalesOrder', x: -200, y: -100 },
       { id: 'PROD-LFP', label: 'Cell-LFP-280Ah', type: 'Product', x: 200, y: -100 },
       { id: 'LOT-C-001', label: 'LOT-C-001 (发货批次)', type: 'Batch', x: -200, y: 100 },
@@ -620,7 +620,7 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'LINE-1', label: '涂布一线 (生产线)', type: 'ProductionLine', x: -400, y: 100 },
     ],
     edges: [
-      { id: 'e1', source: 'SO-202601', target: 'CUST-TESLA', label: '由...下达' },
+      { id: 'e1', source: 'SO-202601', target: 'CUST-XPENG', label: '由...下达' },
       { id: 'e2', source: 'SO-202601', target: 'PROD-LFP', label: '包含' },
       { id: 'e3', source: 'LOT-C-001', target: 'PROD-LFP', label: '是...的实例' },
       { id: 'e4', source: 'LOT-C-001', target: 'QI-001', label: '由...检验' },
@@ -678,7 +678,7 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'WO-0321', label: 'WO-20260321', type: 'WorkOrder', x: -200, y: -100 },
       { id: 'LINE-2', label: '涂布二线', type: 'ProductionLine', x: 200, y: -100 },
       { id: 'FAIL-002', label: '烘箱温度异常', type: 'EquipmentFailure', x: 0, y: 150 },
-      { id: 'CUST-BYD', label: '比亚迪 (客户)', type: 'Customer', x: -200, y: 150 },
+      { id: 'CUST-AITO', label: '问界 (客户)', type: 'Customer', x: -200, y: 150 },
       { id: 'MAINT-URGENT', label: '紧急抢修单', type: 'MaintenanceOrder', x: 200, y: 150 },
       { id: 'SP-HEATER', label: '加热管备件 (库存:0)', type: 'SparePart', x: 400, y: 150 },
     ],
@@ -686,7 +686,7 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
       { id: 'e1', source: 'WO-0321', target: 'SO-202604', label: '履行' },
       { id: 'e2', source: 'WO-0321', target: 'LINE-2', label: '分配给' },
       { id: 'e3', source: 'FAIL-002', target: 'LINE-2', label: '影响' },
-      { id: 'e4', source: 'SO-202604', target: 'CUST-BYD', label: '由...下达' },
+      { id: 'e4', source: 'SO-202604', target: 'CUST-AITO', label: '由...下达' },
       { id: 'e5', source: 'FAIL-002', target: 'MAINT-URGENT', label: '触发' },
       { id: 'e6', source: 'MAINT-URGENT', target: 'SP-HEATER', label: '需要' },
     ]
@@ -749,14 +749,14 @@ const SCENARIOS_DATA: Record<string, { name: string, nodes: any[], edges: any[] 
     name: '成品发货物流追踪 (SHIP-009)',
     nodes: [
       { id: 'SHIP-009', label: '发货单-009', type: 'SalesOrder', x: 0, y: 0 },
-      { id: 'CUST-NIO', label: '蔚来汽车', type: 'Customer', x: -200, y: -100 },
+      { id: 'CUST-ARCFOX', label: '极狐汽车', type: 'Customer', x: -200, y: -100 },
       { id: 'PROD-PACK', label: 'Battery-Pack-100kWh', type: 'Product', x: 200, y: -100 },
       { id: 'FAC-SHANGHAI', label: '上海临港工厂', type: 'Factory', x: 0, y: 150 },
       { id: 'LOGISTICS-04', label: '冷链运输 (温度:22℃)', type: 'Telemetry', x: -200, y: 150 },
       { id: 'WH-FINISHED', label: '成品仓 (出库)', type: 'Workshop', x: 200, y: 150 },
     ],
     edges: [
-      { id: 'e1', source: 'SHIP-009', target: 'CUST-NIO', label: '交付给' },
+      { id: 'e1', source: 'SHIP-009', target: 'CUST-ARCFOX', label: '交付给' },
       { id: 'e2', source: 'SHIP-009', target: 'PROD-PACK', label: '包含' },
       { id: 'e3', source: 'SHIP-009', target: 'FAC-SHANGHAI', label: '发货自' },
       { id: 'e4', source: 'SHIP-009', target: 'LOGISTICS-04', label: '由...追踪' },
@@ -1305,10 +1305,16 @@ export default function OntologyModeling() {
             </div>
           ))}
         </div>
-        <div className="p-4 border-t border-gray-200 bg-gray-50">
+        <div className="p-4 border-t border-gray-200 bg-gray-50 flex gap-3">
+          <button 
+            onClick={() => setActiveTab('discovery')}
+            className="flex-1 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm flex items-center justify-center gap-2"
+          >
+            <ArrowLeft size={16} /> 上一步
+          </button>
           <button 
             onClick={() => setActiveTab('relations')}
-            className="w-full bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm flex items-center justify-center gap-2"
+            className="flex-1 bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm flex items-center justify-center gap-2"
           >
             保存并定义关系 <ArrowRight size={16} />
           </button>
@@ -1805,10 +1811,16 @@ export default function OntologyModeling() {
           )}
         </div>
         
-        <div className="p-4 border-t border-gray-200 bg-white">
+        <div className="p-4 border-t border-gray-200 bg-white flex gap-3">
+          <button 
+            onClick={() => setActiveTab('mapping')}
+            className="flex-1 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm flex items-center justify-center gap-2"
+          >
+            <ArrowLeft size={16} /> 上一步
+          </button>
           <button 
             onClick={() => setActiveTab('instances')}
-            className="w-full bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm flex items-center justify-center gap-2"
+            className="flex-1 bg-indigo-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors shadow-sm flex items-center justify-center gap-2"
           >
             生成实例图谱 <ArrowRight size={16} />
           </button>
@@ -1980,6 +1992,12 @@ export default function OntologyModeling() {
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <button 
+            onClick={() => setActiveTab('relations')}
+            className="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded text-xs font-medium hover:bg-gray-50 transition-colors shadow-sm flex items-center gap-1.5"
+          >
+            <ArrowLeft size={14} /> 上一步
+          </button>
           <span className="text-xs text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded flex items-center gap-1">
             <CheckCircle2 size={12} /> 实例图谱已生成
           </span>
@@ -2055,15 +2073,15 @@ export default function OntologyModeling() {
         <div className="grid grid-cols-3 gap-4">
           <div className="bg-indigo-50/50 border border-indigo-100 p-3 rounded-lg">
             <div className="text-[10px] font-bold text-indigo-800 mb-1">全场景语义理解</div>
-            <p className="text-[10px] text-gray-600">Agent 现在知道 "涂布机-01" 发生 "主轴卡死" 故障，触发了 "维修单"，并能顺藤摸瓜找到受影响的 "批次"、"工单" 乃至 "特斯拉订单"。</p>
+            <p className="text-[10px] text-gray-600">Agent 现在知道 "涂布机-01" 发生 "主轴卡死" 故障，触发了 "维修单"，并能顺藤摸瓜找到受影响的 "批次"、"工单" 乃至 "小鹏汽车订单"。</p>
           </div>
           <div className="bg-amber-50/50 border border-amber-100 p-3 rounded-lg">
             <div className="text-[10px] font-bold text-amber-800 mb-1">跨域影响评估 (Impact Analysis)</div>
-            <p className="text-[10px] text-gray-600">当设备故障时，系统自动沿着图谱计算：维修需要消耗 "备件-涂布辊"，由 "张三" 负责，且会导致 "WO-20260318-01" 延期，直接影响 "特斯拉" 的交付。</p>
+            <p className="text-[10px] text-gray-600">当设备故障时，系统自动沿着图谱计算：维修需要消耗 "备件-涂布辊"，由 "张三" 负责，且会导致 "WO-20260318-01" 延期，直接影响 "小鹏汽车" 的交付。</p>
           </div>
           <div className="bg-emerald-50/50 border border-emerald-100 p-3 rounded-lg">
             <div className="text-[10px] font-bold text-emerald-800 mb-1">Workflow 自动编排</div>
-            <p className="text-[10px] text-gray-600">基于图谱，Agent 自动生成应对工作流：1. 锁定受影响的批次；2. 预警销售人员联系特斯拉；3. 自动向仓库发起备件领用申请。</p>
+            <p className="text-[10px] text-gray-600">基于图谱，Agent 自动生成应对工作流：1. 锁定受影响的批次；2. 预警销售人员联系小鹏汽车；3. 自动向仓库发起备件领用申请。</p>
           </div>
         </div>
       </div>
