@@ -902,6 +902,10 @@ export default function OntologyModeling() {
   const [selectedTableId, setSelectedTableId] = useState('mes_production_line');
   const [selectedTemplate, setSelectedTemplate] = useState('tpl_line');
   const [selectedInstanceTarget, setSelectedInstanceTarget] = useState('failure_impact');
+  
+  // Apple-style on-demand panels state
+  const [isRelToolboxOpen, setIsRelToolboxOpen] = useState(true);
+  const [isRelInspectorOpen, setIsRelInspectorOpen] = useState(true);
 
   // State for draggable instance nodes
   const [instanceNodes, setInstanceNodes] = useState(SCENARIOS_DATA['failure_impact'].nodes);
@@ -1314,93 +1318,100 @@ export default function OntologyModeling() {
   );
 
   const renderRelationsTab = () => (
-    <div className="flex-1 flex overflow-hidden">
-      {/* Left Sidebar: Toolbox */}
-      <div className="w-64 border-r border-gray-200 bg-white flex flex-col shrink-0 z-20">
-        <div className="p-3 border-b border-gray-200 bg-gray-50/50">
-          <h3 className="text-xs font-semibold text-gray-900 flex items-center gap-2">
-            <Box size={14} className="text-indigo-600" />
+    <div className="flex-1 flex overflow-hidden relative bg-[#f8f9fa]">
+      {/* Left Sidebar: Toolbox (Floating & Collapsible) */}
+      <div 
+        className={cn(
+          "absolute top-4 left-4 bottom-4 w-64 bg-white/95 backdrop-blur-xl border border-gray-200/60 rounded-2xl shadow-lg flex flex-col z-20 transition-all duration-300 ease-in-out",
+          isRelToolboxOpen ? "translate-x-0 opacity-100" : "-translate-x-72 opacity-0 pointer-events-none"
+        )}
+      >
+        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
+          <h3 className="text-[13px] font-semibold text-gray-900 flex items-center gap-2">
+            <Box size={16} className="text-indigo-500" />
             实体节点库
           </h3>
-          <p className="text-[10px] text-gray-500 mt-1">拖拽节点到右侧画布中</p>
+          <button onClick={() => setIsRelToolboxOpen(false)} className="text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-100 transition-colors">
+            <X size={14} />
+          </button>
         </div>
-        <div className="flex-1 overflow-y-auto p-3 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-5">
           <div>
-            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">制造资源</div>
+            <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">制造资源</div>
             <div className="space-y-1.5">
               {['Factory', 'Workshop', 'ProductionLine', 'Device'].map(type => (
                 <div
                   key={type}
                   draggable
                   onDragStart={(e) => handleDragStart(e, type)}
-                  className="px-3 py-2 bg-indigo-50 border border-indigo-100 rounded-md text-xs text-indigo-700 cursor-grab hover:bg-indigo-100 hover:border-indigo-300 transition-colors flex items-center justify-between"
+                  className="px-3 py-2 bg-gray-50/80 border border-gray-200/60 rounded-lg text-[13px] text-gray-700 cursor-grab hover:bg-white hover:border-indigo-300 hover:shadow-sm transition-all flex items-center justify-between group"
                 >
                   <span>{type}</span>
-                  <Plus size={12} className="text-indigo-400" />
+                  <Plus size={14} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               ))}
             </div>
           </div>
           <div>
-            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">产品定义</div>
+            <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">产品定义</div>
             <div className="space-y-1.5">
               {['Product', 'Material', 'BOM'].map(type => (
                 <div
                   key={type}
                   draggable
                   onDragStart={(e) => handleDragStart(e, type)}
-                  className="px-3 py-2 bg-emerald-50 border border-emerald-100 rounded-md text-xs text-emerald-700 cursor-grab hover:bg-emerald-100 hover:border-emerald-300 transition-colors flex items-center justify-between"
+                  className="px-3 py-2 bg-gray-50/80 border border-gray-200/60 rounded-lg text-[13px] text-gray-700 cursor-grab hover:bg-white hover:border-emerald-300 hover:shadow-sm transition-all flex items-center justify-between group"
                 >
                   <span>{type}</span>
-                  <Plus size={12} className="text-emerald-400" />
+                  <Plus size={14} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               ))}
             </div>
           </div>
           <div>
-            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">生产执行</div>
+            <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">生产执行</div>
             <div className="space-y-1.5">
               {['SalesOrder', 'WorkOrder', 'Batch'].map(type => (
                 <div
                   key={type}
                   draggable
                   onDragStart={(e) => handleDragStart(e, type)}
-                  className="px-3 py-2 bg-purple-50 border border-purple-100 rounded-md text-xs text-purple-700 cursor-grab hover:bg-purple-100 hover:border-purple-300 transition-colors flex items-center justify-between"
+                  className="px-3 py-2 bg-gray-50/80 border border-gray-200/60 rounded-lg text-[13px] text-gray-700 cursor-grab hover:bg-white hover:border-purple-300 hover:shadow-sm transition-all flex items-center justify-between group"
                 >
                   <span>{type}</span>
-                  <Plus size={12} className="text-purple-400" />
+                  <Plus size={14} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               ))}
             </div>
           </div>
           <div>
-            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">设备与维护</div>
+            <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">设备与维护</div>
             <div className="space-y-1.5">
               {['EquipmentFailure', 'MaintenanceOrder', 'SparePart', 'Telemetry'].map(type => (
                 <div
                   key={type}
                   draggable
                   onDragStart={(e) => handleDragStart(e, type)}
-                  className="px-3 py-2 bg-rose-50 border border-rose-100 rounded-md text-xs text-rose-700 cursor-grab hover:bg-rose-100 hover:border-rose-300 transition-colors flex items-center justify-between"
+                  className="px-3 py-2 bg-gray-50/80 border border-gray-200/60 rounded-lg text-[13px] text-gray-700 cursor-grab hover:bg-white hover:border-rose-300 hover:shadow-sm transition-all flex items-center justify-between group"
                 >
                   <span>{type}</span>
-                  <Plus size={12} className="text-rose-400" />
+                  <Plus size={14} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               ))}
             </div>
           </div>
           <div>
-            <div className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-2">组织与人员</div>
+            <div className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-2">组织与人员</div>
             <div className="space-y-1.5">
               {['Technician', 'Supplier', 'Customer'].map(type => (
                 <div
                   key={type}
                   draggable
                   onDragStart={(e) => handleDragStart(e, type)}
-                  className="px-3 py-2 bg-blue-50 border border-blue-100 rounded-md text-xs text-blue-700 cursor-grab hover:bg-blue-100 hover:border-blue-300 transition-colors flex items-center justify-between"
+                  className="px-3 py-2 bg-gray-50/80 border border-gray-200/60 rounded-lg text-[13px] text-gray-700 cursor-grab hover:bg-white hover:border-blue-300 hover:shadow-sm transition-all flex items-center justify-between group"
                 >
                   <span>{type}</span>
-                  <Plus size={12} className="text-blue-400" />
+                  <Plus size={14} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               ))}
             </div>
@@ -1410,80 +1421,97 @@ export default function OntologyModeling() {
 
       {/* Middle: Graph */}
       <div 
-        className="flex-1 bg-[#f8f9fa] relative overflow-hidden flex flex-col border-r border-gray-200"
+        className="flex-1 w-full h-full relative flex flex-col"
         onMouseMove={handleRelMouseMove}
         onMouseUp={handleRelMouseUp}
         onMouseLeave={handleRelMouseUp}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
-        {relNodes.length === 0 && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 pointer-events-none">
-            <Box size={48} className="mb-4 text-gray-300" />
-            <h3 className="text-lg font-bold text-gray-500 mb-2">画布为空</h3>
-            <p className="text-sm">请从左侧工具箱拖拽实体节点到此处，或点击下方“添加节点”按钮。</p>
-          </div>
-        )}
-        <div className="absolute top-4 left-4 z-10 bg-white px-4 py-2 rounded-lg shadow-sm border border-gray-200 flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            {isEditingGraphName ? (
-              <input
-                autoFocus
-                value={graphName}
-                onChange={e => setGraphName(e.target.value)}
-                onBlur={() => setIsEditingGraphName(false)}
-                onKeyDown={e => e.key === 'Enter' && setIsEditingGraphName(false)}
-                className="text-sm font-bold text-gray-800 border-b-2 border-indigo-500 focus:outline-none px-1 bg-transparent w-40"
-              />
-            ) : (
-              <div
-                className="text-sm font-bold text-gray-800 cursor-pointer hover:text-indigo-600 flex items-center gap-1 group"
-                onClick={() => setIsEditingGraphName(true)}
-              >
-                {graphName} <Edit3 size={14} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+        {/* Top Controls Overlay */}
+        <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-start pointer-events-none">
+          <div className="flex flex-col gap-2 pointer-events-auto">
+            <div className="flex items-center gap-3">
+              {!isRelToolboxOpen && (
+                <button 
+                  onClick={() => setIsRelToolboxOpen(true)}
+                  className="w-10 h-10 bg-white/90 backdrop-blur-md border border-gray-200/60 rounded-xl shadow-sm flex items-center justify-center text-gray-600 hover:text-indigo-600 hover:bg-white transition-all"
+                  title="打开节点库"
+                >
+                  <Box size={18} />
+                </button>
+              )}
+              <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-sm border border-gray-200/60 flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  {isEditingGraphName ? (
+                    <input
+                      autoFocus
+                      value={graphName}
+                      onChange={e => setGraphName(e.target.value)}
+                      onBlur={() => setIsEditingGraphName(false)}
+                      onKeyDown={e => e.key === 'Enter' && setIsEditingGraphName(false)}
+                      className="text-[15px] font-semibold text-gray-900 border-b-2 border-indigo-500 focus:outline-none px-1 bg-transparent w-48"
+                    />
+                  ) : (
+                    <div
+                      className="text-[15px] font-semibold text-gray-900 cursor-pointer hover:text-indigo-600 flex items-center gap-1.5 group transition-colors"
+                      onClick={() => setIsEditingGraphName(true)}
+                    >
+                      {graphName} <Edit3 size={14} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  )}
+                </div>
+                <div className="w-px h-4 bg-gray-300"></div>
+                <div className="flex items-center gap-3 text-[11px] font-medium text-gray-500">
+                  <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-indigo-500"></div> 制造资源</span>
+                  <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> 生产执行</span>
+                  <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-purple-500"></div> 产品定义</span>
+                  <span className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-rose-500"></div> 供应链/质量</span>
+                </div>
               </div>
-            )}
+            </div>
           </div>
-          <div className="h-4 w-px bg-gray-300"></div>
-          <div className="flex items-center gap-3 text-[10px] font-medium text-gray-500">
-            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-indigo-500"></div> 制造资源</span>
-            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> 生产执行</span>
-            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-purple-500"></div> 产品定义</span>
-            <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-rose-500"></div> 供应链/质量</span>
+
+          <div className="flex items-center gap-3 pointer-events-auto">
+            <button
+              onClick={() => setShowNewGraphConfirm(true)}
+              className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-gray-700 bg-white/90 backdrop-blur-md border border-gray-200/60 hover:bg-white rounded-xl transition-all shadow-sm"
+            >
+              <Plus size={16} /> 新建图谱
+            </button>
+            <button 
+              onClick={() => {
+                setShowSaveToast(true);
+                setTimeout(() => setShowSaveToast(false), 3000);
+              }}
+              className="flex items-center gap-1.5 px-4 py-2 text-[13px] font-medium text-white bg-gray-900 hover:bg-black rounded-xl transition-all shadow-sm"
+            >
+              <Save size={16} /> 保存图谱
+            </button>
+            {!isRelInspectorOpen && (
+              <button 
+                onClick={() => setIsRelInspectorOpen(true)}
+                className="w-10 h-10 bg-white/90 backdrop-blur-md border border-gray-200/60 rounded-xl shadow-sm flex items-center justify-center text-gray-600 hover:text-indigo-600 hover:bg-white transition-all"
+                title="打开属性检查器"
+              >
+                <Settings size={18} />
+              </button>
+            )}
           </div>
         </div>
 
-        <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-          <button
-            onClick={() => setShowNewGraphConfirm(true)}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 hover:bg-gray-50 rounded-md transition-colors shadow-sm"
-          >
-            <Plus size={14} /> 新建图谱
-          </button>
-          <button 
-            onClick={() => {
-              setShowSaveToast(true);
-              setTimeout(() => setShowSaveToast(false), 3000);
-            }}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors shadow-sm"
-          >
-            <Save size={14} /> 保存图谱
-          </button>
-        </div>
-        
-        {/* Floating Toolbar */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 bg-white px-2 py-2 rounded-xl shadow-md border border-gray-200 flex items-center gap-2">
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 bg-white/90 backdrop-blur-md px-2 py-2 rounded-2xl shadow-lg border border-gray-200/60 flex items-center gap-2 pointer-events-auto">
           <button 
             onClick={() => setShowAddNodeModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
           >
             <Plus size={16} className="text-indigo-600" /> 添加节点
           </button>
-          <div className="w-px h-5 bg-gray-300"></div>
+          <div className="w-px h-6 bg-gray-200 mx-1"></div>
           <button 
             onClick={openAddRel}
             disabled={relNodes.length < 2}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg transition-colors ${relNodes.length < 2 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+            className={`flex items-center gap-2 px-4 py-2 text-[13px] font-medium rounded-xl transition-colors ${relNodes.length < 2 ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
           >
             <Link2 size={16} className={relNodes.length < 2 ? 'text-gray-400' : 'text-emerald-600'} /> 添加关系
           </button>
@@ -1493,21 +1521,19 @@ export default function OntologyModeling() {
         <div className="flex-1 w-full h-full relative flex items-center justify-center overflow-auto min-h-[600px]">
           {relNodes.length === 0 && (
             <div className="absolute inset-0 flex flex-col items-center justify-center z-0">
-              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                <Network size={40} className="text-gray-400" />
+              <div className="w-24 h-24 bg-gray-100/50 rounded-full flex items-center justify-center mb-6">
+                <Network size={40} className="text-gray-300" />
               </div>
-              <h3 className="text-lg font-bold text-gray-700 mb-2">图谱为空</h3>
-              <p className="text-sm text-gray-500 mb-6 max-w-md text-center">
-                当前本体图谱没有任何节点和关系。请先添加实体节点，然后建立它们之间的关联关系。
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">图谱为空</h3>
+              <p className="text-[13px] text-gray-500 mb-8 max-w-md text-center leading-relaxed">
+                当前本体图谱没有任何节点和关系。请先从左侧节点库拖拽实体，或点击下方“添加节点”按钮。
               </p>
-              <div className="flex gap-4">
-                <button 
-                  onClick={() => setShowAddNodeModal(true)}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-700 flex items-center gap-2 font-medium"
-                >
-                  <Plus size={18} /> 添加节点
-                </button>
-              </div>
+              <button 
+                onClick={() => setShowAddNodeModal(true)}
+                className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl shadow-sm hover:bg-indigo-700 flex items-center gap-2 font-medium transition-colors"
+              >
+                <Plus size={18} /> 添加节点
+              </button>
             </div>
           )}
           <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 min-w-[800px] min-h-[600px]">
@@ -1597,34 +1623,44 @@ export default function OntologyModeling() {
         </div>
       </div>
 
-      {/* Right: Relation Config */}
-      <div className="w-80 bg-white flex flex-col shrink-0">
-        <div className="p-4 border-b border-gray-200 bg-white flex justify-between items-center">
+      {/* Right: Relation Config (Inspector) */}
+      <div 
+        className={cn(
+          "absolute top-4 right-4 bottom-4 w-80 bg-white/95 backdrop-blur-xl border border-gray-200/60 rounded-2xl shadow-lg flex flex-col z-20 transition-all duration-300 ease-in-out",
+          isRelInspectorOpen ? "translate-x-0 opacity-100" : "translate-x-88 opacity-0 pointer-events-none"
+        )}
+      >
+        <div className="p-4 border-b border-gray-100 flex justify-between items-center">
           <div>
-            <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-              <Network size={16} className="text-indigo-600" /> 关系属性配置
+            <h3 className="text-[13px] font-semibold text-gray-900 flex items-center gap-2">
+              <Network size={16} className="text-indigo-500" /> 属性检查器
             </h3>
-            <p className="text-xs text-gray-500 mt-1">共定义 {relEdges.length} 组实体关系</p>
+            <p className="text-[10px] text-gray-500 mt-1">共定义 {relEdges.length} 组实体关系</p>
           </div>
-          {!isAddingRel && !activeRelId && (
-            <button 
-              onClick={openAddRel}
-              disabled={relNodes.length < 2}
-              className={`p-1.5 rounded transition-colors ${relNodes.length < 2 ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'}`}
-              title={relNodes.length < 2 ? "需至少两个节点才能新建关系" : "新建关系"}
-            >
-              <Plus size={16} />
+          <div className="flex items-center gap-2">
+            {!isAddingRel && !activeRelId && (
+              <button 
+                onClick={openAddRel}
+                disabled={relNodes.length < 2}
+                className={`p-1.5 rounded-lg transition-colors ${relNodes.length < 2 ? 'bg-gray-50 text-gray-400 cursor-not-allowed' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-100'}`}
+                title={relNodes.length < 2 ? "需至少两个节点才能新建关系" : "新建关系"}
+              >
+                <Plus size={14} />
+              </button>
+            )}
+            <button onClick={() => setIsRelInspectorOpen(false)} className="text-gray-400 hover:text-gray-600 p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+              <X size={14} />
             </button>
-          )}
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto bg-gray-50/50">
+        <div className="flex-1 overflow-y-auto bg-gray-50/30 custom-scrollbar">
           {(isAddingRel || activeRelId) ? (
             <div className="p-4 space-y-4 bg-white border-b border-gray-100">
               <div className="flex justify-between items-center mb-2">
-                <h4 className="text-xs font-bold text-gray-800">{isAddingRel ? '新建实体关系' : '编辑实体关系'}</h4>
-                <button onClick={() => { setIsAddingRel(false); setActiveRelId(null); }} className="text-gray-400 hover:text-gray-600">
-                  <X size={16} />
+                <h4 className="text-[13px] font-semibold text-gray-800">{isAddingRel ? '新建实体关系' : '编辑实体关系'}</h4>
+                <button onClick={() => { setIsAddingRel(false); setActiveRelId(null); }} className="text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-100 transition-colors">
+                  <X size={14} />
                 </button>
               </div>
               
@@ -1916,7 +1952,7 @@ export default function OntologyModeling() {
       {showSaveToast && (
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg shadow-lg animate-in fade-in slide-in-from-bottom-4">
           <CheckCircle2 size={16} className="text-emerald-500" />
-          <span className="text-sm font-medium">图谱 "{graphName}" 已保存！可在“实例绑定与生成”模块中使用。</span>
+          <span className="text-sm font-medium">图谱 "{graphName}" 已保存！可在“本体库”模块中使用。</span>
         </div>
       )}
     </div>
@@ -1927,7 +1963,7 @@ export default function OntologyModeling() {
       <div className="p-4 border-b border-gray-200 bg-white flex justify-between items-center shrink-0 shadow-sm z-10">
         <div className="flex items-center gap-4">
           <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-            <Box size={16} className="text-indigo-600" /> 实例绑定与生成
+            <Box size={16} className="text-indigo-600" /> 本体库
           </h3>
           <div className="h-4 w-px bg-gray-300"></div>
           <div className="flex items-center gap-2">
@@ -2035,62 +2071,58 @@ export default function OntologyModeling() {
   );
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden font-sans">
-      {/* Top Header */}
-      <div className="h-14 border-b border-gray-200 flex items-center justify-between px-4 shrink-0 bg-gray-900 text-white">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
-            <Database size={18} />
+    <div className="h-full flex flex-col bg-[#F5F5F7] font-sans overflow-hidden">
+      {/* Apple-style Top Header & Navigation */}
+      <div className="h-16 border-b border-gray-200/80 bg-white/80 backdrop-blur-md flex items-center justify-between px-6 shrink-0 z-30 sticky top-0">
+        <div className="flex items-center gap-3 w-1/4">
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gray-800 to-black text-white flex items-center justify-center shadow-sm">
+            <Database size={16} />
           </div>
           <div>
-            <h2 className="text-sm font-semibold">Ontology Builder</h2>
-            <p className="text-[10px] text-gray-400 font-mono">本体建模与自动化生成引擎</p>
+            <h2 className="text-[15px] font-semibold text-gray-900 tracking-tight">本体创建</h2>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] bg-gray-800 text-gray-300 px-2 py-1 rounded border border-gray-700">
-            数据层 → Ontology Builder → Agent / 推理层
-          </span>
-        </div>
-      </div>
-
-      {/* Main Content with Vertical Tabs */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Navigation (Stepper) */}
-        <div className="w-48 bg-gray-50 border-r border-gray-200 flex flex-col shrink-0 py-4 z-20">
-          <div className="px-4 mb-4">
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-gray-400">构建流程</h3>
-          </div>
-          <nav className="flex-1 space-y-1 px-2">
+        
+        {/* Segmented Control */}
+        <div className="flex-1 flex justify-center">
+          <div className="bg-gray-100/80 p-1 rounded-lg flex items-center gap-1">
             {[
-              { id: 'discovery', label: '1. 数据接入与发现', icon: Search },
-              { id: 'mapping', label: '2. 模板匹配与映射', icon: GitMerge },
-              { id: 'relations', label: '3. 关系定义与图谱', icon: Network },
-              { id: 'instances', label: '4. 实例绑定与生成', icon: Box },
-            ].map(tab => {
-              const Icon = tab.icon;
+              { id: 'discovery', label: '数据接入' },
+              { id: 'mapping', label: '模版匹配' },
+              { id: 'relations', label: '关系定义' },
+              { id: 'instances', label: '本体库' },
+            ].map((tab, index) => {
               const isActive = activeTab === tab.id;
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as TabKey)}
                   className={cn(
-                    "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-all text-left",
+                    "px-4 py-1.5 rounded-md text-[13px] font-medium transition-all duration-200 ease-out",
                     isActive 
-                      ? "bg-indigo-100 text-indigo-700 shadow-sm" 
-                      : "text-gray-600 hover:bg-gray-200/50"
+                      ? "bg-white text-gray-900 shadow-sm" 
+                      : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50"
                   )}
                 >
-                  <Icon size={16} className={isActive ? "text-indigo-600" : "text-gray-400"} />
+                  <span className="mr-1.5 opacity-50">{index + 1}.</span>
                   {tab.label}
                 </button>
               );
             })}
-          </nav>
+          </div>
         </div>
 
+        <div className="w-1/4 flex justify-end">
+          <span className="text-[11px] bg-gray-100 text-gray-500 px-2.5 py-1 rounded-full font-medium">
+            Agent Data OS
+          </span>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex overflow-hidden relative">
         {/* Tab Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden bg-white m-4 rounded-2xl shadow-sm border border-gray-200/60">
           {activeTab === 'discovery' && renderDiscoveryTab()}
           {activeTab === 'mapping' && renderMappingTab()}
           {activeTab === 'relations' && renderRelationsTab()}

@@ -90,6 +90,7 @@ export default function WorkflowStudio() {
   const [nodes, setNodes] = useState(workflowData['wf1'].nodes);
   const [edges, setEdges] = useState(workflowData['wf1'].edges);
   const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   
   // Dragging & Panning State
   const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
@@ -102,6 +103,8 @@ export default function WorkflowStudio() {
 
   const handleNodeMouseDown = (e: React.MouseEvent, node: any) => {
     e.stopPropagation();
+    setSelectedNodeId(node.id);
+    setIsRightPanelOpen(true);
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return;
     const mouseX = (e.clientX - rect.left - transform.x) / transform.scale;
@@ -111,6 +114,7 @@ export default function WorkflowStudio() {
   };
 
   const handleCanvasMouseDown = (e: React.MouseEvent) => {
+    setSelectedNodeId(null);
     setIsPanning(true);
     setPanStart({ x: e.clientX, y: e.clientY });
   };
@@ -202,6 +206,8 @@ export default function WorkflowStudio() {
       setEdges(workflowData[selectedWorkflowId].edges);
     }
   }, [selectedWorkflowId]);
+
+  const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
   return (
     <div className="h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
@@ -388,12 +394,14 @@ export default function WorkflowStudio() {
             {/* Nodes */}
             {nodes.map(node => {
               const cat = nodeCategories.find(c => c.id === node.category);
+              const isSelected = selectedNodeId === node.id;
               return (
                 <div 
                   key={node.id}
                   className={cn(
                     "absolute bg-white border rounded-lg shadow-sm w-40 transition-shadow pointer-events-auto",
-                    draggingNodeId === node.id ? "cursor-grabbing shadow-lg border-indigo-400 z-10" : "cursor-grab border-gray-200 hover:shadow-md hover:border-indigo-300"
+                    draggingNodeId === node.id ? "cursor-grabbing shadow-lg border-indigo-400 z-10" : "cursor-grab border-gray-200 hover:shadow-md hover:border-indigo-300",
+                    isSelected && "ring-2 ring-indigo-500 border-indigo-500"
                   )}
                   style={{ left: node.x, top: node.y }}
                   onMouseDown={(e) => handleNodeMouseDown(e, node)}
@@ -436,25 +444,45 @@ export default function WorkflowStudio() {
               </button>
             </div>
             <div className="p-4 space-y-4">
-              <div>
-                <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">节点类型</label>
-                <div className="text-sm font-mono text-gray-900 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">优化决策节点</div>
-              </div>
-              <div>
-                <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">算法</label>
-                <select className="w-full text-sm border border-gray-200 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                  <option>遗传算法 (GA)</option>
-                  <option>混合整数线性规划 (MILP)</option>
-                  <option>强化学习 (RL)</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">输入数据</label>
-                <div className="space-y-1">
-                  <div className="text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1 text-gray-600 font-mono">异常数据</div>
-                  <div className="text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1 text-gray-600 font-mono">历史案例</div>
+              {selectedNode ? (
+                <>
+                  <div>
+                    <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">节点名称</label>
+                    <div className="text-sm font-bold text-gray-900 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">{selectedNode.type}</div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">节点类型</label>
+                    <div className="text-sm font-mono text-gray-900 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">{nodeCategories.find(c => c.id === selectedNode.category)?.label.split(' ')[0]}</div>
+                  </div>
+                  
+                  {selectedNode.type === '本体映射节点' || selectedNode.type === '订单解析与映射' || selectedNode.type === '设备状态映射' ? (
+                    <div>
+                      <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">目标实例映射 (Target Instance)</label>
+                      <select className="w-full text-sm border border-gray-200 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <option value="failure_impact">设备故障影响评估 (COATER-01)</option>
+                        <option value="sales_order_trace">销售订单追溯 (SO-20260318-01)</option>
+                        <option value="quality_trace">质量缺陷追溯 (DEF-001)</option>
+                      </select>
+                      <p className="text-[10px] text-gray-500 mt-1">选择在“本体与语义建模”中已配置的目标实例图谱。</p>
+                    </div>
+                  ) : selectedNode.category === 'decision' ? (
+                    <div>
+                      <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">关联智能体 (Agent)</label>
+                      <div className="text-sm font-mono text-indigo-700 bg-indigo-50 px-2 py-1.5 rounded border border-indigo-200">{selectedNode.type}</div>
+                      <p className="text-[10px] text-gray-500 mt-1">该节点由 Agent Studio 中配置的智能体接管决策。</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">通用配置</label>
+                      <div className="text-xs text-gray-500 italic">该节点暂无特殊配置项</div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-sm text-gray-500 text-center py-8">
+                  请在画布中选中一个节点以查看配置
                 </div>
-              </div>
+              )}
             </div>
           </div>
         )}
