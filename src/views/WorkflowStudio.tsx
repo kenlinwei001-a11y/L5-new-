@@ -1,492 +1,599 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Play, Plus, Search, Settings, Database, GitMerge, BrainCircuit, Terminal, FlaskConical, Layers, ZoomIn, ZoomOut, Maximize, X, List, LayoutGrid } from 'lucide-react';
+import { useState } from 'react';
+import {
+  GitMerge,
+  Plus,
+  Search,
+  Play,
+  Settings,
+  Code,
+  FileText,
+  FolderOpen,
+  History,
+  ChevronRight,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  MoreHorizontal,
+  Copy,
+  Check,
+  LayoutGrid,
+  List,
+  GitBranch,
+  Terminal,
+  Boxes,
+  Save,
+  PlayCircle
+} from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const nodeCategories = [
-  { id: 'data', label: '数据节点 (15)', icon: Database, color: 'text-blue-600', bg: 'bg-blue-50' },
-  { id: 'semantic', label: '语义节点 (10)', icon: Layers, color: 'text-purple-600', bg: 'bg-purple-50' },
-  { id: 'reasoning', label: '推理节点 (20)', icon: BrainCircuit, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-  { id: 'decision', label: '决策节点 (20)', icon: GitMerge, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-  { id: 'simulation', label: '仿真节点 (15)', icon: FlaskConical, color: 'text-amber-600', bg: 'bg-amber-50' },
-  { id: 'execution', label: '执行节点 (10)', icon: Terminal, color: 'text-rose-600', bg: 'bg-rose-50' },
-  { id: 'control', label: '控制节点 (10)', icon: Settings, color: 'text-slate-600', bg: 'bg-slate-50' },
-];
-
-const nodeTypes: Record<string, string[]> = {
-  data: ['数据获取节点', '流数据连接节点', '特征工程节点', '数据过滤节点'],
-  semantic: ['本体映射节点', '实体识别节点', '关系抽取节点'],
-  reasoning: ['异常检测节点', '根因分析节点', '趋势预测节点'],
-  decision: ['产销匹配推演 Agent', '设备异常诊断 Agent', '目标实例: 生产订单', '目标实例: 维保工单', '优化决策节点', '规则引擎节点', '多目标规划节点'],
-  simulation: ['物理仿真节点', '业务推演节点', 'What-If分析节点'],
-  execution: ['动作下发节点', 'API调用节点', '工单生成节点'],
-  control: ['条件分支节点', '循环控制节点', '并行网关节点']
-};
-
-const workflows = [
-  { id: 'wf1', name: '产销协同优化工作流', description: '基于订单波动自动调整生产计划' },
-  { id: 'wf2', name: '设备预测性维护工作流', description: '监控设备状态并自动生成维保工单' },
-  { id: 'wf3', name: '供应链风险预警工作流', description: '识别供应链潜在风险并推荐替代方案' }
-];
-
-const workflowData: Record<string, { nodes: any[], edges: any[] }> = {
-  wf1: {
-    nodes: [
-      { id: 'n1', type: '订单数据接入', category: 'data', x: 50, y: 150 },
-      { id: 'n2', type: '订单解析与映射', category: 'semantic', x: 250, y: 150 },
-      { id: 'n3', type: '产能瓶颈检测', category: 'reasoning', x: 450, y: 100 },
-      { id: 'n4', type: '产销匹配推演 Agent', category: 'decision', x: 650, y: 100 },
-      { id: 'n4_target', type: '目标实例: 生产订单', category: 'decision', x: 650, y: 200 },
-      { id: 'n5', type: '排产计划下发', category: 'execution', x: 850, y: 150 },
-    ],
-    edges: [
-      { from: 'n1', to: 'n2' },
-      { from: 'n2', to: 'n3' },
-      { from: 'n3', to: 'n4' },
-      { from: 'n3', to: 'n4_target' },
-      { from: 'n4', to: 'n5' },
-      { from: 'n4_target', to: 'n5' },
-    ]
+// --- Mock Data ---
+const WORKFLOWS = [
+  {
+    id: 'wf-sales-production',
+    name: '产销协同优化工作流',
+    description: '基于订单波动自动调整生产计划，实现产销协同优化',
+    version: 'v2.1.0',
+    status: 'active',
+    runs: 1289,
+    lastRun: '2分钟前',
+    author: '系统管理员',
+    updatedAt: '2024-03-20',
+    nodes: 7,
+    edges: 6
   },
-  wf2: {
-    nodes: [
-      { id: 'n1', type: 'IoT传感器数据', category: 'data', x: 50, y: 150 },
-      { id: 'n2', type: '设备状态映射', category: 'semantic', x: 250, y: 150 },
-      { id: 'n3', type: '设备异常诊断 Agent', category: 'decision', x: 450, y: 100 },
-      { id: 'n3_target', type: '目标实例: 维保工单', category: 'decision', x: 450, y: 200 },
-      { id: 'n4', type: '维保工单生成', category: 'execution', x: 650, y: 150 },
-    ],
-    edges: [
-      { from: 'n1', to: 'n2' },
-      { from: 'n2', to: 'n3' },
-      { from: 'n2', to: 'n3_target' },
-      { from: 'n3', to: 'n4' },
-      { from: 'n3_target', to: 'n4' },
-    ]
+  {
+    id: 'wf-predictive-maintenance',
+    name: '设备预测性维护工作流',
+    description: '监控设备状态并自动生成维保工单',
+    version: 'v1.5.2',
+    status: 'active',
+    runs: 456,
+    lastRun: '15分钟前',
+    author: '设备管理组',
+    updatedAt: '2024-03-18',
+    nodes: 12,
+    edges: 11
   },
-  wf3: {
-    nodes: [
-      { id: 'n1', type: '数据获取节点', category: 'data', x: 50, y: 150 },
-      { id: 'n2', type: '本体映射节点', category: 'semantic', x: 250, y: 150 },
-      { id: 'n3', type: '异常检测节点', category: 'reasoning', x: 450, y: 100 },
-      { id: 'n4', type: '优化决策节点', category: 'decision', x: 650, y: 150 },
-      { id: 'n5', type: '动作下发节点', category: 'execution', x: 850, y: 150 },
-    ],
-    edges: [
-      { from: 'n1', to: 'n2' },
-      { from: 'n2', to: 'n3' },
-      { from: 'n3', to: 'n4' },
-      { from: 'n4', to: 'n5' },
-    ]
+  {
+    id: 'wf-supply-chain-risk',
+    name: '供应链风险预警工作流',
+    description: '识别供应链潜在风险并推荐替代方案',
+    version: 'v1.0.0',
+    status: 'draft',
+    runs: 0,
+    lastRun: '-',
+    author: '供应链团队',
+    updatedAt: '2024-03-15',
+    nodes: 5,
+    edges: 4
+  },
+  {
+    id: 'wf-auto-scheduling',
+    name: '自动排产优化流程',
+    description: '基于APS算法自动生成最优排产方案',
+    version: 'v3.0.1',
+    status: 'active',
+    runs: 3456,
+    lastRun: '刚刚',
+    author: '生产计划组',
+    updatedAt: '2024-03-21',
+    nodes: 9,
+    edges: 8
   }
-};
+];
 
-  // Clean up initialNodes and sampleEdges as they are no longer used directly
+const WORKFLOW_RUNS = [
+  { id: 'run-001', workflowId: 'wf-sales-production', status: 'success', trigger: '定时触发', duration: '45s', startedAt: '2024-03-21 10:30:00' },
+  { id: 'run-002', workflowId: 'wf-sales-production', status: 'success', trigger: '手动触发', duration: '52s', startedAt: '2024-03-21 09:15:00' },
+  { id: 'run-003', workflowId: 'wf-sales-production', status: 'failed', trigger: 'API调用', duration: '12s', startedAt: '2024-03-21 08:45:00' },
+  { id: 'run-004', workflowId: 'wf-predictive-maintenance', status: 'running', trigger: '定时触发', duration: '-', startedAt: '2024-03-21 10:25:00' },
+];
 
+const NODE_CATEGORIES = [
+  { id: 'data', label: '数据节点', icon: Boxes, count: 15 },
+  { id: 'semantic', label: '语义节点', icon: GitBranch, count: 10 },
+  { id: 'reasoning', label: '推理节点', icon: Terminal, count: 20 },
+  { id: 'decision', label: '决策节点', icon: GitMerge, count: 20 },
+  { id: 'execution', label: '执行节点', icon: Play, count: 10 },
+];
 
-export default function WorkflowStudio() {
-  const [activeCategory, setActiveCategory] = useState('data');
-  const [activeTab, setActiveTab] = useState<'workflows' | 'nodes'>('workflows');
-  const [selectedWorkflowId, setSelectedWorkflowId] = useState('wf1');
-  const [nodes, setNodes] = useState(workflowData['wf1'].nodes);
-  const [edges, setEdges] = useState(workflowData['wf1'].edges);
-  const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  
-  // Dragging & Panning State
-  const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [transform, setTransform] = useState({ x: 40, y: 40, scale: 0.75 });
-  const [isPanning, setIsPanning] = useState(false);
-  const [panStart, setPanStart] = useState({ x: 0, y: 0 });
-  
-  const canvasRef = useRef<HTMLDivElement>(null);
+const WORKFLOW_YAML = `name: 产销协同优化工作流
+version: "2.1.0"
+description: 基于订单波动自动调整生产计划
 
-  const handleNodeMouseDown = (e: React.MouseEvent, node: any) => {
-    e.stopPropagation();
-    setSelectedNodeId(node.id);
-    setIsRightPanelOpen(true);
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const mouseX = (e.clientX - rect.left - transform.x) / transform.scale;
-    const mouseY = (e.clientY - rect.top - transform.y) / transform.scale;
-    setDragOffset({ x: mouseX - node.x, y: mouseY - node.y });
-    setDraggingNodeId(node.id);
+triggers:
+  - type: schedule
+    cron: "0 */2 * * *"
+  - type: webhook
+    endpoint: /api/v1/workflow/sales-production
+
+nodes:
+  - id: order-input
+    type: data-source
+    config:
+      source: ERP_Sales_DB
+      query: "SELECT * FROM sales_orders WHERE status='confirmed'"
+
+  - id: semantic-mapping
+    type: ontology-mapping
+    depends_on: [order-input]
+    config:
+      target_entity: SalesOrder
+      mapping_rules:
+        - field: order_no
+          maps_to: orderId
+        - field: delivery_date
+          maps_to: requiredDate
+
+  - id: bottleneck-detection
+    type: reasoning
+    depends_on: [semantic-mapping]
+    config:
+      algorithm: constraint_analysis
+      threshold: 0.85
+
+  - id: agent-decision
+    type: agent
+    depends_on: [bottleneck-detection]
+    config:
+      agent_id: sales-production-optimizer
+      action: optimize_schedule
+
+  - id: schedule-output
+    type: execution
+    depends_on: [agent-decision]
+    config:
+      action: update_aps_schedule
+      notify: [生产计划组]`;
+
+// Code Block Component
+function CodeBlock({ code, language }: { code: string; language: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
-
-  const handleCanvasMouseDown = (e: React.MouseEvent) => {
-    setSelectedNodeId(null);
-    setIsPanning(true);
-    setPanStart({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (draggingNodeId && canvasRef.current) {
-      const rect = canvasRef.current.getBoundingClientRect();
-      const mouseX = (e.clientX - rect.left - transform.x) / transform.scale;
-      const mouseY = (e.clientY - rect.top - transform.y) / transform.scale;
-
-      setNodes(prevNodes => 
-        prevNodes.map(node => 
-          node.id === draggingNodeId 
-            ? { ...node, x: mouseX - dragOffset.x, y: mouseY - dragOffset.y }
-            : node
-        )
-      );
-    } else if (isPanning) {
-      const dx = e.clientX - panStart.x;
-      const dy = e.clientY - panStart.y;
-      setTransform(prev => ({ ...prev, x: prev.x + dx, y: prev.y + dy }));
-      setPanStart({ x: e.clientX, y: e.clientY });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setDraggingNodeId(null);
-    setIsPanning(false);
-  };
-
-  const handleWheel = (e: React.WheelEvent) => {
-    if (!canvasRef.current) return;
-    const zoomSensitivity = 0.001;
-    const delta = -e.deltaY * zoomSensitivity;
-    const newScale = Math.min(Math.max(0.1, transform.scale + delta), 3);
-
-    const rect = canvasRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    const scaleRatio = newScale / transform.scale;
-    const newX = mouseX - (mouseX - transform.x) * scaleRatio;
-    const newY = mouseY - (mouseY - transform.y) * scaleRatio;
-
-    setTransform({ x: newX, y: newY, scale: newScale });
-  };
-
-  const handleZoomIn = () => setTransform(prev => ({ ...prev, scale: Math.min(3, prev.scale * 1.2) }));
-  const handleZoomOut = () => setTransform(prev => ({ ...prev, scale: Math.max(0.1, prev.scale / 1.2) }));
-  const handleFitView = () => setTransform({ x: 40, y: 40, scale: 0.75 });
-
-  // Drag and drop from sidebar
-  const handleDragStart = (e: React.DragEvent, nodeType: string, category: string) => {
-    e.dataTransfer.setData('application/reactflow', JSON.stringify({ type: nodeType, category }));
-    e.dataTransfer.effectAllowed = 'move';
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    const data = e.dataTransfer.getData('application/reactflow');
-    if (!data) return;
-
-    const { type, category } = JSON.parse(data);
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect) return;
-
-    const x = (e.clientX - rect.left - transform.x) / transform.scale;
-    const y = (e.clientY - rect.top - transform.y) / transform.scale;
-
-    const newNode = {
-      id: `n${Date.now()}`,
-      type,
-      category,
-      x,
-      y
-    };
-
-    setNodes(nds => [...nds, newNode]);
-  };
-
-  useEffect(() => {
-    if (selectedWorkflowId && workflowData[selectedWorkflowId]) {
-      setNodes(workflowData[selectedWorkflowId].nodes);
-      setEdges(workflowData[selectedWorkflowId].edges);
-    }
-  }, [selectedWorkflowId]);
-
-  const selectedNode = nodes.find(n => n.id === selectedNodeId);
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-      {/* Header */}
-      <div className="h-14 border-b border-gray-200 flex items-center justify-between px-4 shrink-0 bg-gray-50/50">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
-            <GitMerge size={18} />
-          </div>
-          <div>
-            <h2 className="text-sm font-semibold text-gray-900">工作流编排</h2>
-            <p className="text-[10px] text-gray-500 font-mono">100+ 节点 • DAG 编排</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={() => setIsRightPanelOpen(!isRightPanelOpen)}
-            className={cn(
-              "px-3 py-1.5 border font-medium rounded-lg flex items-center gap-2 transition-colors text-xs shadow-sm",
-              isRightPanelOpen 
-                ? "bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100" 
-                : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
-            )}
-          >
-            <Settings size={14} />
-            节点配置
-          </button>
-          <button className="px-3 py-1.5 bg-gray-900 text-white font-medium rounded-lg flex items-center gap-2 hover:bg-gray-800 transition-colors text-xs shadow-sm">
-            <Play size={14} />
-            实时调试
-          </button>
-        </div>
+    <div className="relative">
+      <div className="absolute right-2 top-2">
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-1 px-2 py-1 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded transition-colors"
+        >
+          {copied ? <Check size={12} /> : <Copy size={12} />}
+          {copied ? '已复制' : '复制'}
+        </button>
       </div>
+      <div className="bg-slate-900 text-slate-300 p-4 pt-10 overflow-x-auto rounded-b-lg">
+        <pre className="text-sm font-mono">
+          <code>{code}</code>
+        </pre>
+      </div>
+    </div>
+  );
+}
 
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - Nodes & Workflows */}
-        <div className="w-64 border-r border-gray-200 bg-gray-50/30 flex flex-col shrink-0 z-20">
-          <div className="flex border-b border-gray-200">
-            <button
-              onClick={() => setActiveTab('workflows')}
-              className={cn(
-                "flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors",
-                activeTab === 'workflows' ? "text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/30" : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-              )}
-            >
-              <List size={14} />
-              工作流清单
-            </button>
-            <button
-              onClick={() => setActiveTab('nodes')}
-              className={cn(
-                "flex-1 py-2.5 text-xs font-medium flex items-center justify-center gap-1.5 transition-colors",
-                activeTab === 'nodes' ? "text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/30" : "text-gray-500 hover:text-gray-700 hover:bg-gray-100"
-              )}
-            >
-              <LayoutGrid size={14} />
-              节点库
-            </button>
-          </div>
+// Workflow Detail Component
+function WorkflowDetail({ workflow, onClose }: { workflow: typeof WORKFLOWS[0]; onClose: () => void }) {
+  const [activeTab, setActiveTab] = useState<'yaml' | 'nodes' | 'runs' | 'settings'>('yaml');
+  const [viewMode, setViewMode] = useState<'code' | 'visual'>('code');
 
-          {activeTab === 'workflows' ? (
-            <div className="flex-1 overflow-y-auto p-3 space-y-2">
-              {workflows.map(wf => (
-                <div
-                  key={wf.id}
-                  onClick={() => setSelectedWorkflowId(wf.id)}
-                  className={cn(
-                    "p-3 rounded-lg border cursor-pointer transition-all",
-                    selectedWorkflowId === wf.id
-                      ? "bg-indigo-50 border-indigo-200 shadow-sm"
-                      : "bg-white border-gray-200 hover:border-indigo-300 hover:shadow-sm"
-                  )}
-                >
-                  <h3 className={cn("text-xs font-semibold mb-1", selectedWorkflowId === wf.id ? "text-indigo-700" : "text-gray-900")}>
-                    {wf.name}
-                  </h3>
-                  <p className="text-[10px] text-gray-500 leading-relaxed line-clamp-2">
-                    {wf.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <>
-              <div className="p-3 border-b border-gray-200">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
-                  <input 
-                    type="text" 
-                    placeholder="搜索 100+ 节点..." 
-                    className="w-full pl-8 pr-3 py-1.5 bg-white border border-gray-200 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                  />
+  const tabs = [
+    { id: 'yaml', label: 'workflow.yaml', icon: Code },
+    { id: 'nodes', label: `nodes (${workflow.nodes})`, icon: FolderOpen },
+    { id: 'runs', label: `runs (${WORKFLOW_RUNS.filter(r => r.workflowId === workflow.id).length})`, icon: History },
+    { id: 'settings', label: 'config.json', icon: Settings },
+  ] as const;
+
+  const runs = WORKFLOW_RUNS.filter(r => r.workflowId === workflow.id);
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-white">
+      {/* Header */}
+      <header className="border-b border-slate-200">
+        {/* Breadcrumb */}
+        <div className="px-4 py-2 border-b border-slate-100 flex items-center gap-2 text-sm text-slate-600">
+          <GitMerge size={14} className="text-slate-400" />
+          <span className="hover:text-slate-900 cursor-pointer">工作流编排</span>
+          <ChevronRight size={14} className="text-slate-300" />
+          <span className="font-medium text-slate-900">{workflow.name}</span>
+        </div>
+
+        {/* Title Row */}
+        <div className="px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-slate-800 text-white flex items-center justify-center">
+                <GitMerge size={20} />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-slate-900">{workflow.name}</h1>
+                <div className="flex items-center gap-2 mt-1 text-sm text-slate-500">
+                  <span className="font-mono">{workflow.id}</span>
+                  <span>•</span>
+                  <span>{workflow.version}</span>
+                  <span>•</span>
+                  <span className={cn(
+                    "px-1.5 py-0.5 text-xs rounded",
+                    workflow.status === 'active'
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-amber-100 text-amber-700"
+                  )}>
+                    {workflow.status === 'active' ? '已启用' : '草稿'}
+                  </span>
                 </div>
               </div>
-              <div className="flex-1 overflow-y-auto p-2 space-y-4">
-                {nodeCategories.map(cat => (
-                  <div key={cat.id}>
-                    <div 
-                      className="flex items-center gap-2 px-2 py-1.5 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 rounded-md"
-                      onClick={() => setActiveCategory(cat.id)}
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="flex items-center gap-2 px-3 py-2 border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50">
+                <Settings size={14} />
+                设置
+              </button>
+              <button className="flex items-center gap-2 px-3 py-2 bg-slate-800 text-white text-sm font-medium hover:bg-slate-700">
+                <PlayCircle size={14} />
+                运行工作流
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex items-center gap-1 px-4 border-t border-slate-200">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-3 text-sm font-medium border-t-2 transition-colors",
+                  activeTab === tab.id
+                    ? "border-slate-800 text-slate-900"
+                    : "border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                )}
+              >
+                <Icon size={14} />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
+      </header>
+
+      {/* Content */}
+      <div className="flex-1 overflow-auto bg-slate-50">
+        <div className="max-w-5xl mx-auto p-6">
+          {/* File Path Bar */}
+          <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 border border-slate-200 text-sm text-slate-600 rounded-t-lg">
+            <span className="font-medium text-slate-900">{workflow.id}</span>
+            <span className="text-slate-400">/</span>
+            <span>
+              {activeTab === 'yaml' && 'workflow.yaml'}
+              {activeTab === 'nodes' && 'nodes/'}
+              {activeTab === 'runs' && 'runs/'}
+              {activeTab === 'settings' && 'config.json'}
+            </span>
+          </div>
+
+          {/* YAML Tab */}
+          {activeTab === 'yaml' && (
+            <div className="bg-white border border-t-0 border-slate-200 rounded-b-lg overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-2 bg-slate-50 border-b border-slate-200">
+                <div className="flex items-center gap-4">
+                  <span className="text-sm font-medium text-slate-700">workflow.yaml</span>
+                  <div className="flex items-center bg-slate-100 rounded p-0.5">
+                    <button
+                      onClick={() => setViewMode('code')}
+                      className={cn(
+                        "px-3 py-1 text-xs font-medium rounded transition-colors",
+                        viewMode === 'code'
+                          ? "bg-white text-slate-900 shadow-sm"
+                          : "text-slate-600 hover:text-slate-900"
+                      )}
                     >
-                      <cat.icon size={14} className={cat.color} />
-                      {cat.label}
-                    </div>
-                    {activeCategory === cat.id && (
-                      <div className="mt-1 space-y-1 pl-6 pr-2">
-                        {nodeTypes[cat.id]?.map((node, idx) => (
-                          <div 
-                            key={idx} 
-                            draggable
-                            onDragStart={(e) => handleDragStart(e, node, cat.id)}
-                            className="px-2 py-1.5 bg-white border border-gray-200 rounded text-[11px] text-gray-600 cursor-grab hover:border-indigo-300 hover:shadow-sm transition-all flex items-center justify-between"
-                          >
-                            <span className="font-mono">{node}</span>
-                            <Plus size={12} className="text-gray-400" />
-                          </div>
-                        ))}
+                      代码
+                    </button>
+                    <button
+                      onClick={() => setViewMode('visual')}
+                      className={cn(
+                        "px-3 py-1 text-xs font-medium rounded transition-colors",
+                        viewMode === 'visual'
+                          ? "bg-white text-slate-900 shadow-sm"
+                          : "text-slate-600 hover:text-slate-900"
+                      )}
+                    >
+                      可视化
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {viewMode === 'code' ? (
+                <CodeBlock code={WORKFLOW_YAML} language="yaml" />
+              ) : (
+                <div className="p-8 bg-slate-50 min-h-[400px] flex items-center justify-center">
+                  <div className="text-center text-slate-400">
+                    <LayoutGrid size={48} className="mx-auto mb-4 opacity-30" />
+                    <p>可视化视图开发中</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Nodes Tab */}
+          {activeTab === 'nodes' && (
+            <div className="bg-white border border-t-0 border-slate-200 rounded-b-lg">
+              <div className="divide-y divide-slate-100">
+                {NODE_CATEGORIES.map((cat) => (
+                  <div key={cat.id} className="p-4 hover:bg-slate-50">
+                    <div className="flex items-center gap-3">
+                      <cat.icon size={18} className="text-slate-500" />
+                      <div className="flex-1">
+                        <div className="font-medium text-slate-900">{cat.label}</div>
+                        <div className="text-xs text-slate-500">{cat.count} 个节点</div>
                       </div>
-                    )}
+                      <ChevronRight size={16} className="text-slate-400" />
+                    </div>
                   </div>
                 ))}
               </div>
-            </>
+            </div>
+          )}
+
+          {/* Runs Tab */}
+          {activeTab === 'runs' && (
+            <div className="bg-white border border-t-0 border-slate-200 rounded-b-lg">
+              <table className="w-full text-sm">
+                <thead className="bg-slate-50 border-b border-slate-200">
+                  <tr>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700">运行ID</th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700">状态</th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700">触发方式</th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700">耗时</th>
+                    <th className="px-4 py-3 text-left font-semibold text-slate-700">开始时间</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {runs.length > 0 ? runs.map((run) => (
+                    <tr key={run.id} className="hover:bg-slate-50">
+                      <td className="px-4 py-3 font-mono text-slate-600">{run.id}</td>
+                      <td className="px-4 py-3">
+                        <span className={cn(
+                          "flex items-center gap-1.5 text-xs",
+                          run.status === 'success' ? "text-emerald-600" :
+                          run.status === 'failed' ? "text-rose-600" :
+                          "text-blue-600"
+                        )}>
+                          {run.status === 'success' && <CheckCircle2 size={14} />}
+                          {run.status === 'failed' && <XCircle size={14} />}
+                          {run.status === 'running' && <Clock size={14} className="animate-spin" />}
+                          {run.status === 'success' ? '成功' : run.status === 'failed' ? '失败' : '运行中'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-slate-600">{run.trigger}</td>
+                      <td className="px-4 py-3 text-slate-600">{run.duration}</td>
+                      <td className="px-4 py-3 text-slate-500 text-xs">{run.startedAt}</td>
+                    </tr>
+                  )) : (
+                    <tr>
+                      <td colSpan={5} className="px-4 py-8 text-center text-slate-400">
+                        暂无运行记录
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Settings Tab */}
+          {activeTab === 'settings' && (
+            <div className="bg-white border border-t-0 border-slate-200 rounded-b-lg">
+              <div className="p-6 space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">工作流名称</label>
+                  <input
+                    type="text"
+                    defaultValue={workflow.name}
+                    className="w-full px-3 py-2 border border-slate-200 rounded text-sm focus:outline-none focus:border-slate-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">描述</label>
+                  <textarea
+                    defaultValue={workflow.description}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-slate-200 rounded text-sm focus:outline-none focus:border-slate-400"
+                  />
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">超时时间 (秒)</label>
+                    <input
+                      type="number"
+                      defaultValue={300}
+                      className="w-full px-3 py-2 border border-slate-200 rounded text-sm focus:outline-none focus:border-slate-400"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-slate-700 mb-2">重试次数</label>
+                    <input
+                      type="number"
+                      defaultValue={3}
+                      className="w-full px-3 py-2 border border-slate-200 rounded text-sm focus:outline-none focus:border-slate-400"
+                    />
+                  </div>
+                </div>
+                <div className="pt-4 border-t border-slate-100">
+                  <button className="px-4 py-2 bg-slate-800 text-white text-sm font-medium hover:bg-slate-700">
+                    保存配置
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
 
-        {/* Canvas Area */}
-        <div 
-          className={cn("flex-1 relative bg-[#f8f9fa] overflow-hidden", isPanning ? "cursor-grabbing" : "cursor-grab")}
-          ref={canvasRef}
-          onMouseDown={handleCanvasMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onWheel={handleWheel}
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-        >
-          {/* Grid Background */}
-          <div 
-            className="absolute inset-0 pointer-events-none" 
-            style={{ 
-              backgroundImage: 'radial-gradient(#cbd5e1 1px, transparent 1px)', 
-              backgroundSize: `${20 * transform.scale}px ${20 * transform.scale}px`,
-              backgroundPosition: `${transform.x}px ${transform.y}px`
-            }}
-          ></div>
-          
-          {/* Transform Wrapper */}
-          <div 
-            className="absolute inset-0 origin-top-left pointer-events-none"
-            style={{ transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})` }}
-          >
-            {/* SVG for Edges */}
-            <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none">
-              {edges.map((edge, idx) => {
-                const fromNode = nodes.find(n => n.id === edge.from);
-                const toNode = nodes.find(n => n.id === edge.to);
-                if (!fromNode || !toNode) return null;
-                
-                const startX = fromNode.x + 160; // node width approx
-                const startY = fromNode.y + 20; // node height approx / 2
-                const endX = toNode.x;
-                const endY = toNode.y + 20;
-                
-                return (
-                  <path 
-                    key={idx}
-                    d={`M ${startX} ${startY} C ${startX + 50} ${startY}, ${endX - 50} ${endY}, ${endX} ${endY}`}
-                    fill="none"
-                    stroke="#94a3b8"
-                    strokeWidth="2"
-                    markerEnd="url(#arrowhead)"
-                  />
-                );
-              })}
-              <defs>
-                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                  <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
-                </marker>
-              </defs>
-            </svg>
+// Main Component
+export default function WorkflowStudio() {
+  const [workflows, setWorkflows] = useState(WORKFLOWS);
+  const [selectedWorkflow, setSelectedWorkflow] = useState<typeof WORKFLOWS[0] | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
-            {/* Nodes */}
-            {nodes.map(node => {
-              const cat = nodeCategories.find(c => c.id === node.category);
-              const isSelected = selectedNodeId === node.id;
-              return (
-                <div 
-                  key={node.id}
-                  className={cn(
-                    "absolute bg-white border rounded-lg shadow-sm w-40 transition-shadow pointer-events-auto",
-                    draggingNodeId === node.id ? "cursor-grabbing shadow-lg border-indigo-400 z-10" : "cursor-grab border-gray-200 hover:shadow-md hover:border-indigo-300",
-                    isSelected && "ring-2 ring-indigo-500 border-indigo-500"
-                  )}
-                  style={{ left: node.x, top: node.y }}
-                  onMouseDown={(e) => handleNodeMouseDown(e, node)}
-                >
-                  <div className={cn("h-1.5 w-full rounded-t-lg", cat?.bg)}></div>
-                  <div className="p-2.5">
-                    <div className="flex items-center gap-1.5 mb-1.5 pointer-events-none">
-                      {cat && <cat.icon size={12} className={cat.color} />}
-                      <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">{cat?.label.split(' ')[0]}</span>
-                    </div>
-                    <div className="text-xs font-mono text-gray-900 truncate pointer-events-none">{node.type}</div>
-                  </div>
-                  {/* Ports */}
-                  <div className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 bg-white border-2 border-gray-300 rounded-full pointer-events-none"></div>
-                  <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-white border-2 border-gray-300 rounded-full pointer-events-none"></div>
-                </div>
-              );
-            })}
-          </div>
+  const filteredWorkflows = workflows.filter(wf =>
+    wf.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    wf.id.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-          {/* Zoom Controls */}
-          <div className="absolute bottom-4 left-4 flex items-center bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden z-20">
-            <button onClick={handleZoomOut} className="p-2 hover:bg-gray-50 text-gray-600 border-r border-gray-200" title="缩小"><ZoomOut size={16} /></button>
-            <div className="px-3 py-2 text-xs font-mono text-gray-600 font-medium min-w-[60px] text-center">{Math.round(transform.scale * 100)}%</div>
-            <button onClick={handleZoomIn} className="p-2 hover:bg-gray-50 text-gray-600 border-l border-gray-200" title="放大"><ZoomIn size={16} /></button>
-            <button onClick={handleFitView} className="p-2 hover:bg-gray-50 text-gray-600 border-l border-gray-200" title="适应视图"><Maximize size={16} /></button>
-          </div>
+  return (
+    <div className="h-full flex flex-col bg-white">
+      {/* Header */}
+      <header className="border-b border-slate-200">
+        <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-2 text-sm text-slate-600">
+          <GitMerge size={16} className="text-slate-400" />
+          <span className="font-medium text-slate-900">Workflow Studio</span>
         </div>
 
-        {/* Right Sidebar - Config */}
-        {isRightPanelOpen && (
-          <div className="w-72 border-l border-gray-200 bg-white flex flex-col shrink-0 z-20 animate-in slide-in-from-right-8 duration-200">
-            <div className="p-3 border-b border-gray-200 bg-gray-50/50 flex justify-between items-center">
-              <h3 className="text-xs font-semibold text-gray-900">节点配置</h3>
-              <button 
-                onClick={() => setIsRightPanelOpen(false)}
-                className="text-gray-400 hover:text-gray-600 p-1 rounded-md hover:bg-gray-200 transition-colors"
-              >
-                <X size={14} />
+        <div className="px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-slate-800 text-white flex items-center justify-center">
+                <GitMerge size={20} />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-slate-900">工作流编排</h1>
+                <p className="text-sm text-slate-500">DAG 工作流设计与编排管理</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className="flex items-center gap-2 px-3 py-2 bg-slate-800 text-white text-sm font-medium hover:bg-slate-700">
+                <Plus size={14} />
+                新建工作流
               </button>
             </div>
-            <div className="p-4 space-y-4">
-              {selectedNode ? (
-                <>
-                  <div>
-                    <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">节点名称</label>
-                    <div className="text-sm font-bold text-gray-900 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">{selectedNode.type}</div>
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">节点类型</label>
-                    <div className="text-sm font-mono text-gray-900 bg-gray-50 px-2 py-1.5 rounded border border-gray-200">{nodeCategories.find(c => c.id === selectedNode.category)?.label.split(' ')[0]}</div>
-                  </div>
-                  
-                  {selectedNode.type === '本体映射节点' || selectedNode.type === '订单解析与映射' || selectedNode.type === '设备状态映射' ? (
-                    <div>
-                      <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">目标实例映射 (Target Instance)</label>
-                      <select className="w-full text-sm border border-gray-200 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                        <option value="failure_impact">设备故障影响评估 (COATER-01)</option>
-                        <option value="sales_order_trace">销售订单追溯 (SO-20260318-01)</option>
-                        <option value="quality_trace">质量缺陷追溯 (DEF-001)</option>
-                      </select>
-                      <p className="text-[10px] text-gray-500 mt-1">选择在“本体与语义建模”中已配置的目标实例图谱。</p>
-                    </div>
-                  ) : selectedNode.category === 'decision' ? (
-                    <div>
-                      <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">关联智能体 (Agent)</label>
-                      <div className="text-sm font-mono text-indigo-700 bg-indigo-50 px-2 py-1.5 rounded border border-indigo-200">{selectedNode.type}</div>
-                      <p className="text-[10px] text-gray-500 mt-1">该节点由 Agent Studio 中配置的智能体接管决策。</p>
-                    </div>
-                  ) : (
-                    <div>
-                      <label className="block text-[10px] font-medium text-gray-500 uppercase mb-1">通用配置</label>
-                      <div className="text-xs text-gray-500 italic">该节点暂无特殊配置项</div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="text-sm text-gray-500 text-center py-8">
-                  请在画布中选中一个节点以查看配置
-                </div>
-              )}
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto bg-slate-50">
+        <div className="max-w-6xl mx-auto p-6">
+          {/* Toolbar */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={14} />
+                <input
+                  type="text"
+                  placeholder="搜索工作流..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 pr-4 py-2 w-64 bg-white border border-slate-200 text-sm focus:outline-none focus:border-slate-400 rounded"
+                />
+              </div>
+              <button className="flex items-center gap-1 px-3 py-2 bg-white border border-slate-200 text-sm text-slate-600 hover:bg-slate-50">
+                <List size={14} />
+                状态
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setViewMode('list')}
+                className={cn(
+                  "p-2 border",
+                  viewMode === 'list'
+                    ? "bg-slate-100 border-slate-300 text-slate-900"
+                    : "bg-white border-slate-200 text-slate-400 hover:text-slate-600"
+                )}
+              >
+                <List size={16} />
+              </button>
+              <button
+                onClick={() => setViewMode('grid')}
+                className={cn(
+                  "p-2 border",
+                  viewMode === 'grid'
+                    ? "bg-slate-100 border-slate-300 text-slate-900"
+                    : "bg-white border-slate-200 text-slate-400 hover:text-slate-600"
+                )}
+              >
+                <LayoutGrid size={16} />
+              </button>
             </div>
           </div>
-        )}
+
+          {/* Workflow List */}
+          <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 border-b border-slate-200">
+                <tr>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">工作流名称</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">版本</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">状态</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">节点数</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">运行次数</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700">最后运行</th>
+                  <th className="px-4 py-3 text-left font-semibold text-slate-700"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {filteredWorkflows.map((wf) => (
+                  <tr
+                    key={wf.id}
+                    className="hover:bg-slate-50 cursor-pointer"
+                    onClick={() => setSelectedWorkflow(wf)}
+                  >
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <GitMerge size={18} className="text-slate-500" />
+                        <div>
+                          <div className="font-medium text-sky-600 hover:underline">{wf.name}</div>
+                          <div className="text-xs text-slate-500 font-mono">{wf.id}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-slate-600 font-mono text-xs">{wf.version}</td>
+                    <td className="px-4 py-3">
+                      <span className={cn(
+                        "px-2 py-0.5 text-xs rounded",
+                        wf.status === 'active'
+                          ? "bg-emerald-100 text-emerald-700"
+                          : "bg-amber-100 text-amber-700"
+                      )}>
+                        {wf.status === 'active' ? '已启用' : '草稿'}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">{wf.nodes} 节点 / {wf.edges} 连接</td>
+                    <td className="px-4 py-3 text-slate-600">{wf.runs.toLocaleString()}</td>
+                    <td className="px-4 py-3 text-slate-500 text-xs">{wf.lastRun}</td>
+                    <td className="px-4 py-3">
+                      <button className="p-1 hover:bg-slate-200 text-slate-400">
+                        <MoreHorizontal size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
+
+      {/* Workflow Detail Modal */}
+      {selectedWorkflow && (
+        <WorkflowDetail
+          workflow={selectedWorkflow}
+          onClose={() => setSelectedWorkflow(null)}
+        />
+      )}
     </div>
   );
 }
