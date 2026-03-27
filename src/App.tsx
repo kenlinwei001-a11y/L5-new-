@@ -27,6 +27,7 @@ import OntologyModeling from './views/OntologyModeling';
 import MCPStudio from './views/MCPStudio';
 import GovernanceCenter from './views/GovernanceCenter';
 import SkillMarket from './views/SkillMarket';
+import SkillsOS from './views/SkillsOS';
 import PlaceholderView from './views/PlaceholderView';
 import IoTDeviceManagement from './views/IoTDeviceManagement';
 import BusinessSystemIntegration from './views/BusinessSystemIntegration';
@@ -149,7 +150,7 @@ export default function App() {
           {activeTab === 'ontology' && <div className="p-6 h-full"><OntologyModeling /></div>}
           {activeTab === 'tool' && <div className="p-6 h-full"><MCPStudio /></div>}
           {activeTab === 'governance' && <div className="p-6 h-full"><GovernanceCenter /></div>}
-          {activeTab === 'skill' && <div className="p-6 h-full"><SkillMarket /></div>}
+          {activeTab === 'skill' && <div className="h-full"><SkillsOS /></div>}
         </div>
       </main>
     </div>
