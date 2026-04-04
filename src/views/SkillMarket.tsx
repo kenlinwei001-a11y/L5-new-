@@ -4,11 +4,9 @@ import {
   Filter,
   Download,
   Check,
-  X,
   ChevronLeft,
   FileText,
   Code,
-  Settings,
   BookOpen,
   FolderOpen,
   Copy,
@@ -20,6 +18,7 @@ import {
   ExternalLink,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { CodeBlock } from '../components/CodeBlock';
 import type { Skill, SkillCategory } from '../types/skills';
 import { mockSkills } from '../data/skillsMock';
 import { skillCategoryLabels, skillCategoryConfig } from '../types/skills';
@@ -133,36 +132,6 @@ function SkillCard({ skill, onClick, onInstall }: {
   );
 }
 
-// Code Block Component with Copy Button
-function CodeBlock({ code, language }: { code: string; language: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="relative">
-      <div className="absolute right-2 top-2">
-        <button
-          onClick={handleCopy}
-          className="flex items-center gap-1 px-2 py-1 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded transition-colors"
-        >
-          {copied ? <Check size={12} /> : <Copy size={12} />}
-          {copied ? '已复制' : '复制'}
-        </button>
-      </div>
-      <div className="bg-slate-900 text-slate-300 p-4 pt-10 overflow-x-auto rounded-b-lg">
-        <pre className="text-sm font-mono">
-          <code>{code}</code>
-        </pre>
-      </div>
-    </div>
-  );
-}
-
 // Skill Detail Component - GitHub Style File Browser
 function SkillDetail({ skill, onClose, onInstall }: {
   skill: Skill;
@@ -198,7 +167,7 @@ function SkillDetail({ skill, onClose, onInstall }: {
 
         {/* Skill Info */}
         <div className="px-4 py-4">
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">{skill.name}</h1>
+          <h1 className="text-xl font-bold text-slate-900 mb-2">{skill.name}</h1>
 
           {/* Meta Info Row */}
           <div className="flex items-center gap-4 text-sm flex-wrap">

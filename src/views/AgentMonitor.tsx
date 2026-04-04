@@ -86,7 +86,7 @@ export default function AgentMonitor() {
   return (
     <div className="h-full flex flex-col gap-6">
       <header>
-        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">智能体控制台</h2>
+        <h2 className="text-xl font-bold text-gray-900">智能体控制台</h2>
         <p className="text-sm text-gray-500 mt-1">多智能体协同执行与推理链监控</p>
       </header>
 

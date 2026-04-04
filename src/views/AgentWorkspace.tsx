@@ -24,9 +24,7 @@ import {
   MoreHorizontal,
   Filter,
   ChevronRight,
-  Box,
   Radio,
-  FileCode,
   History,
   BarChart3
 } from 'lucide-react';
@@ -37,12 +35,13 @@ interface AgentWorkspaceProps {
 }
 
 // --- Mock Data ---
+// 数据与相关模块实际数据保持一致
 const MODULE_STATS = [
-  { id: 'agent', name: '智能体实例', count: 12, active: 5, icon: Bot, color: 'slate' },
-  { id: 'workflow', name: '工作流编排', count: 8, active: 3, icon: GitMerge, color: 'slate' },
-  { id: 'tool', name: 'MCP 工具', count: 45, active: 45, icon: Wrench, color: 'slate' },
-  { id: 'skill', name: '原子技能', count: 128, active: 128, icon: Zap, color: 'slate' },
-  { id: 'simulation', name: '推演任务', count: 4, active: 1, icon: MonitorPlay, color: 'slate' },
+  { id: 'agent', name: '智能体实例', count: 5, active: 3, icon: Bot, color: 'slate' },
+  { id: 'workflow', name: '工作流编排', count: 4, active: 3, icon: GitMerge, color: 'slate' },
+  { id: 'tool', name: 'MCP 工具', count: 5, active: 4, icon: Wrench, color: 'slate' },
+  { id: 'skill', name: '原子技能', count: 5, active: 2, icon: Zap, color: 'slate' },
+  { id: 'simulation', name: '推演任务', count: 2, active: 1, icon: MonitorPlay, color: 'slate' },
 ];
 
 const RECENT_ACTIVITIES = [
@@ -79,8 +78,8 @@ export default function AgentWorkspace({ onNavigate }: AgentWorkspaceProps) {
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: LayoutGrid },
-    { id: 'agents', label: 'Agents', icon: Bot, count: 12 },
-    { id: 'workflows', label: 'Workflows', icon: GitMerge, count: 8 },
+    { id: 'agents', label: 'Agents', icon: Bot, count: 5 },
+    { id: 'workflows', label: 'Workflows', icon: GitMerge, count: 4 },
     { id: 'tasks', label: 'Tasks', icon: CheckCircle2, count: 23 },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   ] as const;

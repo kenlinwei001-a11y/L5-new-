@@ -101,7 +101,7 @@ export default function SimulationLab() {
             <FlaskConical size={18} />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-gray-900">推演实验室</h2>
+            <h2 className="text-base font-semibold text-gray-900">推演实验室</h2>
             <p className="text-[10px] text-gray-500 font-mono">场景生成与仿真验证</p>
           </div>
         </div>

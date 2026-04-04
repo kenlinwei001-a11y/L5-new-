@@ -22,7 +22,7 @@ export default function SkillsOS() {
                 <Grid3X3 size={20} />
               </div>
               <div>
-                <h1 className="font-semibold text-gray-900">Skills OS</h1>
+                <h1 className="text-base font-semibold text-gray-900">Skills OS</h1>
                 <p className="text-xs text-gray-500">智能技能管理平台</p>
               </div>
             </div>
@@ -65,7 +65,7 @@ export default function SkillsOS() {
               <Grid3X3 size={18} />
             </button>
             <Store size={18} className="text-gray-400" />
-            <h2 className="font-semibold text-gray-900">技能市场</h2>
+            <h2 className="text-base font-semibold text-gray-900">技能市场</h2>
           </div>
         </div>
 

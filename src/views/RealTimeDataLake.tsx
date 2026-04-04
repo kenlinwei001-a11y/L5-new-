@@ -6,9 +6,7 @@ import {
   Search, 
   Filter, 
   Download, 
-  Database,
-  Activity,
-  AlertCircle
+  Database
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -193,7 +191,7 @@ export default function RealTimeDataLake() {
       {/* Sub-navigation */}
       <div className="w-48 border-r border-gray-200 bg-white flex flex-col shrink-0">
         <div className="p-4 border-b border-gray-200">
-          <h2 className="font-semibold text-gray-900 text-sm">实时数据湖</h2>
+          <h2 className="text-base font-semibold text-gray-900">实时数据湖</h2>
         </div>
         <nav className="p-2 space-y-1">
           <button

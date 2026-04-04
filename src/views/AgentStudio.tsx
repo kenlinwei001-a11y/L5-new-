@@ -63,8 +63,7 @@ export default function AgentStudio() {
             <Cpu size={18} />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-gray-900">智能体配置中心 (Agent Studio)</h2>
-            <p className="text-[10px] text-gray-500 font-mono">基于 7 步逻辑的语义决策 Agent</p>
+            <h2 className="text-base font-semibold text-gray-900">智能体配置中心</h2>
           </div>
         </div>
         <div className="flex items-center gap-2">

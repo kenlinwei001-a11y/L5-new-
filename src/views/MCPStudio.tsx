@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  Terminal,
   Plus,
   Search,
   CheckCircle2,
@@ -17,11 +16,12 @@ import {
   LayoutGrid,
   List,
   Database,
-  Shield,
   TerminalSquare,
+  Terminal,
   MoreHorizontal,
   Send,
-  Clock
+  Clock,
+  ArrowLeft
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -298,6 +298,13 @@ function ToolDetail({ tool, onClose }: { tool: typeof TOOLS[0]; onClose: () => v
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <button
+                onClick={onClose}
+                className="flex items-center gap-2 px-3 py-2 border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors"
+              >
+                <ArrowLeft size={14} />
+                返回
+              </button>
               <button className="flex items-center gap-2 px-3 py-2 border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50">
                 <Settings size={14} />
                 设置

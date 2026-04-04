@@ -14,7 +14,7 @@ export default function ReasoningGraph() {
   return (
     <div className="h-full flex flex-col gap-6">
       <header>
-        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">推理图谱 (Reasoning Graph)</h2>
+        <h2 className="text-xl font-bold text-gray-900">推理图谱 (Reasoning Graph)</h2>
         <p className="text-sm text-gray-500 mt-1">异常 → 关联对象 → 关键指标 → 推理路径 → 决策建议 → 执行动作</p>
       </header>
 

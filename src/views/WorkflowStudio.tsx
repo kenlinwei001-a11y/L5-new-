@@ -6,7 +6,6 @@ import {
   Play,
   Settings,
   Code,
-  FileText,
   FolderOpen,
   History,
   ChevronRight,
@@ -14,17 +13,17 @@ import {
   XCircle,
   Clock,
   MoreHorizontal,
-  Copy,
-  Check,
   LayoutGrid,
   List,
   GitBranch,
   Terminal,
   Boxes,
   Save,
-  PlayCircle
+  PlayCircle,
+  ArrowLeft
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import { CodeBlock } from '../components/CodeBlock';
 
 // --- Mock Data ---
 const WORKFLOWS = [
@@ -146,36 +145,6 @@ nodes:
       action: update_aps_schedule
       notify: [生产计划组]`;
 
-// Code Block Component
-function CodeBlock({ code, language }: { code: string; language: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="relative">
-      <div className="absolute right-2 top-2">
-        <button
-          onClick={handleCopy}
-          className="flex items-center gap-1 px-2 py-1 bg-slate-700 hover:bg-slate-600 text-slate-300 text-xs rounded transition-colors"
-        >
-          {copied ? <Check size={12} /> : <Copy size={12} />}
-          {copied ? '已复制' : '复制'}
-        </button>
-      </div>
-      <div className="bg-slate-900 text-slate-300 p-4 pt-10 overflow-x-auto rounded-b-lg">
-        <pre className="text-sm font-mono">
-          <code>{code}</code>
-        </pre>
-      </div>
-    </div>
-  );
-}
-
 // Workflow Detail Component
 function WorkflowDetail({ workflow, onClose }: { workflow: typeof WORKFLOWS[0]; onClose: () => void }) {
   const [activeTab, setActiveTab] = useState<'yaml' | 'nodes' | 'runs' | 'settings'>('yaml');
@@ -228,6 +197,13 @@ function WorkflowDetail({ workflow, onClose }: { workflow: typeof WORKFLOWS[0]; 
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <button
+                onClick={onClose}
+                className="flex items-center gap-2 px-3 py-2 border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors"
+              >
+                <ArrowLeft size={14} />
+                返回
+              </button>
               <button className="flex items-center gap-2 px-3 py-2 border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50">
                 <Settings size={14} />
                 设置
@@ -443,7 +419,7 @@ function WorkflowDetail({ workflow, onClose }: { workflow: typeof WORKFLOWS[0]; 
 
 // Main Component
 export default function WorkflowStudio() {
-  const [workflows, setWorkflows] = useState(WORKFLOWS);
+  const workflows = WORKFLOWS;
   const [selectedWorkflow, setSelectedWorkflow] = useState<typeof WORKFLOWS[0] | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');

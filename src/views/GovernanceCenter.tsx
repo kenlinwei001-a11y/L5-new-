@@ -21,8 +21,7 @@ export default function GovernanceCenter() {
             <ShieldCheck size={18} />
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-gray-900">治理中心</h2>
-            <p className="text-[10px] text-gray-500 font-mono">数据质量 • 权限 • 审计 • 监管</p>
+            <h2 className="text-xl font-bold text-gray-900">治理中心</h2>
           </div>
         </div>
       </div>

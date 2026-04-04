@@ -77,7 +77,7 @@ export default function DecisionSpace() {
   return (
     <div className="h-full flex flex-col gap-6">
       <header>
-        <h2 className="text-2xl font-semibold text-gray-900 tracking-tight">决策空间</h2>
+        <h2 className="text-xl font-bold text-gray-900">决策空间</h2>
         <p className="text-sm text-gray-500 mt-1">智能体驱动的异常处理与执行</p>
       </header>
 
